@@ -134,6 +134,31 @@
         /* font-lock-preprocessor-face */
         color: #a6e22e;
       }
+      .return-stack-bar-ket {
+        /* return-stack-bar-ket-face */
+        color: #dc322f;
+        font-weight: bold;
+      }
+      .return-stack-exit {
+        /* return-stack-exit-face */
+        color: #00ffff;
+        font-weight: bold;
+      }
+      .return-stack-jo {
+        /* return-stack-jo-face */
+        color: #ef5939;
+        font-weight: bold;
+      }
+      .return-stack-line {
+        /* return-stack-line-face */
+        color: #ae81ff;
+        font-weight: bold;
+      }
+      .return-stack-the-jo {
+        /* return-stack-the-jo-face */
+        color: #fd971f;
+        font-weight: bold;
+      }
       .string {
         /* font-lock-string-face */
         color: #e6db74;
@@ -389,10 +414,10 @@
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> play with jo &amp; jojo</span>
    1. if we have
       * the following one jojo in the return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [ (square) ]
-            (square)
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-jo">(square)</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * and 2 in the argument-stack
         denoted by &lt;&lt; 2 &gt;&gt;
@@ -407,10 +432,10 @@
 <span class="org-block-end-line">        #+end_src
 </span>   2. when "next" is called
       * "next" moves the jojo on top of return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (square)
-        - [ (square) ]
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * "next" finds the meaning of the jo just been pulled out
         i.e. the jo "square"
@@ -418,18 +443,18 @@
         to help to explain the meaning of the function-jo "square"
         the function body of the jo "square"
         is pushed to return-stack as a new jojo
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (square)
-        - [ (square) ] - [ (dup) ]
-            (exit)         (multiple)
-                           (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>         <span class="return-stack-jo">(multiple)</span>
+                           <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>   3. "next" is called again
       * "next" moves the jojo on top of return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (square)       (dup)
-        - [ (square) ] - [ (multiple) ]
-            (exit)         (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>         <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * "next" finds the meaning of the jo just been pulled out
         i.e. the jo "dup"
@@ -442,10 +467,10 @@
         "next" recognizes that
         it is the last jo in the jojo
         so "next" pops the jojo out of return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (square)
-        - [ (square) ]
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * "next" finds the meaning of the jo just been pulled out
         i.e. the jo "multiple"
@@ -458,8 +483,8 @@
         it is the last jo in the jojo
         so "next" pops the jojo out of return-stack
         the return-stack is empty now
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [  ]
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> [  ]
 <span class="org-block-end-line">        #+end_src
 </span>      * "next" finds the meaning of the jo just been pulled out
         i.e. the jo "square"
@@ -467,24 +492,24 @@
         to help to explain the meaning of the function-jo "square"
         the function body of the jo "square"
         is pushed to return-stack as a new jojo
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [ (dup) ]
-            (multiple)
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-jo">(multiple)</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>   6. "next"
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (dup)
-        - [ (multiple) ]
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(dup)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * argument-stack
         &lt;&lt; 4, 4 &gt;&gt;
    7. "next"
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [  ]
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> [  ]
 <span class="org-block-end-line">        #+end_src
 </span>      * argument-stack
         &lt;&lt; 16 &gt;&gt;
@@ -501,58 +526,58 @@
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> let us do a little review</span>
    1. at the beginning
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [ (square) ]
-            (square)
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-jo">(square)</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * argument-stack
         &lt;&lt; 2 &gt;&gt;
    2. next
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (square)
-        - [ (square) ] - [ (dup) ]
-            (exit)         (multiple)
-                           (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>         <span class="return-stack-jo">(multiple)</span>
+                           <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>   3. next
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (square)       (dup)
-        - [ (square) ] - [ (multiple) ]
-            (exit)         (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>         <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * argument-stack
         &lt;&lt; 2, 2 &gt;&gt;
    4. next
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (square)
-        - [ (square) ]
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * argument-stack &lt;&lt; 4 &gt;&gt;
    5. next
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [ (dup) ]
-            (multiple)
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-jo">(multiple)</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>   6. next
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>            (dup)
-        - [ (multiple) ]
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(dup)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * argument-stack
         &lt;&lt; 4, 4 &gt;&gt;
    7. next
       * return-stack
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [  ]
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> [  ]
 <span class="org-block-end-line">        #+end_src
 </span>      * argument-stack
         &lt;&lt; 16 &gt;&gt;
@@ -797,20 +822,20 @@
          <span class="type">xx</span> exit
 <span class="org-block-end-line">      #+end_src
 </span>   3. return-stack
-<span class="org-block-begin-line">      #+begin_src picture
-</span>                                               (prepare_for)
-                                                 (exception_head)
-                                                 (!exception_1)
-                                                 (!exception_2)
-                                                 (exit)
-                      (prepare_for)            (function_1)
-      - [ pointer ] - [ (exception_head) ] - [ (function_2) ] - [ (!exception_1) ]
-                        (!exception_1)         (exit)             (exit)
-                        (!exception_2)
-                        (exit)
-                      (function_1)
-                      (function_2)
-                      (exit)
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>                                               <span class="return-stack-jo">(prepare_for)</span>
+                                                 <span class="return-stack-jo">(exception_head)</span>
+                                                 <span class="return-stack-jo">(!exception_1)</span>
+                                                 <span class="return-stack-jo">(!exception_2)</span>
+                                                 <span class="return-stack-exit">(exit)</span>
+                      <span class="return-stack-jo">(prepare_for)</span>            <span class="return-stack-jo">(function_1)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">pointer</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exception_head)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(function_2)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(!exception_1)</span> <span class="return-stack-bar-ket">]</span>
+                        <span class="return-stack-jo">(!exception_1)</span>         <span class="return-stack-exit">(exit)</span>             <span class="return-stack-exit">(exit)</span>
+                        <span class="return-stack-jo">(!exception_2)</span>
+                        <span class="return-stack-exit">(exit)</span>
+                      <span class="return-stack-jo">(function_1)</span>
+                      <span class="return-stack-jo">(function_2)</span>
+                      <span class="return-stack-exit">(exit)</span>
 
       the pointer above is into argument-stack
 <span class="org-block-end-line">      #+end_src
@@ -820,10 +845,10 @@
       * and
         to call "next" again
         the return-stack should be change to
-<span class="org-block-begin-line">        #+begin_src picture
-</span>        - [ (fun1) ]
-            (fun2)
-            (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(fun1)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-jo">(fun2)</span>
+            <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> the plan</span>
    * so
@@ -1505,43 +1530,43 @@
       <span class="type">xx</span> exit
 <span class="org-block-end-line">      #+end_src
 </span>   2. return-stack
-<span class="org-block-begin-line">      #+begin_src picture
-</span>      - [ (prepare_for) ]
-            (exception_head)
-            (!exception_1)
-            (!exception_2)
-            (exit)
-          (function_1)
-          (function_2)
-          (exit)
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(prepare_for)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-jo">(exception_head)</span>
+            <span class="return-stack-jo">(!exception_1)</span>
+            <span class="return-stack-jo">(!exception_2)</span>
+            <span class="return-stack-exit">(exit)</span>
+          <span class="return-stack-jo">(function_1)</span>
+          <span class="return-stack-jo">(function_2)</span>
+          <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">      #+end_src
 </span>   3. next
       * this is how the return-stack looks
         right before exception_head is executed
-<span class="org-block-begin-line">        #+begin_src picture
-</span>          (prepare_for)
-        - [ (exception_head) ]
-            (!exception_1)
-            (!exception_2)
-            (exit)
-          (function_1)
-          (function_2)
-          (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>          <span class="return-stack-jo">(prepare_for)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exception_head)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-jo">(!exception_1)</span>
+            <span class="return-stack-jo">(!exception_2)</span>
+            <span class="return-stack-exit">(exit)</span>
+          <span class="return-stack-jo">(function_1)</span>
+          <span class="return-stack-jo">(function_2)</span>
+          <span class="return-stack-exit">(exit)</span>
 <span class="org-block-end-line">        #+end_src
 </span>      * after exception_head is executed
-<span class="org-block-begin-line">        #+begin_src picture
-</span>                                                 (prepare_for)
-                                                   (exception_head)
-                                                   (!exception_1)
-                                                   (!exception_2)
-                        (prepare_for)              (exit)
-        - [ pointer ] - [ (exception_head) ] - [ (function_1) ]
-                          (!exception_1)         (function_2)
-                          (!exception_2)         (exit)
-                          (exit)
-                        (function_1)
-                        (function_2)
-                        (exit)
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>                                                 <span class="return-stack-jo">(prepare_for)</span>
+                                                   <span class="return-stack-jo">(exception_head)</span>
+                                                   <span class="return-stack-jo">(!exception_1)</span>
+                                                   <span class="return-stack-jo">(!exception_2)</span>
+                        <span class="return-stack-jo">(prepare_for)</span>              <span class="return-stack-exit">(exit)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">pointer</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exception_head)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(function_1)</span> <span class="return-stack-bar-ket">]</span>
+                          <span class="return-stack-jo">(!exception_1)</span>         <span class="return-stack-jo">(function_2)</span>
+                          <span class="return-stack-jo">(!exception_2)</span>         <span class="return-stack-exit">(exit)</span>
+                          <span class="return-stack-exit">(exit)</span>
+                        <span class="return-stack-jo">(function_1)</span>
+                        <span class="return-stack-jo">(function_2)</span>
+                        <span class="return-stack-exit">(exit)</span>
 
         the pointer above is into argument-stack
 <span class="org-block-end-line">        #+end_src
@@ -3228,7 +3253,6 @@
       <span class="type">rb</span> size$un_initialized_memory
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* ===================================</span>
-
 </pre>
   </body>
 </html>
