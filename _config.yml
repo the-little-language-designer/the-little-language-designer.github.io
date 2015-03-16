@@ -1,0 +1,21 @@
+title:            the little language designer
+description:      "成爲小小語言設計家 / to be the little language designer ^-^"
+
+host: 0.0.0.0
+port: 4444
+baseurl: ""
+
+url: "http://the-little-language-designer.github.io"
+
+## for locally test
+# url: "http://0.0.0.0:4444"
+
+# Owner/author information
+owner:
+  name:           XIE Yuheng
+  email:          xyheme@gmail.com
+
+timezone:    Asia/Shanghai
+future:      true
+
+exclude: ["makefile", "lib", "config.rb", "Gemfile", "Capfile", "Gemfile.lock", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]

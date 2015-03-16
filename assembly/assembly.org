@@ -1,0 +1,23 @@
+#+TITLE:  匯編 / assembly
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+* 棧
+  * cicada 中使用棧的約定是
+    1. 指針指向 current-free-address
+    2. push 時 指針的值增加
+    3. 兩個棧 兩個指針
+       以實現 參數傳遞 與 函數調用
+  * x86 中使用棧的約定是
+    1. 指針指向 last-pushed-content
+       [這是一種設計失誤 因爲它把空的棧變成了一種特殊情況]
+    2. push 時 指針的值減小
+       [這是一種設計失誤 因爲它徒然與人們的直覺相違背]
+    3. 一個棧 兩個指針
+       以實現 參數傳遞 與 函數調用
+       一個專門用來找到 stack 中的 return-address
+       因爲 return-address 將要被夾在 argument 和 local variable 之間
+       所以 需要一個機制來找打它的位置
+       [這是一種設計失誤 因爲它引入了不必要的技巧]
+    4. http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/
+    5. http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/

@@ -1,20 +1,30 @@
-.ONESHELL:
-
 help:
-	@
-	echo -e " \E[33;1m                                                           \E[0m "
-	echo -e " \E[33;1m   Makefile functions                                      \E[0m "
-	echo -e " \E[33;1m     clean                                                 \E[0m "
-	echo -e " \E[33;1m							     \E[0m "
-	echo -e " \E[33;1m                                                           \E[0m "
-	echo -e " \E[33;1m   please read the Makefile for more informations          \E[0m "
-	echo -e " \E[33;1m							     \E[0m "
-	echo -e " \E[33;1m   I wish you happy making ^_^                             \E[0m "
-	echo -e " \E[33;1m                                                           \E[0m "
+	#
+	# dependencies ::
+	#   bundle, jekyll
+	#
+	#
+	# run   :: use jekyll serve to run it
+	#
+	# clean :: note that, this will also clean up
+	#          backup files that ended by "~"
+	#
+	#
+	#   please read the "makefile" for more informations
+	#   happy making ^_^
+	#
 
-clean*~:
-	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~  */*/*/*/*/*~  
+run:
+	cat _config.yml local.yml > _config-local.yml
+
+	 jekyll serve       \
+	  --config  _config-local.yml  \
+	  --watch                      \
+	  --drafts
 
 clean:
-	make clean*~                                  &&\
-	echo -e "\E[33;1m [ok] clean directory \E[0m"
+	rm -f                  \
+	*~ */*~ */*/*~ */*/*/*~  */*/*/*/*~
+
+kkk:
+	bundle exec
