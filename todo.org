@@ -1,0 +1,7 @@
+#+TITLE:  todo
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.comment
+
+* todo
+** re-design the color of molokai to from a new color theme
+** write the welcome page and use it as the index.html

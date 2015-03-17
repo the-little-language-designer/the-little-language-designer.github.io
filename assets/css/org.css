@@ -1,0 +1,62 @@
+---
+---
+
+{% include font.css %}
+
+body {
+    color: #f8f8f0;
+    background-color: #1b1d1e;
+    font-family: "Envy Code R", "R-PMingLiU-TW";
+}
+
+pre {
+    color: #f8f8f0;
+    background-color: #1b1d1e;
+    font-family: "Envy Code R", "R-PMingLiU-TW";
+}
+
+pre {
+    margin-left: 0.7em;
+}
+
+.one-of-three-button {
+    display: inline-block;
+    cursor: pointer;   
+    width: 31%;
+    border-radius: 0.2em;
+
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+
+    background-color: tomato;
+}
+
+.one-of-three-button:hover {
+    text-decoration: none;
+
+    background-color: #a9b2b9;
+  }
+
+.one-of-three-button[href="overview.html"] {
+  
+}
+.one-of-three-button[href="overview.html"]:hover {
+    background-color: #a94209;
+}
+
+.one-of-three-button[href="contents.html"] {
+  
+}
+.one-of-three-button[href="contents.html"]:hover {
+    background-color: #a64609;
+}
+
+.one-of-three-button[href="show-all.html"] {
+  
+}
+.one-of-three-button[href="show-all.html"]:hover {
+
+}
+
+

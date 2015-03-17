@@ -1,11 +1,10 @@
 ---
 ---
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<!-- Created by orh-1.47 in css mode. -->
 <html>
   <head>
     <title>cicada-nymph.org</title>
-{% include in-org-head.html %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style type="text/css">
     <!--
       body {
@@ -190,6 +189,8 @@
       }
     -->
     </style>
+    
+{% include in-org-head.html %}
   </head>
   <body>
     {% include before-pre.html %}
@@ -197,13 +198,12 @@
 <span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">cicada-nymph
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
-</span> 
+</span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
 <span class="org-level-2">** a version of starting forth</span>
 <span class="org-level-2">** merge the-little-language-designer to the-little-language-designer.github.io</span>
    * use jekyll to do the pages
-   * hach htmlize to org-&gt;html (orh)
-   * note the viewers about the font
+   * hach htmlize to do org-&gt;html
 <span class="org-level-2">** more note about assembler</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
@@ -353,7 +353,18 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
 
-   <span class="preprocessor">include</span> <span class="string">"include/linux-header.inc"</span>
+   <span class="preprocessor">define</span> sys_6_r8  <span class="variable-name">r8</span>
+   <span class="preprocessor">define</span> sys_5_r9  <span class="variable-name">r9</span>
+   <span class="preprocessor">define</span> sys_4_r10 <span class="variable-name">r10</span>
+   <span class="preprocessor">define</span> sys_3_rdx <span class="variable-name">rdx</span>
+   <span class="preprocessor">define</span> sys_2_rsi <span class="variable-name">rsi</span>
+   <span class="preprocessor">define</span> sys_1_rdi <span class="variable-name">rdi</span>
+   <span class="preprocessor">define</span> sys_n_rax <span class="variable-name">rax</span>
+
+   <span class="comment">;; the only three linux syscall we will use
+</span>   <span class="preprocessor">define</span> syscall_read    <span class="constant">0</span>
+   <span class="preprocessor">define</span> syscall_write   <span class="constant">1</span>
+   <span class="preprocessor">define</span> syscall_exit    <span class="constant">60</span>
 
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
@@ -698,7 +709,7 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> windows calling convention for x86-64</span>
-   * <span class="org-link">https://msdn.microsoft.com/en-us/library/ew5tede7%28v=vs.90%29.aspx</span>
+   * <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/ew5tede7%28v=vs.90%29.aspx">microsoft's web</a></span>
    * if you respect the calling convention
      1. your functions will be able to call other functions
         which respect the calling convention

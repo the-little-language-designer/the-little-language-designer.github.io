@@ -1,0 +1,52 @@
+#+TITLE:  font css
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+* 楷
+  #+begin_src css :tangle _includes/font.css
+  @font-face
+  {
+      font-family: "MS-Song";
+      src: url("{{ site.url }}/assets/font/MS-Song/MS-Song.woff") format("woff");
+      font-weight: normal;
+      font-style:  normal;
+  }  
+  #+end_src
+* 宋
+  #+begin_src css :tangle _includes/font.css
+  @font-face
+  {
+      font-family: "R-PMingLiU-TW";
+      src: url("{{ site.url }}/assets/font/臺灣早期印刷字形之細明體/R-PMingLiU-TW.woff") format("woff");
+      font-weight: normal;
+      font-style:  normal;
+  }    
+  #+end_src
+* 黑
+  #+begin_src css :tangle _includes/font.css
+  @font-face
+  {
+      font-family: "MingLan";
+      src: url("{{ site.url }}/assets/font/花明蘭黑6.1/H-MingLan-R.woff") format("woff");
+      font-weight: normal;
+      font-style:  normal;
+  }
+  #+end_src
+* 英
+  #+begin_src css :tangle _includes/font.css
+  @font-face
+  {
+      font-family: "monofur";
+      src: url("{{ site.url }}/assets/font/monofur/monof55.woff") format("woff");
+      font-weight: normal;
+      font-style:  normal;
+  }
+
+  @font-face
+  {
+      font-family: "lmmono10";
+      src: url("{{ site.url }}/assets/font/Latin-Modern-Mono/lmmono10-regular.woff") format("woff");
+      font-weight: normal;
+      font-style:  normal;
+  }
+  #+end_src
