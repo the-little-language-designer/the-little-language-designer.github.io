@@ -1,6 +1,6 @@
 #+TITLE:  welcome css
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.comment
+#+EMAIL:  xyheme@gmail.com
 
 * for template in jekyll
   #+begin_src css :tangle assets/css/welcome.css
@@ -70,94 +70,17 @@
   {% include font.css %}
 
   body {
+      font-size: 16px;
       color: #f8f8f0;
       background-color: #1b1d1e;
       font-family: "Envy Code R", "R-PMingLiU-TW";
   }
   #+end_src
-* primary header
+* simple box
   #+begin_src css :tangle assets/css/welcome.css
-  .logo {
-      border-top: 4px solid #648880;
-      float: left;
-      font-size: 48px;
-      font-weight: 100;
-      letter-spacing: .5px;
-      line-height: 44px;
-      padding: 40px 0 22px 0;
-      text-transform: uppercase;
-  }
-  .tagline {
-      margin: 66px 0 22px 0;
-      text-align: right;
-  }
-  .primary-nav {
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-  }
-  #+end_src
-* primary footer
-  #+begin_src css :tangle assets/css/welcome.css
-  .primary-footer {
-      color: #648880;
-      font-size: 14px;
-      padding-bottom: 44px;
-      padding-top: 44px;
-  }
-  .primary-footer small {
-      float: left;
-      font-weight: 400;
-  }
-  #+end_src
-* link
-  #+begin_src css :tangle assets/css/welcome.css
-  a {
-      color: #648880;
-      text-decoration: none;
-  }
-  a:hover {
-      color: #a9b2b9;
-  }
-  p a {
-      border-bottom: 1px solid #dfe2e5;
-  }
+  /* to use simple box is */
+  /* to set box-sizing to border-box */
 
-  .primary-header a,
-  .primary-footer a {
-      color: #f8f8f0;
-  }
-
-  .primary-header a:hover,
-  .primary-footer a:hover {
-      color: #648880;
-  }
-  #+end_src
-* hero
-  #+begin_src css :tangle assets/css/welcome.css
-  .hero {
-      color: #fff;
-      line-height: 44px;
-      padding: 22px 80px 66px 80px;
-      text-align: center;
-  }
-  .hero h2 {
-      font-size: 36px;
-  }
-  .hero p {
-      font-size: 24px;
-      font-weight: 100;
-  }
-  #+end_src
-* teaser
-  #+begin_src css :tangle assets/css/welcome.css
-  .teaser a:hover h3 {
-      color: #a9b2b9;
-  }
-  #+end_src
-* grid
-  #+begin_src css :tangle assets/css/welcome.css
   ,*,
   ,*:before,
   ,*:after {
@@ -165,35 +88,73 @@
       -moz-box-sizing: border-box;
       box-sizing: border-box;
   }
-  .container,
-  .grid {
-      margin: 0 auto;
-      width: 960px;
+  #+end_src
+* size & color of <h123456> <p>
+  #+begin_src css :tangle assets/css/welcome.css
+  h1, h2, h3, h4 {
+
   }
-  .container {
-      padding-left: 30px;
-      padding-right: 30px;
+  h1, h3, h4, h5, p {
+      margin-bottom: 0.4em;
   }
-  .grid,
-  .col-1-3,
-  .col-2-3 {
-      padding-left: 15px;
-      padding-right: 15px;
+  h1 {
+      font-size: 2rem;
   }
-  .col-1-3,
-  .col-2-3  {
-      display: inline-block;
-      vertical-align: top;
+  h2 {
+      font-size: 1.6rem;
+      color: #616d8d;
+      color: #637d66;
   }
-  .col-1-3 {
-      width: 33.33%;
+  h3 {
+      font-size: 1.3rem;
   }
-  .col-2-3 {
-      width: 66.66%;
+  h4 {
+      font-size: 1.2rem;
+      color: #616d8d;
+      color: #637d66;
+  }
+  h5 {
+      font-size: 1rem;
   }
   #+end_src
-* clearfix
-#+begin_src css :tangle assets/css/welcome.css
+* primary header
+  #+begin_src css :tangle assets/css/welcome.css
+  .logo {
+      float: left;
+      margin-top:      0.2em;
+      margin-bottom:   0.2em;
+      margin-left:     2.8em;
+      margin-right:    2.8em;
+      padding-top:     1em;
+      padding-bottom:  1em;
+      padding-left:    0;
+      padding-right:   0;
+
+      font-size: 34px;
+      color: #f8f8f0;
+      text-align: left;
+
+  }
+
+  .author-mark {
+      float: right;
+      margin-top:    3em;
+      margin-bottom: 3em;
+      margin-left:   0em;
+      margin-right:  4em;
+
+      text-align: right;
+  }
+  #+end_src
+* primary footer
+  #+begin_src css :tangle assets/css/welcome.css
+  .primary-footer {
+      padding-bottom: 2em;
+      padding-top:    2em;
+  }
+  #+end_src
+* >< use group to do clearfix
+  #+begin_src css :tangle assets/css/welcome.css
   .group:before,
   .group:after {
       content: "";
@@ -207,94 +168,70 @@
       ,*zoom: 1;
   }
   #+end_src
-* rows
+* link
   #+begin_src css :tangle assets/css/welcome.css
-  .row,
-  .row-alt {
-      min-width: 960px;
+  a {
+      color: #b7b297;
+      text-decoration: none;
   }
-  .row {
-      background: #fff;
-      padding: 66px 0 44px 0;
-  }
-  .row-alt {
-      background: #cbe2c1;
-      background: -webkit-linear-gradient(to right, #a1d3b0, #f6f1d3);
-      background:    -moz-linear-gradient(to right, #a1d3b0, #f6f1d3);
-      background:         linear-gradient(to right, #a1d3b0, #f6f1d3);
-      padding: 44px 0 22px 0;
+
+  a:hover {
+      color: #f8f8f0;
   }
   #+end_src
-* typography
+* slogan
   #+begin_src css :tangle assets/css/welcome.css
-  h1, h2, h3, h4 {
-      color: #648880;
-  }
-  h1, h3, h4, h5, p {
-      margin-bottom: 22px;
-  }
-  h1 {
-      font-size: 36px;
-      line-height: 44px;
-  }
-  h2 {
-      font-size: 24px;
-      line-height: 44px;
-  }
-  h3 {
-      font-size: 21px;
-  }
-  h4 {
-      font-size: 18px;
-  }
-  h5 {
-      color: #a9b2b9;
-      font-size: 14px;
-      font-weight: 400;
-      text-transform: uppercase;
-  }
-  strong {
-      font-weight: 400;
-  }
-  cite,
-  em {
-      font-style: italic;
-  }
-  #+end_src
-* lead
-  #+begin_src css :tangle assets/css/welcome.css
-  .lead {
+  .slogan {
+      line-height: 1.7em;
+      padding-top:    0.5em;
+      padding-bottom: 2.5em;
+      padding-right:  2em;
+      padding-left:   2em;
       text-align: center;
   }
-  .lead p {
-      font-size: 21px;
-      line-height: 33px;
-  }
   #+end_src
-* button
-  #+begin_src css :tangle assets/css/welcome.css
-  .btn {
-      border-radius: 5px;
-      color: #fff;
-      cursor: pointer;
-      display: inline-block;
-      font-weight: 400;
-      letter-spacing: .5px;
-      margin: 0;
-      text-transform: uppercase;
-  }
-  .btn-alt {
-      border: 1px solid #fff;
-      padding: 10px 30px;
-  }
-  .btn-alt:hover {
-      background: #fff;
-      color: #648880;
-  }
-  #+end_src
-* navigation
-  #+begin_src css :tangle assets/css/welcome.css
-  .nav {
-      text-align: right;
-  }
-  #+end_src
+* article
+** article
+   #+begin_src css :tangle assets/css/welcome.css
+   article {
+       display: block;
+       border-bottom: 0.5em solid #1b1d1e;
+
+       color: #1b1d1e;
+       background-color: #b7b297;
+
+       padding-top:    1em;
+       padding-bottom: 1em;
+       padding-left:   1em;
+       padding-right:  1em;
+   }
+
+   article:hover {
+       background: #f8f8f0;
+   }
+
+   article p {
+       padding-left:   1.5em;
+       padding-right:  1.5em;
+   }
+   #+end_src
+** cicada-nymph
+   #+begin_src css :tangle assets/css/welcome.css
+   #cicada-nymph {
+
+   }
+
+   #cicada-nymph:hover {
+
+   }
+   #+end_src
+** more
+   #+begin_src css :tangle assets/css/welcome.css
+   #more {
+
+   }
+
+   #more:hover {
+
+   }
+   #+end_src

@@ -1,6 +1,6 @@
 #+TITLE:  org css
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.comment
+#+EMAIL:  xyheme@gmail.com
 
 * for template in jekyll
   #+begin_src css :tangle assets/css/org.css
@@ -32,10 +32,10 @@
       margin-left: 0.7em;
   }
   #+end_src
-* one-of-three-button
+* button-1-3
 ** shape and default color
    #+begin_src css :tangle assets/css/org.css
-   .one-of-three-button {
+   .button-1-3 {
        display: inline-block;
        cursor: pointer;
        width: 31%;
@@ -44,37 +44,36 @@
        text-align: center;
        font-weight: bold;
        text-decoration: none;
-
-       background-color: tomato;
    }
 
-   .one-of-three-button:hover {
+   .button-1-3:hover {
        text-decoration: none;
-
-       background-color: #a9b2b9;
      }
    #+end_src
 ** fake <S-lefttab>
    #+begin_src css :tangle assets/css/org.css
-   .one-of-three-button[href="overview.html"] {
-
+   .button-1-3[href="overview.html"] {
+       color: #a64609;
+       background-color: #a6e22e;
    }
-   .one-of-three-button[href="overview.html"]:hover {
-       background-color: #a94209;
-   }
-
-   .one-of-three-button[href="contents.html"] {
-
-   }
-   .one-of-three-button[href="contents.html"]:hover {
-       background-color: #a64609;
+   .button-1-3[href="overview.html"]:hover {
+       background-color: #98fb98;
    }
 
-   .one-of-three-button[href="show-all.html"] {
-
+   .button-1-3[href="contents.html"] {
+       color: #afeeee; 
+       background-color: #fd971f;
    }
-   .one-of-three-button[href="show-all.html"]:hover {
+   .button-1-3[href="contents.html"]:hover {
+       background-color: #ff8888;
+   }
 
+   .button-1-3[href="show-all.html"] {
+       color: #f8f8f0;
+       background-color: #ef5939;
+   }
+   .button-1-3[href="show-all.html"]:hover {
+       background-color: #ffc0cb;
    }
    #+end_src
 * ><

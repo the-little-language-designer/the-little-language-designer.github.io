@@ -189,7 +189,6 @@
       }
     -->
     </style>
-    
 {% include in-org-head.html %}
   </head>
   <body>
@@ -201,9 +200,6 @@
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
 <span class="org-level-2">** a version of starting forth</span>
-<span class="org-level-2">** merge the-little-language-designer to the-little-language-designer.github.io</span>
-   * use jekyll to do the pages
-   * hach htmlize to do org-&gt;html
 <span class="org-level-2">** more note about assembler</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
@@ -4188,8 +4184,8 @@
 </span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">if</span>
     <span class="cicada-nymph-comment">&lt;&lt; string[address, length] --
        address, string[address, length] &gt;&gt;</span>
-    ,*false?branch* save-into,jo-heap
-    ,*current-free-address,jo-heap* xx|swap|x
+    <span class="cicada-nymph-variable">*false?branch*</span> save-into,jo-heap
+    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xx|swap|x
     <span class="cicada-nymph-number">0</span> save-into,jo-heap
     <span class="cicada-nymph-end">end</span>
   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
@@ -4197,12 +4193,12 @@
   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">else</span>
     <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
        address, string[address, length] &gt;&gt;</span>
-    ,*branch* save-into,jo-heap
+    <span class="cicada-nymph-variable">*branch*</span> save-into,jo-heap
     x|swap|xx
-    ,*current-free-address,jo-heap* xxx|swap|x
+    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xxx|swap|x
     <span class="cicada-nymph-number">0</span> save-into,jo-heap
     <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length], address &gt;&gt;</span>
-    ,*current-free-address,jo-heap*
+    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
     over sub <span class="cicada-nymph-variable">*jo-size*</span> div
     swap save
     <span class="cicada-nymph-end">end</span>
@@ -4212,7 +4208,7 @@
     <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
        string[address, length] &gt;&gt;</span>
     x|swap|xx
-    ,*current-free-address,jo-heap*
+    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
     over sub <span class="cicada-nymph-variable">*jo-size*</span> div
     swap save
     <span class="cicada-nymph-end">end</span>

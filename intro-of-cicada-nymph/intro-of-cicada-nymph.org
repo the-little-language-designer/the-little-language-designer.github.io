@@ -1,7 +1,14 @@
-#+TITLE:  中大初犯 / first-commit-in-SYSU
+#+TITLE:  小蟬語引 / intro-of-cicada-nymph
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
+* 綱要
+** 講
+   1. [[../architecture/overview.html][構架]]
+   2. [[../assembly/overview.html][匯編]]
+   3. [[../cicada-nymph/overview.html][小蟬語]]
+** 讀
+   1. [[../syntax-and-semantic/overview.html][語法與語義]]
 * 題解
 ** 小小語言設計家
    * 用匯編語言來實現一個簡單的程序語言的解釋器
@@ -32,13 +39,6 @@
      關於其設計決策有作者的兩篇文章 :
      1. [[http://flatassembler.net/docs.php?article=ufasm][Understanding the flat assembler]]
      2. [[http://flatassembler.net/docs.php?article=design][Design Principles]]
-* 綱要
-** 講
-   1. 構架
-   2. 匯編
-   3. 小蟬語
-** 讀
-   1. 語法與語義
 * 工具
 ** 文本編輯器
    * emacs
