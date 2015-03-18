@@ -2,4 +2,10 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.comment
 
-* todo
+* add copyright and LICENSE
+* add a real footer to index.html
+* add acknowledgement
+* add translation
+* add xieyuheng
+* add poem
+* add cicada
