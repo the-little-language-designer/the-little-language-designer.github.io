@@ -120,11 +120,6 @@ h5 {
     text-align: right;
 }
 
-.primary-footer {
-    padding-bottom: 2em;
-    padding-top:    2em;
-}
-
 .group:before,
 .group:after {
     content: "";
@@ -192,4 +187,13 @@ article p {
 
 #more:hover {
 
+}
+
+.primary-footer {
+    padding-bottom: 2em;
+    padding-top:    2em;
+}
+.primary-footer h5  {
+    padding-left:   5em;
+    padding-right:  5em;      
 }

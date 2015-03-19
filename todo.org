@@ -2,10 +2,9 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.comment
 
-* add copyright and LICENSE
-* add a real footer to index.html
-* add acknowledgement
-* add translation
-* add xieyuheng
-* add poem
-* add cicada
+* write better license
+* write better intro for cicada-language
+* translation
+  * do the translation of dijkstra's
+    on-the-cruelty-of-really-teaching-computing-science
+  * re-format is-god-a-taoist

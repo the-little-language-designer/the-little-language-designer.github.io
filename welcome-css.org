@@ -117,7 +117,7 @@
       font-size: 1rem;
   }
   #+end_src
-* primary header
+* primary-header
   #+begin_src css :tangle assets/css/welcome.css
   .logo {
       float: left;
@@ -144,13 +144,6 @@
       margin-right:  4em;
 
       text-align: right;
-  }
-  #+end_src
-* primary footer
-  #+begin_src css :tangle assets/css/welcome.css
-  .primary-footer {
-      padding-bottom: 2em;
-      padding-top:    2em;
   }
   #+end_src
 * >< use group to do clearfix
@@ -225,6 +218,16 @@
 
    }
    #+end_src
+** cicada-language
+   #+begin_src css :tangle assets/css/welcome.css
+   #cicada-language {
+
+   }
+
+   #cicada-language:hover {
+
+   }
+   #+end_src
 ** more
    #+begin_src css :tangle assets/css/welcome.css
    #more {
@@ -235,3 +238,14 @@
 
    }
    #+end_src
+* primary-footer
+  #+begin_src css :tangle assets/css/welcome.css
+  .primary-footer {
+      padding-bottom: 2em;
+      padding-top:    2em;
+  }
+  .primary-footer h5  {
+      padding-left:   5em;
+      padding-right:  5em;
+  }
+  #+end_src

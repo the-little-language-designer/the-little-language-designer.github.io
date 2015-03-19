@@ -46,6 +46,8 @@
    * linux
 * 尾聲
 ** 開放源代碼運動
+   * [[https://en.wikipedia.org/wiki/Free_software_movement][free software movement]]
+   * [[https://en.wikipedia.org/wiki/Open-source_movement][open source movement]]
 ** hackerspace & makerspace
    * [[http://www.szdiy.org/][深圳 SZDIY]]
    * [[http://www.chaihuo.org/][深圳 柴火]]

@@ -1,0 +1,43 @@
+#+TITLE:  感謝 / acknowledgement
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+* 漢語
+  * 感謝 [[http://www.cs.indiana.edu/~dfried/][Dan Friedman]] 和 [[http://www.ccs.neu.edu/home/matthias/][Matthias Felleisen]]
+    他們用他們的小人書  [[http://www.ccs.neu.edu/home/matthias/BTLS/][the little schemer]]
+    引導我進入了 Scheme 和 函數式編程的世界
+  * 還要感謝  [[http://hemann.pl/][Jason Hemann]] 的熱情 邀請 和 鼓勵
+  * 還要感謝 Richard W.M. Jones
+    因爲我從他的 [[https://github.com/xieyuheng/jonesforth][jonesforth]] 那裏
+    學會了如何用匯編實現一個 類 Forth 語言
+  * 還要感謝 Tomasz Grysztar
+    因爲我使用他的 [[http://flatassembler.net/][fasm]] 彙編器
+  * 還要感謝 鮑鴻然
+    因爲在跟他的討論過程中
+    我們一起設計了 蟬語 的核心中文語法
+  * 還要感謝 中山大學的 卞靜 教授
+    她的鼓勵和幫助
+    使得我有機會在學校講授匯編語言課程
+* English
+  * I would like to thank [[http://www.cs.indiana.edu/~dfried/][Dan Friedman]]
+    and [[http://www.ccs.neu.edu/home/matthias/][Matthias Felleisen]]
+    who introduced me to Scheme
+    and to many of the concepts of functional programming
+    (by their book [[http://www.ccs.neu.edu/home/matthias/BTLS/][the little schemer]])
+    I consider myself as Dan's student
+    even he has never and never will meet me
+  * I would like to thank [[http://hemann.pl/][Jason Hemann]]
+    for his kind invitations and encouragements
+  * I would like to thank Richard W.M. Jones
+    for I learned how to implement a forth-like language
+    from his [[https://github.com/xieyuheng/jonesforth][jonesforth]]
+  * I would like to thank Tomasz Grysztar
+    for his great [[http://flatassembler.net/][fasm]] assembler
+  * I would like to thank BAO Hongran
+    for to design part of
+    the main Chinese syntax of cicada language
+  * I would like to thank Professor BIAN Jing
+    in SUN YAT-SEN university
+    her encouragements and help
+    makes me be able to teach
+    an assembly language course in the university
