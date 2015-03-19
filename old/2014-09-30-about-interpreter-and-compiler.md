@@ -1,11 +1,11 @@
----
+
 layout: post
 title: about interpreter and compiler
 description: "DON'T PANIC"
 imagefeature: "lambda-1.jpg"
 categories:
   - documentations
----
+
 
 when you want to design a new computer programming language,
 all you need to do is just imagine it in your mind.
