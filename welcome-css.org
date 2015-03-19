@@ -70,7 +70,7 @@
   {% include font.css %}
 
   body {
-      font-size: 16px;
+      font-size: 22px;
       color: #f8f8f0;
       background-color: #1b1d1e;
       font-family: "Envy Code R", "R-PMingLiU-TW";
@@ -188,7 +188,8 @@
    #+begin_src css :tangle assets/css/welcome.css
    article {
        display: block;
-       border-bottom: 0.5em solid #1b1d1e;
+       border-top:    0.2em solid #1b1d1e;
+       border-bottom: 0.2em solid #1b1d1e;
 
        color: #1b1d1e;
        background-color: #b7b297;

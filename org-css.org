@@ -15,12 +15,14 @@
   {% include font.css %}
 
   body {
+      font-size: 22px;
       color: #f8f8f0;
       background-color: #1b1d1e;
       font-family: "Envy Code R", "R-PMingLiU-TW";
   }
 
   pre {
+      font-size: 22px;
       color: #f8f8f0;
       background-color: #1b1d1e;
       font-family: "Envy Code R", "R-PMingLiU-TW";
