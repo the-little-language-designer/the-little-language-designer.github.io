@@ -8,4 +8,4 @@
    * [[../translation/dijkstra/on-the-cruelty-of-really-teaching-computing-science/overview.html][on the cruelty of really teaching computing science]]
 * 如是說 / thus-spoke
   * [[../thus-spoke/thus-spoke-galois/overview.html][伽羅瓦如是說 / thus spoke Galois]]
-  * [[../thus-spoke/thus-spoke-p/overview.html][龐加萊如是說 / thus spoke Poincaré]]
+  * [[../thus-spoke/thus-spoke-poincare/overview.html][龐加萊如是說 / thus spoke Poincaré]]
