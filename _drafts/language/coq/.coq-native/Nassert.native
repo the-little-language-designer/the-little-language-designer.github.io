@@ -1,0 +1,58 @@
+open Nativevalues
+open Nativecode
+open Nativelib
+open Nativeconv
+open Declaremods
+let symbols_tbl =
+  get_library_symbols_tbl
+  (str_decode "8495a6be00000009000000020000000600000005a02661737365727440")
+
+(* Time spent generating this code: 0.00000s *)
+let const_Nassert_mult_O_plus' =
+  mk_constant_accu (get_const symbols_tbl 0)
+
+let const_Nassert_plus_rearrange =
+  mk_constant_accu (get_const symbols_tbl 1)
+
+let const_Nassert_plus_swap =
+  mk_constant_accu (get_const symbols_tbl 2)
+
+let const_Nassert_left_mult_step_distribution =
+  mk_constant_accu (get_const symbols_tbl 3)
+
+let const_Nassert_mult_comm =
+  mk_constant_accu (get_const symbols_tbl 4)
+
+let const_Nassert_ble_nat_refl =
+  mk_constant_accu (get_const symbols_tbl 5)
+
+let const_Nassert_zero_nbeq_S =
+  mk_constant_accu (get_const symbols_tbl 6)
+
+let const_Nassert_andb_false_r =
+  mk_constant_accu (get_const symbols_tbl 7)
+
+let const_Nassert_plus_ble_compat_l =
+  mk_constant_accu (get_const symbols_tbl 8)
+
+let const_Nassert_S_nbeq_0 =
+  mk_constant_accu (get_const symbols_tbl 9)
+
+let const_Nassert_mult_1_l =
+  mk_constant_accu (get_const symbols_tbl 10)
+
+let const_Nassert_all3_spec =
+  mk_constant_accu (get_const symbols_tbl 11)
+
+let const_Nassert_mult_plus_distr_r =
+  mk_constant_accu (get_const symbols_tbl 12)
+
+let const_Nassert_mult_assoc =
+  mk_constant_accu (get_const symbols_tbl 13)
+
+let const_Nassert_beq_nat_refl =
+  mk_constant_accu (get_const symbols_tbl 14)
+
+let const_Nassert_plus_swap' =
+  mk_constant_accu (get_const symbols_tbl 15)
+

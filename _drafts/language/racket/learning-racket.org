@@ -1,0 +1,36 @@
+#+TITLE:  learning racket ^-^
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+
+* note
+  * racket -il xrepl
+    is a better repl 
+* module 
+  * provide function
+    
+  #+begin_src scheme   
+  ;; require file
+  (require "file.xxx")
+
+
+  ;; require collect
+  (require setup/dirs)
+
+  (build-path
+   ;; main collection directory
+   (find-collects-dir)
+   "racket")
+  (find-user-collects-dir)
+  (get-collects-search-dirs)
+
+
+  ;; require module
+  (module hi racket
+          (printf "Hello\n"))
+  (require 'hi)
+  ;; later requires do not re-evaluate the module body
+  (require 'hi)
+
+  #+end_src  
+

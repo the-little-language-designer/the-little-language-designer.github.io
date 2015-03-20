@@ -1,0 +1,2 @@
+
+emacs lisp is a very bad designed language.

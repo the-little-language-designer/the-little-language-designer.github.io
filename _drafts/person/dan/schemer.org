@@ -1,0 +1,7082 @@
+#+TITLE:  to be a little schemer
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+
+* TODO
+* the teaching of dan
+  * 耐心
+    恆久的努力
+    認真弄清最簡單的例子
+    勤奮地練習
+  * 快速形成自己的模型[數學模型]來理解所觀察到的事物
+    而不是急着去看他人對這些事物的說明
+    當形成了自己的理解之後在去看他人對這些事物的說明
+    然後在這中交流當中謙虛而勇敢地改正自己的模型
+* *the little schemer*
+* >< recursion
+* 8 lambda the ultimate
+** rember-f
+   #+begin_src scheme
+   (define rember-f
+     (lambda (test?)
+       (lambda (a l)
+         (letrec
+             ([R (lambda (l)
+                   (cond [(null? l) '()]
+                         [(test? (car l) a)
+                          (cdr l)]
+                         [else
+                          (cons (car l)
+                                (R (cdr l)))]
+                         ))])
+           (R l)))))
+
+   ((rember-f eq?)  1 '(11 1 1 1))
+
+
+   (rember-f eq?)
+   ==
+   ((lambda (test?)
+      (lambda (a l)
+        (letrec
+            ([R (lambda (l)
+                  (cond [(null? l) '()]
+                        [(test? (car l) a)
+                         (cdr l)]
+                        [else
+                         (cons (car l)
+                               (R (cdr l)))]
+                        ))])
+          (R l))))
+    eq?)
+   ==
+   (lambda (a l)
+     (letrec
+         ([R (lambda (l)
+               (cond [(null? l) '()]
+                     [(eq? (car l) a)
+                      (cdr l)]
+                     [else
+                      (cons (car l)
+                            (R (cdr l)))]
+                     ))])
+       (R l)))
+
+   ((rember-f eq?) 1 '(11 1 1 1))
+   ==
+   ((lambda (a l)
+      (letrec
+          ([R (lambda (l)
+                (cond [(null? l) '()]
+                      [(eq? (car l) a)
+                       (cdr l)]
+                      [else
+                       (cons (car l)
+                             (R (cdr l)))]
+                      ))])
+        (R l)))
+    1 '(2 1 3))
+   ==
+   list :== '() |
+
+
+
+   (letrec
+       ([R (lambda (l)
+             (cond [(null? l) '()]
+                   [(eq? (car l) a)
+                    (cdr l)]
+                   [else
+                    (cons (car l)
+                          (R (cdr l)))]
+                   ))])
+     (R l))
+
+
+   #+end_src
+** insert-g
+   #+begin_src scheme
+   (define insert-g
+     (lambda (test?)
+       (lambda (g)
+         (lambda (new old l)
+           (letrec
+               ([I (lambda (l)
+                     (cond
+                      [(null? l) '()]
+                      [(test? (car l) old)
+                       (g new old (cdr l))]
+                      [else
+                       (cons (car l)
+                             (I (cdr l)))]))])
+             (I l))))))
+   (define seqL
+     (lambda (new old l)
+       (cons new (cons old l))))
+   (define seqR
+     (lambda (new old l)
+       (cons old (cons new l))))
+   (define seqS
+     (lambda (new old l)
+       (cons new l)))
+   (define seqrem
+     (lambda (new old l)
+       l))
+   (((insert-g eq?) seqR) 'k 2 '(1 2 3))
+   (((insert-g eq?) seqL) 'k 2 '(1 2 3))
+   (((insert-g eq?) seqS) 'k 2 '(1 2 3))
+   (((insert-g eq?) seqrem) 'k 2 '(1 2 3))
+   #+end_src
+   abstract common patterns with a new function
+** >< multirember&co
+   #+begin_src scheme
+   (define multiinsertLR&co
+     (lambda (new oldL oldR lat col) ;;col denote collector
+       (cond [(null? lat)
+              (col '() 0 0)]
+             [(eq? (car lat) oldL)
+              (multiinsertLR&co new oldL oldR
+                                (cdr lat)
+                                (lambda (newlat L R)
+                                  (col (cons new (cons oldL newlat))
+                                       (add1 L)
+                                       R)))]
+             [(eq? (car lat) oldR)
+              (multiinsertLR&co new oldL oldR
+                                (cdr lat)
+                                (lambda (newlat L R)
+                                  (col (cons oldR (cons new newlat))
+                                       L
+                                       (add1 R))))]
+             [else
+              (multiinsertLR&co new oldL oldR
+                                (cdr lat)
+                                (lambda (newlat L R)
+                                  (col (cons (car lat) newlat)
+                                       L
+                                       R)))]
+             )))
+
+
+   ;; test:
+   (multiinsertLR&co 'k '<l 'r> '(<l r> <l r>)
+                     (lambda (newlat L R)
+                       newlat))
+   #+end_src
+* 9 ... and again, and again, and again, ... (Ycombinator)
+** partial function
+   指這樣的遞歸函數（考慮遞歸函數的工作方式）
+   對一部分輸入值它會在有限次層展開後停止
+   而對其他部分的輸入值 遞歸函數就這些值而展開時 不會停止
+   （相反的術語是：total function）
+   + 在明確地定義拓撲結構之前
+     儘量避免使用拓撲學術語 去討論類似收斂性的性質
+   ``the recursion step gives the value in terms of
+   the value of the procedure applied to a different argument
+   in order for the recursion to terminate
+   the different argument must be
+   closer to the base argument in some way''
+   --kent dybvig
+
+   想用遞歸的方式來實現某個函數(procedure)
+   如果能找到某個對輸入值的某一方面的度量（用自然數）
+   使這一度量隨着遞歸函數展開的層次的深入而嚴格遞減
+   那麼就能保證這個遞歸函數是一個total function
+** inperfectness, bad and eternity
+   假設有一個探究函數性質的謂詞名叫will-stop?
+   它能判斷一個函數是否是total的
+   往證這樣的謂詞的存在性將導出矛盾
+   首先作簡化 不妨假設它判斷的是作用於'()的函數
+   考慮它作用於函數bad的值 即考慮bad作用於'()是否會停止
+   就展示了不協調性 即矛盾
+   #+begin_src scheme
+   (define bad
+     (lambda (x)
+       (and (will-stop? bad)
+            (eternity x))))
+   (define eternity
+     (lambda (x)
+       (eternity x)))
+   #+end_src
+** Y
+*** lambda表達式的作用：
+    通常只有當我命名一個非遞歸函數後
+    我才能呼喚它讓它作用於自變量
+    而lambda表達式使得我可以換直接寫出一個非遞歸函數
+    然後指示它讓它作用於自變量 而不用給函數命名
+*** Ycombinator的作用：
+    可是代碼對於遞歸函數的描述是表面上的循環定義
+    需要命名函數後才能在定義中循環呼喚它
+    爲了不給函數命名而可以直接使用它 人們必須另想辦法
+    辦法之一就是使用Ycombinator
+    一個可以描述遞歸函數作用的λ-term
+*** 下面這一段總結自sicp：
+**** 遞歸函數的看似循環的定義 可以被看作由函數方程確定函數
+     通常人們說循環定義是錯誤的
+     然而其實人們經常把一個方程變形爲等價的迭代方程
+     這個迭代方程就是循環定義的 但它並不是錯誤的 而是有精確語義的
+     人們對方程作這樣變形 就是爲了解原方程 或者近似地解原方程
+     sicp中通過反過來考慮而把循環定義理解爲方程
+     使得一個人首先在觀念上不再排斥循環定義
+
+     任意一個方程的一個未知元
+     都可以看作一個約束變元
+     而一個慣例是用這個變元來命名方程的解
+
+     在一個遞歸函數的定義（一個方程）中 用define命名函數時使用的名稱
+     可以看作一個約束變元
+     只不過之後把所求得的遞歸函數存入了這個名稱所對應的存儲空間
+**** Ycombinator是以遞歸函數爲不動點的算子
+     >< 有了λ-cal的知識之後就發現我在這部分說的很多內容並不正確
+     >< 但是作爲一個求解Y的heuristic 這些文本還是有很大意義的
+     可以說它把上面的函數方程解了出來
+     即把函數方程的解用函數顯式表示出來
+     這個解甚至可以在scheme的解釋器中進行計算
+     + 這裏體現了人們對函數的追求 或者更本質地說 是對計算的追求
+       因爲儘管函數並不總是能用顯式計算
+       或更進一步 高效地用顯式計算
+       但是一個關係是函數關係可能暗示着這個關係的宜計算性
+     + 這裏“不動點”是一個拓撲學術語 精確的討論需要明確一個拓撲結構
+       並且考慮算子的收斂性 不動點的存在性與唯一性 等等
+     用例子來解釋如下：
+     #+begin_src scheme
+     (define ^
+       (lambda (x n)
+         (cond ((= n 0)
+                1)
+               (else
+                (* x (^ x (- n 1)))))))
+     (define F
+       (lambda (g)
+         (lambda (x n)
+           (cond ((= n 0)
+                  1)
+                 (else
+                  (* x (g x (- n 1))))))))
+     #+end_src
+     把^變爲F
+     而F可以被Y作用而得到^
+     + 可以這樣來理解：
+       F中g的第二次出現標出了^的位置
+       而g的第一次出現表明這個位置就是被循環調用的位置
+     有限次迭代F就發現
+     對於任意起始函數g
+     F的N次迭代對於所有x和小於N的n與^有相同的值
+     所以如果用一個可以作無窮循環的函數來迭代F就可以生成^
+     考慮下面的獲得無限循環的方式：
+     #+begin_src scheme
+     ((lambda (x) (x x)) (lambda (x) (x x)))
+     (define Y
+       (lambda (f)
+         ((lambda (x) (f (x x)))
+          (lambda (x) (f (x x))))))
+     #+end_src
+     (Y F)=(F (Y F))
+     Y爲函數空間中的算子
+     但是這個函數沒法被實際調用 因爲它的遞歸層次的加深不會停止
+     要想寫出可以被實際調用的Y就需要很好地理解解釋器的解釋方式
+*** 回到the little schemer
+    目的是寫出一個可以在scheme中被實際調用的Ycombinator
+    (首先要弄清解釋器的行爲方式)
+    下面用兩個平行的例子來作說明
+    其中第一個很容易在我寫的解釋器中被求值
+    而要對第二個求值就需要先給我寫的解釋器增加關於數值計算的內建函數
+**** 用define定義一個遞歸函數（用set!定義的也是一樣）
+     #+begin_src scheme
+     (define length
+       (lambda (l)
+         (cond ((null? l)
+                0)
+               (else
+                (add1 (length (cdr l)))))))
+     (define ^
+       (lambda (x n)
+         (cond ((= n 0)
+                1)
+               (else
+                (* x (^ x (- n 1)))))))
+     #+end_src
+     下面我們的目標就是不用define來定義遞歸函數
+**** 有限層遞歸函數
+     對於小的參數給出的結果與遞歸函數給出的結果相同
+     *每增加一層都要把函數的定義重新寫一遍*
+     #+begin_src scheme
+     ;length0
+     (lambda (l)
+       (cond ((null? l)
+              0)
+             (else
+              (add1 (eternity (cdr l))))))
+     ;length1
+     (lambda (l)
+       (cond
+        ((null? l)
+         0)
+        (else
+         (add1 ((lambda (l)
+                  (cond
+                 ((null? l)
+                  0)
+                 (else
+                  (add1 (eternity (cdr l))))))
+                (cdr l))))))
+     ;length2
+     (lambda (l)
+       (cond
+        ((null? l)
+         0)
+        (else
+         (add1 ((lambda (l)
+                  (cond
+                   ((null? l)
+                    0)
+                   (else
+                    (add1 ((lambda (l)
+                             (cond
+                              ((null? l)
+                               0)
+                              (else
+                               (add1 (eternity (cdr l))))))
+                           (cdr l))))))
+                (cdr l))))))
+
+     ;^0
+     (lambda (x n)
+       (cond ((= n 0)
+              1)
+             (else
+              (* x (whatever x (- n 1))))))
+     ;^1
+     (lambda (x n)
+       (cond ((= n 0)
+              1)
+             (else
+              (* x ((lambda (x n)
+                      (cond ((= n 0)
+                             1)
+                            (else
+                             (* x (whatever x (- n 1))))))
+                    x (- n 1))))))
+     ;^2
+     (lambda (x n)
+       (cond ((= n 0)
+              1)
+             (else
+              (* x ((lambda (x n)
+                      (cond ((= n 0)
+                             1)
+                            (else
+                             (* x ((lambda (x n)
+                                     (cond ((= n 0)
+                                            1)
+                                           (else
+                                            (* x (whatever x (- n 1))))))
+                                   x (- n 1))))))
+                    x (- n 1))))))
+     #+end_src
+**** 用算子L的迭代來寫有限層遞歸函數
+     算子指 以procedure爲參數 以procedure爲值 的procedure
+     *每增加一層都要多寫一個L*
+     #+begin_src scheme
+     ;length0
+     ((lambda (length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 (length (cdr l)))))))
+      eternity)
+     ;length1
+     ((lambda (length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 (length (cdr l)))))))
+      ((lambda (length)
+         (lambda (l)
+           (cond ((null? l)
+                  0)
+                 (else
+                  (add1 (length (cdr l)))))))
+       eternity))
+     ;length2
+     ((lambda (length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 (length (cdr l)))))))
+      ((lambda (length)
+         (lambda (l)
+           (cond ((null? l)
+                  0)
+                 (else
+                  (add1 (length (cdr l)))))))
+       ((lambda (length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 (length (cdr l)))))))
+        eternity)))
+
+     ;^0
+     ((lambda (g)
+        (lambda (x n)
+          (cond ((= n 0)
+                 1)
+                (else
+                 (* x (g x (- n 1)))))))
+      eternity)
+     ;^1
+     ((lambda (g)
+        (lambda (x n)
+          (cond ((= n 0)
+                 1)
+                (else
+                 (* x (g x (- n 1)))))))
+      ((lambda (g)
+        (lambda (x n)
+          (cond ((= n 0)
+                 1)
+                (else
+                 (* x (g x (- n 1)))))))
+       eternity))
+     ;^2
+     ((lambda (g)
+        (lambda (x n)
+          (cond ((= n 0)
+                 1)
+                (else
+                 (* x (g x (- n 1)))))))
+      ((lambda (g)
+         (lambda (x n)
+          (cond ((= n 0)
+                 1)
+                (else
+                 (* x (g x (- n 1)))))))
+       ((lambda (g)
+          (lambda (x n)
+            (cond ((= n 0)
+                   1)
+                  (else
+                   (* x (g x (- n 1)))))))
+        eternity)))
+     #+end_src
+**** 用作用於算子L的procedure 來迭代算子L 以得到有限層遞歸函數
+     *每增加一層都要重新寫一個用作用於算子L的procedure*
+     #+begin_src scheme
+     ;length0
+     ((lambda (mk-length)
+        (mk-length eternity))
+      (lambda (length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 (length (cdr l))))))))
+     ;length1
+     ((lambda (mk-length)
+        (mk-length
+         (mk-length eternity)))
+      (lambda (length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 (length (cdr l))))))))
+     ;length2
+     ((lambda (mk-length)
+        (mk-length
+         (mk-length
+          (mk-length eternity))))
+      (lambda (length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 (length (cdr l))))))))
+     ;^0
+     ((lambda (mk^)
+        (mk^ eternity))
+      (lambda (x n)
+        (cond ((= n 0)
+               1)
+              (else
+               (* x (g x (- n 1)))))))
+     ;^1
+     ((lambda (mk^)
+        (mk^
+         (mk^ eternity)))
+      (lambda (x n)
+        (cond ((= n 0)
+               1)
+              (else
+               (* x (g x (- n 1)))))))
+     ;^2
+     ((lambda (mk^)
+        (mk^
+         (mk^
+          (mk^ eternity))))
+      (lambda (x n)
+        (cond ((= n 0)
+               1)
+              (else
+               (* x (g x (- n 1)))))))
+     #+end_src
+**** ``all names are equal, but some names are more equal than others.''
+     更換命名後
+     下面這個還可以作爲length0
+     #+begin_src scheme
+     ((lambda (mk-length)
+        (mk-length mk-length))
+      (lambda (mk-length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 (mk-length (cdr l))))))))
+     (define length0
+       ((lambda (mk-length)
+          (mk-length mk-length))
+        (lambda (mk-length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 (mk-length (cdr l)))))))))
+     (length0 '())
+     (length0 '(1))
+     #+end_src
+     下面這個也可以作爲length1
+     並且我們知道對於長度大於1的l
+     (eternity eternity)會被求值 然後作用於(cddr l) 然後被add1作用
+     所以我就可以使得(eternity eternity)被求值的時候跳出來和我玩
+     #+begin_src scheme
+     ((lambda (mk-length)
+        (mk-length mk-length))
+      (lambda (mk-length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 ((mk-length eternity) (cdr l))))))))
+     (define length1
+       ((lambda (mk-length)
+          (mk-length mk-length))
+        (lambda (mk-length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 ((mk-length eternity) (cdr l)))))))))
+     (define eternity)
+     (define i-want-to-play-with-length1
+       (lambda ()
+         ((lambda (k)
+            (cond ((string? k)
+                   (begin
+                     (display k)
+                     (newline)))
+                  ((procedure? k)
+                   (begin (display "笨length1~~~")
+                          (newline)
+                          (display "碰到了長度超過1的list他就處理不了了！")
+                          (newline)))
+                  (else
+                   (begin (display "nothing-else")
+                          (newline)))))
+          (letcc play-with-me
+                 (set! eternity play-with-me)
+                 "ready to play with length1, haha."))))
+     (i-want-to-play-with-length1)
+     (eternity '())
+     (length1 '())
+     (length1 '(1))
+     (length1 '(1 2))
+     #+end_src
+**** ``all names are equal, but some names are more equal than others.''
+     *最後終於得到了遞歸函數length*
+     #+begin_src scheme
+     ((lambda (mk-length)
+        (mk-length mk-length))
+      (lambda (mk-length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 ((mk-length mk-length) (cdr l))))))))
+     (define length
+       ((lambda (mk-length)
+          (mk-length mk-length))
+        (lambda (mk-length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 ((mk-length mk-length) (cdr l)))))))))
+     (length '(1 2 3 4 5 6 7 8 9 10))
+     #+end_src
+     這是
+     L*是L的變形 這個變形在於把L的recursion從L變爲(L L)
+     記這個變形的結果爲L*
+     L*就是我們所向往的東西 它作用於自身就得到遞歸函數
+     (L* L*)就是length
+     (lambda (mk-length) (mk-length mk-length))只是簡單地作用於L*而得到(L* L*)而已
+     而(L* L*)會給出一個closure
+     稱爲<closure-of-length>
+     *這個就是遞歸函數length*
+     當傳入參數l的是非空list而需要遞歸時
+     在recursion位置 就會用(L* L*)再造出一個<closure-of-length>
+     而傳入這個<closure-of-length>的參數就是(car l)的值了
+     + 下一節想要提取出L時所犯的錯誤強調了下面這一點：
+       必須是當需要遞歸時才用(L* L*)造出一個<closure-of-length>
+       這個特性是可以實現的
+       從下面的表格中可以看到
+       當<closure-of-length> action時
+       <body>就在擴展後的<environment>下用meaning問自己存在的意義是什麼
+       然後如果不需要遞歸
+       <closure-of-L*>就安安靜靜的呆在名字<environment>中mk-length的後面
+     #+begin_src scheme
+     ------------------------------------------------
+     <closure-of-length>
+     ------------------------------------------------
+     <environment>
+     (((mk-length) (<closure-of-L*>))
+      ...)
+     <formals>
+     (l)
+     <body>
+     (cond ((null? l)
+            0)
+           (else
+            (add1 ((mk-length mk-length) (cdr l)))))
+     -------------------------------------------------
+     -------------------------------------------------
+     <closure-of-L*>
+     -------------------------------------------------
+     <environment>
+     (...)
+     <formals>
+     (mk-length)
+     <body>
+     (lambda (l)
+       (cond ((null? l)
+              0)
+             (else
+              (add1 ((mk-length mk-length) (cdr l))))))
+     --------------------------------------------------
+     #+end_src
+**** to extract a value and give it a name
+     for to get back the function that looks like length
+***** 可怕的錯誤
+      現在既然已經知道該如何得到遞歸函數length了
+      那麼就該考慮如何得到這個能得到遞歸函數length的表達式了
+      即 想要求一個procedure 稱爲Y
+      它作用於L會得到遞歸函數length
+      並且這個L可以是其他類似於L的用來定義單變量遞歸函數的算子
+      首先應該讓上面的可以得到遞歸函數length的表達式中出現算子L
+      換一種問法
+      如何從L得到L*呢？
+      + 注意 因爲是被(lambda (mk-length) (mk-length mk-length))作用
+        所以下面L*的參數mk-length所接受的值將總是L*本身
+      + 可以發現雖然let是語義清晰的語法糖
+        但是卻不能完成把L提取出來的任務
+        所以還是得回到lambda表達式
+      只要把L*中的(mk-length mk-length)部分
+      當作是從L的recursion位置的length代換而來的就行了嗎？
+      把(mk-length mk-length)的值傳入L的參數就行了嗎？
+      這就犯了一個可怕的讓機器崩潰的錯誤！！！
+      + 因爲(mk-length mk-length)的值必須要等到需要遞歸調用的時候再求才行
+        否則就沒完沒了陷入了循環
+        因爲在求值(mk-length mk-length)對l的作用的時候
+        首先要求值(mk-length mk-length)
+        而求值(mk-length mk-length)的時候
+        馬上就需要求值同樣的(mk-length mk-length)
+        ><遺失的show函數是不是可以探測這種循環？
+      *千萬不要執行下面的代碼塊中的任何表達式*
+      >< org-babel如何限制可執行性呢？
+      #+begin_src scheme
+      (lambda (mk-length)
+         (lambda (l)
+           (cond ((null? l)
+                  0)
+                 (else
+                  (add1 ((mk-length mk-length) (cdr l)))))))
+      =/={這裏上下兩個表示是不相等的 上面的是對的 下面的是錯的}
+      (lambda (mk-length)
+       (let ((length (mk-length mk-length)))
+         (cond ((null? l)
+                0)
+               (else
+                (add1 (length (cdr l)))))))
+      ==
+      (lambda (mk-length)
+        ((lambda (length)
+           (lambda (l)
+             (cond ((null? l)
+                    0)
+                   (else
+                    (add1 (length (cdr l)))))))
+         (mk-length mk-length)))
+
+      錯的length：
+      ((lambda (mk-length)
+         (mk-length mk-length))
+       (lambda (mk-length)
+         ((lambda (length)
+            (lambda (l)
+              (cond ((null? l)
+                     0)
+                    (else
+                     (add1 (length (cdr l)))))))
+          (mk-length mk-length))))
+
+      錯的length：
+      ((lambda (mk-length)
+         (mk-length mk-length))
+       (lambda (mk-length)
+         (L (mk-length mk-length))))
+      (define L
+        (lambda (length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 (length (cdr l))))))))
+
+      這樣寫出來的錯的Y如下：
+      (define Y
+        (lambda (F)
+          ((lambda (f) (f f))
+           (lambda (f) (F (f f))))))
+      #+end_src
+***** 正確的東西
+      那麼 如何正確地從L得到L*呢？
+      只要把(mk-length mk-length)放到lambda表達式中保護起來如下
+      (lambda (x) ((mk-length mk-length) x))
+      然後再傳入L的參數length
+      傳入時lambda表達式會被求值成爲closure
+      這樣((mk-length mk-length) x)作爲closure的body只有被調用的時候纔會被求值
+      下面的代碼塊中
+      第1個等號表示等號下面的東西與L*的效果相同（仍然稱之爲L*）
+      第2個等號表示等號上面的東西是等號下面的東西的語法糖
+      之後的東西就是把Y寫出來的簡單過程
+      + 雖然我的目的好像是不使用define
+        但是爲了清晰性我還是定義出L來
+      #+begin_src scheme
+      ;L*
+      (lambda (mk-length)
+        (lambda (l)
+          (cond ((null? l)
+                 0)
+                (else
+                 (add1 ((mk-length mk-length) (cdr l)))))))
+      ;==
+      (lambda (mk-length)
+        (let ((length (lambda (x) ((mk-length mk-length) x))))
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 (length (cdr l))))))))
+      ;==
+      (lambda (mk-length)
+        ((lambda (length)
+           (lambda (l)
+             (cond ((null? l)
+                    0)
+                   (else
+                    (add1 (length (cdr l)))))))
+         (lambda (x) ((mk-length mk-length) x))))
+      ;----------------------------------------------
+      ;this is length
+      ((lambda (mk-length)
+         (mk-length mk-length))
+       (lambda (mk-length)
+         ((lambda (length)
+            (lambda (l)
+              (cond ((null? l)
+                     0)
+                    (else
+                     (add1 (length (cdr l)))))))
+          (lambda (x) ((mk-length mk-length) x)))))
+      ;----------------------------------------------
+      ;this is length
+      ((lambda (mk-length)
+         (lambda (l)
+           (cond ((null? l)
+                  0)
+                 (else
+                  (add1 ((mk-length mk-length) (cdr l)))))))
+       (lambda (mk-length)
+         (lambda (l)
+           (cond ((null? l)
+                  0)
+                 (else
+                  (add1 ((mk-length mk-length) (cdr l))))))))
+      ;don't believe me?
+      (((lambda (mk-length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 ((mk-length mk-length) (cdr l)))))))
+        (lambda (mk-length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 ((mk-length mk-length) (cdr l))))))))
+       '(1 2 3 4 5 6 7 8 9 10))
+      ;----------------------------------------------
+      (define L
+        (lambda (length)
+          (lambda (l)
+            (cond ((null? l)
+                   0)
+                  (else
+                   (add1 (length (cdr l))))))))
+      ((lambda (mk-length)
+         (mk-length mk-length))
+       (lambda (mk-length)
+         (L
+          (lambda (x) ((mk-length mk-length) x)))))
+      ;---------------------------------------------
+      ;most clear version
+      (define Y
+        (lambda (F)
+          (let ((F* (Y-help F)))
+            (F* F*))))
+      (define Y-help
+        (lambda (F)
+          (lambda (F*)
+            (F (lambda (x) ((F* F*) x))))))
+      ;---------------------------------------------
+      (define Y
+        (lambda (F)
+          ((lambda (F*) (F (lambda (x) ((F* F*) x))))
+           (lambda (F*) (F (lambda (x) ((F* F*) x)))))))
+      (define Y
+        (lambda (F)
+          (let ((F* (lambda (F*) (F (lambda (x) ((F* F*) x))))))
+            (F* F*))))
+      ;---------------------------------------------
+      ;most simple version
+      (define Y
+        (lambda (F)
+          ((lambda (F*) (F* F*))
+           (lambda (F*) (F (lambda (x) ((F* F*) x)))))))
+      ;---------------------------------------------
+      (define length
+
+        (Y (lambda (length)
+             (lambda (l)
+               (cond ((null? l)
+                      0)
+                     (else
+                      (add1 (length (cdr l))))))))
+
+
+        )
+      (length '(1 2 3 4 5 6 7 8 9 10))
+
+
+      ((Y (lambda (length)
+            (lambda (l)
+              (cond ((null? l)
+                     0)
+                    (else
+                     (add1 (length (cdr l))))))))
+
+       '(1 2 3 4 5 6 7 8 9 10))
+      #+end_src
+* 10 what is the value of all this? (interpreter)
+** note
+   徹底弄清某些東西的最好方法就是實現它們
+   因爲當一個人解釋一個被他實現了的東西 而不說明他是如何實現它的時候
+   他是在蒙着你的眼睛給你描述一幅畫
+
+   這裏“寫出一個scheme解釋器”是指寫出一個value函數
+   在元解釋器中以如下方式調用value函數：（合法輸入記爲<sexp>）
+   > (value '<sexp>)
+   1. 因爲對於不同<sexp>函數value有不同的作用方式
+      所以需要分類 再按類型求值
+      理想的處理是讓分類方式清晰地表達出這種作用方式上的不同
+   2. 觀念上 需要嚴格區分解釋前的<sexp>與解釋後的<sexp>
+      即作爲輸入的<sexp>與作爲輸出的<sexp>
+   3. 爲了能夠在元解釋器中遞歸地處理<sexp>
+      首先需要分爲<atom>與<list>兩類
+      + 因爲我的解釋器中的<sexp>
+        對元解釋器來說是<*sexp*>
+        遞歸地在元解釋器中處理<*sexp*>要遵從前面的誡律
+      並且要區分<list>是否是null
+      還有<list>的car是否是<atom>
+      同時這些也區分了value的作用方式
+      而之後的更細的分類更是按value的作用方式的分類
+      + 因此這裏的<atom>指元解釋器中的謂詞``atom?''下的東西
+        而我的解釋器中的謂詞``atom?''
+        需要用元解釋器中的謂詞``:atom?''來特殊處理
+   ``it is necessary for a scheme implementation to distinguish
+   between core forms and syntactic extensions
+   a scheme implementation expands syntactic extensions into core forms
+   as the first step of compilation or interpretation
+   allowing the rest of the compiler or interpreter
+   to focus only on the core forms''
+   --kent dybvig
+   #+name: <<分類>>
+   #+begin_src scheme
+   <sexp> ::= <atom> | <list>
+
+     <atom> ::= <const> | <identifer>
+       <const> ::= <name-of-primitive-procedure> | <*number*> | <*bool*>
+
+     <list> ::= () | (<head-sexp> <sexp> ...)
+       <head-sexp> ::= <atom-head-sexp> | <list-head-sexp>
+         <list-head-sexp> ::= <lambda-exp>
+          :此時原list被解釋爲non-primitive-procedure的action
+         <atom-head-sexp> ::= <name-of-primitive-procedure>
+                               :此時原list被解釋爲primitive-procedure的action
+                              | quote
+                               :此時原list屬於數據類型 <*sexp*>
+                              | lambda
+                               :此時原list是一個lambda-exp
+                              | cond
+                               :此時原list是一個控制結構
+
+   note:
+   1. 這個代碼塊的使用只是爲了語法高亮
+   2. ``::=''符號用來表示歸納定義
+   3. ``<sexp> ...''的出現代表這裏可以出現零個或一個或多個<sexp>
+   4. 在分類的末端
+      我用符號``:''來對語義作簡單的說明
+   5. 在分類的末端
+      我用符號<*...*>來記那些在我的解釋中代表一類獨立的數據結構的東西
+      它們會被我的解釋器中的atom?判斷爲真
+      它們目前有：
+      <*number*> <*bool*> <*sexp*>
+      <*procedure*> == <*primitive*> | <*non-primitive*>
+      <*non-primitive*> == <*closure*>
+      數據結構指能夠以特定的方式存儲在內存的東西
+      當然對於我寫的解釋器來說內存是想象出來的
+      <var> 與 <obj>的綁定是在table中實現的
+      而table是元解釋器中的一個list
+   6. 術語``action''與``application''等同
+      但是更接近數學
+   7. 書中原來的解釋器不處理'()
+      對'()的處理是我加的
+      我想在讀第18章的時候人們可以體會到書中不處理'()的原因
+   #+end_src
+*** little change
+    1. use `myapply' to rename `apply'
+    2. add *null
+    3. change a way of [[*identifer and notfound][error report]]
+*** important terms
+    1. 我寫的解釋器直接被稱作“我寫的解釋器”
+       （當然這其實是Friedman寫的解釋器）
+       其中的符號表達式記爲<sexp>
+    2. 我寫的解釋器所嵌入的解釋器被稱作“元解釋器”
+       其中的符號表達式記爲sexp
+*** typesetting
+    1. 需要被引用的代碼塊會被加上標題
+** lexical scope, entry and table of environment
+   ``the scope of a binding is the block
+   in which the bound identifier is visible
+   minus any portions of the block
+   in which the identifier is shadowed''
+
+   ``a variable that occurs free in a lambda expression
+   should always be bound
+   otherwise when the procedure is apply
+   there will be an error about the unbound variable''
+
+   ``to support lexical scoping
+   a procedure carries the lexical context (environment)
+   along with its code''
+
+   ``so that
+   when the procedure is applied somewhere outside the scope
+   of the bindings for variables that occur free within the procedure
+   the same bindings
+   that were in effect when the procedure was created
+   are in effect again when the procedure is applied''
+
+   --kent dybvig
+
+   lambda表達式 表達procedure語義 在解釋器中會被轉化爲closure
+   closure會把當時的environment包入其內
+   每次closure的action會用<arg>s與<val>s組成的new-entry擴展environment
+   然後在擴展的environment中apply
+   apply時 不是這個procedure的參數的<arg>s 與 是這個procedure的參數的<arg>s
+   都以一致的方式 由內層到外層地 在table的entry中查找它們的<val>s
+   這種方式就是*identifer
+
+   entry是用來記錄一組names與一組values之間的命名關係的數據結構
+   考慮怎樣一個樹適合用來完成這個任務就明白entry的構造了
+   即一個names的list和一個同等長度的values的list作成的pair
+   + pair這個術語被濫用了
+     這裏指只含有兩個元素的list
+     其他地方又指形如(A . B)的東西
+   #+begin_src scheme
+   (define new-entry
+     (lambda (a b)
+       (cons a (cons b '()))))
+   (define first
+     (lambda (l)
+       (car l)))
+   (define second
+     (lambda (l)
+       (cadr l)))
+   #+end_src
+
+   lookup-in-entry是*identifer類型的作用的實現方式
+   + 當在entry中找不到name時返回(entry-f name) ``f'' denote function
+     考慮下面的environment數據結構就知道
+     當在一個entry中找不到name時不把這個name扔掉
+     是因爲還要在environment中的下一個entry中找name
+   + 先把entry中的names與values拆開 然後交給輔助函數處理
+   #+begin_src scheme
+   (define lookup-in-entry
+     (lambda (name entry entry-f)
+       (lookup-in-entry-help name
+                             (first entry)
+                             (second entry)
+                             entry-f)))
+   (define lookup-in-entry-help
+     (lambda (name names values entry-f)
+       (cond
+        ((null? names)
+         (entry-f name))
+        ((eq? name (car names))
+         (car values))
+        (else
+         (lookup-in-entry-help name (cdr names) (cdr values) entry-f)))))
+   #+end_src
+
+   table (of environment) is a list of entries
+   考慮在environment中查找name的方式就知道
+   這個數據結構使得一個name所對應的新value可以覆蓋它所對應的舊value
+   #+begin_src scheme
+   (define extend-table cons)
+   (define lookup-in-table
+     (lambda (name table table-f)
+       (cond ((null? table)
+              (table-f name))
+             (else
+              (lookup-in-entry name
+                               (car table)
+                               (lambda (name)
+                                 (lookup-in-table name (cdr table) table-f)))))))
+   #+end_src
+** value and meaning
+   按作用類型對<sexp>[[分類]]
+   一共僅有7種作用方式
+   atom-to-action: *const *identifer
+   list-to-action: *null *quote *lambda *cond *application
+
+   #+begin_src scheme
+   (define value
+     (lambda (e)
+       (meaning e '())))
+   (define meaning
+     (lambda (e table)
+       ((expression-to-action e) e table)))
+   (define expression-to-action
+     (lambda (e)
+       (cond
+        ((atom? e)
+         (atom-to-action e))
+        (else
+         (list-to-action e)))))
+   (define atom-to-action
+     (lambda (e)
+       (cond
+        ((number? e)
+         ,*const)
+        ((eq? e #t)
+         ,*const)
+        ((eq? e #f)
+         ,*const)
+        ((eq? e 'cons)
+         ,*const)
+        ((eq? e 'car)
+         ,*const)
+        ((eq? e 'cdr)
+         ,*const)
+        ((eq? e 'null?)
+         ,*const)
+        ((eq? e 'eq?)
+         ,*const)
+        ((eq? e 'atom?)
+         ,*const)
+        ((eq? e 'zero?)
+         ,*const)
+        ((eq? e 'add1)
+         ,*const)
+        ((eq? e 'sub1)
+         ,*const)
+        ((eq? e 'number?)
+         ,*const)
+        (else
+         ,*identifer))))
+   (define list-to-action
+     (lambda (e)
+       (cond ((null? e)
+              ,*null)
+             ((atom? (car e))
+              (cond ((eq? (car e) 'quote)
+                     ,*quote)
+                    ((eq? (car e) 'lambda)
+                     ,*lambda)
+                    ((eq? (car e) 'cond)
+                     ,*cond)
+                    (else
+                     ,*application)))
+             (else
+              *application))))
+   #+end_src
+** after classification
+   下面是不同類型的作用的細節
+   注意 它們與上面執行分類功能的代碼是分離的
+   而上面的代碼單純的執行分類的任務沒有遞歸
+   所以遞歸的任務全在作用的細節中完成
+*** dependence
+    #+begin_src scheme
+    (define atom?
+      (lambda (x)
+        (and (not (pair? x))
+             (not (null? x)))))
+    (define add1
+      (lambda (x)
+        (+ 1 x)))
+    (define sub1
+      (lambda (x)
+        (- x 1)))
+    #+end_src
+*** *const
+    最簡單的是*const
+    它把數字與邏輯值按原樣輸出
+    而給<name-of-primitive-procedure>貼上primitive的標籤
+    以表明是這個解釋器中所配備的基本函數與謂詞
+    #+begin_src scheme
+    (define *const
+      (lambda (e table)
+        (cond ((number? e)
+               e)
+              ((eq? e #t)
+               #t)
+              ((eq? e #f)
+               #f)
+              (else
+               (cons 'primitive (cons e '()))))))
+    #+end_src
+*** *identifer
+    1. 前面所敘述的enrty與environment數據結構以及相關函數
+       是爲且僅爲*identifer這種類型的作用而準備的
+    2. 當需要用到lookup-in-table的第四個參數的時候
+       就是找不到某個名稱所對應的值的時候
+       書中使用(car '()))) 這樣就使用戶得到一個元解釋器中的錯誤信息
+       而這裏使用一個字符串
+       好處是 這個字符串標記了錯誤之後還可以被儘量地處理
+       直到實在錯上加錯了爲止
+       這個特性究竟是好是壞就因理解方式而異了
+    3. 這寫問題只有在實踐中才會被處理 在純理論討論中是不作處理的
+       因爲就這裏的認識論而言“錯誤永遠都是非本質的”
+    #+begin_src scheme
+    (define *identifer
+      (lambda (e table)
+        (lookup-in-table e table notfound)))
+    (define notfound
+      (lambda (name)
+        "error: at least one name is unbound"))
+    #+end_src
+*** *null
+    #+begin_src scheme
+    ;最最簡單的*null
+    (define *null
+      (lambda (e table)
+        '()))
+    #+end_src
+*** *quote
+    *quote用來標識<*sexp*>數據類型
+    加quote的<sexp>在解釋時會被認爲是<*sexp*>
+    之所以有<sexp>與<*sexp*>之間的相互轉換
+    得益於McCarthy對LISP的設計
+    ``scheme programs share a common printed representation
+    with scheme data structures
+    as a result
+    any scheme program has a natural and obvious
+    internal representation as a Scheme object''--kent dybvig
+    這個特性使得我在我寫的這個解釋器裏再寫一個解釋器成爲可能
+    #+begin_src scheme
+    (define *quote
+      (lambda (e table)
+        (text-of e)))
+    (define text-of second)
+    #+end_src
+*** *lambda
+    被*lambda來作用的是<lambda-exp> 它的語義是non-primitive
+    <lambda-exp>經*lambda作用被轉化爲closure
+    它前有一個``non-primitive''標籤
+    以方便之後按作用方式的不同來分別處理primitive與non-primitive
+    #+begin_src scheme
+    <closure> == (non-primitive (<environment> <formals> <body>))
+    #+end_src
+    non-primitive就是以這種方式在我的解釋器中被視爲一種數據類型的
+    #+begin_src scheme
+    (define *lambda
+      (lambda (e table)
+        (list 'non-primitive
+              (cons table (cdr e)))))
+    (define table-of
+      (lambda (non-primitive)
+        (car non-primitive)))
+    (define formals-of
+      (lambda (non-primitive)
+        (cadr non-primitive)))
+    (define body-of
+      (lambda (non-primitive)
+        (caddr non-primitive)))
+    #+end_src
+*** *cond
+    cond的功能是分支控制
+    它把謂詞的結果轉化成其他的東西
+    有點像“反謂詞”
+    + 如果沒有一個條件是真的
+      那麼最後一層遞歸的cond-line爲'() 會出現(car '())的錯誤
+      保持cond-lines的結尾是else 就不會出現這種錯誤
+    + 這裏遞歸調用了meaning
+    #+begin_src scheme
+    (define *cond
+      (lambda (e table)
+        (evcon (cond-lines-of e) table)))
+    (define cond-lines-of cdr)
+    (define evcon
+      (lambda (lines table)
+        (cond ((else? (question-of (car lines)))
+               (meaning (answer-of (car lines)) table))
+              ((meaning (question-of (car lines)) table)
+               (meaning (answer-of (car lines)) table))
+              (else
+               (evcon (cdr lines) table)))))
+    (define question-of
+      (lambda (x)
+        (car x)))
+    (define answer-of
+      (lambda (x)
+        (cadr x)))
+    (define else?
+      (lambda (x)
+        (cond ((atom? x)
+               (eq? x 'else))
+              (else
+               #f))))
+    #+end_src
+*** *application
+    只剩最後一個作用方式*application了
+    它的任務繁重 它是使用遞歸調用的主要部分 另外的使用遞歸調用的部分是*cond
+    1. 被*application作用的<sexp>的car爲<*procedure*>
+       這個<*procedure*>是通過遞歸調用meaning
+       作用於出現在car位置的<sexp>而求得的
+       羅嗦地說<*procedure*>是
+       以我定義的方式 在我寫的解釋器裏 表達函數語義的 元解釋器中的sexp
+       即 前面貼着primitive或non-primitive標籤的sexp
+    2. 被*application作用的<sexp>的cdr被爲<*procedure*>的arg-list
+       這個list中的值是經由evlis而遞歸調用meaning
+       作用於出現在cdr位置的(<sexp> ...)而求得的
+       ``evlis'' denote evaluation list
+    3. 前面的遞歸調用meaning作好準備工作後
+       myapply就上場了
+       apply是重要的函數
+       + 爲了避免與元解釋器中的apply衝突而重命名爲myapply
+       + value和apply作爲解釋器的兩部分 如太極生兩儀
+       + >< 寫解釋器的方式不止有這一中 sicp中有另一種很酷的寫法
+         它們在性質上有何區別？
+       它的作用方式根據<*procedure*>是<*primitive*>還是<*non-primitive*>
+       而分類爲apply-primitive與apply-closure
+       1) apply-primitive
+          把任務轉交給更底層 在這裏就是交給元解釋器
+       2) apply-closure
+          <closure>中有<environment> <formals> <body>
+          首先arg-list與<formals>組成new-entry來extend-table
+          以更新<closure>中的<environment>
+          然後調用meaning把<closure>中的<body>在新的<environment>中求值
+    4. 爲什麼要重新定義atom?這個謂詞爲:atom?
+       因爲所希望得到的atom?應該把<*procedure*>判斷爲#t
+       可是
+       以我定義的方式 在我寫的解釋器裏 表達函數語義的 元解釋器中的sexp
+       卻是一個普通的list
+       所以僅用元解釋器裏的atom?作apply-primitive中的謂詞是不夠的
+    #+begin_src scheme
+    (define evlis
+      (lambda (args table)
+        (cond ((null? args)
+               '())
+              (else
+               (cons (meaning (car args) table)
+                     (evlis (cdr args) table))))))
+    (define *application
+      (lambda (e table)
+        (myapply
+         (meaning (function-of e) table)
+         (evlis (arguments-of e) table))))
+    (define function-of car)
+    (define arguments-of cdr)
+
+    (define myapply
+      (lambda (fun vals)
+        (cond ((primitive? fun)
+               (apply-primitive (second fun) vals))
+              ((non-primitive? fun)
+               (apply-closure (second fun) vals)))))
+    (define primitive?
+      (lambda (l)
+        (eq? (car l) 'primitive)))
+    (define non-primitive?
+      (lambda (l)
+        (eq? (car l) 'non-primitive)))
+
+    (define apply-primitive
+      (lambda (name vals)
+        (cond
+         ((eq? name 'cons)
+          (cons (first vals) (second vals)))
+         ((eq? name 'car)
+          (car (first vals)))
+         ((eq? name 'cdr)
+          (cdr (first vals)))
+         ((eq? name 'null?)
+          (null? (first vals)))
+         ((eq? name 'eq?)
+          (eq? (first vals) (second vals)))
+         ((eq? name 'atom?)
+          (:atom? (first vals)))
+         ((eq? name 'zero?)
+          (zero? (first vals)))
+         ((eq? name 'add1)
+          (add1 (first vals)))
+         ((eq? name 'sub1)
+          (sub1 (first vals)))
+         ((eq? name 'number?)
+          (number? (first vals))))))
+    (define :atom?
+      (lambda (x)
+        (cond ((atom? x)
+               #t)
+              ((null? x)
+               #f)
+              ((eq? (car x) 'primitive)
+               #t)
+              ((eq? (car x) 'non-primitive)
+               #t)
+              (else
+               #f))))
+
+    (define apply-closure
+      (lambda (closure vals)
+        (meaning (body-of closure)
+                 (extend-table (new-entry (formals-of closure) vals)
+                               (table-of closure)))))
+    #+end_src
+** >< make good ues of other functions in this interpreter
+   except the function value
+   what other functions in interpreter.scm can we use?
+** >< add some functions into this interpreter for fun
+** test
+   #+begin_src scheme :result output :session *scheme* :scheme ikarus
+   ;; 對*identifer的測試可以看作對報錯情況的測試
+   (value 'not-const)
+
+   ;; *const
+   ;; 數字與邏輯值
+   (value 1)
+   ;; 下面兩個用到*application
+   (value '(add1 1))
+   (value '(sub1 1))
+   (value #t)
+   (value #f)
+
+   ;; 基本函數primitive
+   (value 'add1)
+   (value 'car)
+   (value 'atom?)
+
+   ;; *null
+   (value '())
+
+   ;; *quote
+   (value '(quote a-quoted-string))
+   (value '(quote (a-quoted-string)))
+   (value '(quote (lambda (x) (add1 (add1 x)))))
+
+   ;; *lambda 非基本函數non-primitive
+   (value '(lambda (x) (add1 (add1 x))))
+
+   ;; *cond
+   ;; 用到*application
+   (value '(cond ((eq? 1 2) 123) (else 321)))
+   (value '(cond ((eq? 1 kkk) 123) (else 321)))
+   (value '(cond ((eq? cons car) 123) (else 321)))
+
+   ;; *application
+   (value '(cons 1 '()))
+   (value '((lambda (x) (cons 'drink (cons x '())))
+            'milk))
+   (value '((lambda (y) (cond
+                         ((eq? y 'thirst)
+                          ((lambda (x) (cons 'drink (cons x '())))
+                           'water))
+                         ((eq? y 'not-thirst)
+                          ((lambda (x) (cons 'do (cons 'not (cons 'drink (cons x '())))))
+                           'water))
+                         (else
+                          'what-ever)))
+            'thirst))
+   (value '((lambda (y) (cond
+                         ((eq? y 'thirst)
+                          ((lambda (x) (cons 'drink (cons x '())))
+                           'water))
+                         ((eq? y 'not-thirst)
+                          ((lambda (x) (cons 'do (cons 'not (cons 'drink (cons x '())))))
+                           'water))
+                         (else
+                          'what-ever)))
+            'not-thirst))
+   ;; 這裏用到的是有else保護的cond
+   (value '((lambda (y) (cond
+                         ((eq? y 'thirst)
+                          ((lambda (x) (cons 'drink (cons x '())))
+                           'water))
+                         ((eq? y 'not-thirst)
+                          ((lambda (x) (cons 'do (cons 'not (cons 'drink (cons x '())))))
+                           'water))
+                         (else
+                          'what-ever)))
+            'do-not-tell-you))
+   ;; 而如果不用else就會可能報錯
+   ;; 報出的是元解釋器中的(car '())錯誤
+   ;; (value '((lambda (y) (cond
+   ;;                     ((eq? y 'thirst)
+   ;;                      ((lambda (x) (cons 'drink (cons x '())))
+   ;;                       'water))
+   ;;                     ((eq? y 'not-thirst)
+   ;;                      ((lambda (x) (cons 'do (cons 'not (cons 'drink (cons x '())))))
+   ;;                       'water))))
+   ;;        'do-not-tell-you))
+
+   ;; 測試結果(in ikarus)
+   ;; "error: at least one name is unbound"
+   ;; > 1
+   ;; > 2
+   ;; > 0
+   ;; > #t
+   ;; > #f
+   ;; > (primitive add1)
+   ;; > (primitive car)
+   ;; > (primitive atom?)
+   ;; > ()
+   ;; > a-quoted-string
+   ;; > (a-quoted-string)
+   ;; > (lambda (x) (add1 (add1 x)))
+   ;; > (non-primitive (() (x) (add1 (add1 x))))
+   ;; > 321
+   ;; > 321
+   ;; > 321
+   ;; > (1)
+   ;; > (drink milk)
+   ;; > (drink water)
+   ;; > (do not drink water)
+   ;; > what-ever
+   #+end_src
+* *the seasoned schemer*
+* >< lost
+* >< 14 let there be names
+  [[shell:evince -p 95 ~/learning-lisp/scheme/the-seasoned-schemer.pdf &]]
+  #+begin_src scheme
+  (define-syntax try
+    (syntax-rules ()
+      [(_ <var> a . b)
+       (letcc success
+         (letcc <var> (success a)) . b)]
+      ))
+  (try x a b)
+
+  (letcc success
+    (letcc x (success <sexp1>))
+    <sexp2>)
+  得:(<sexp2>暫時被忘掉了)
+  (letcc success
+    <sexp1>)
+
+  失敗:
+  x是失敗的記號
+  如果在求值<sexp1>的過程中遇到x的作用(x <sexp*>)
+  就得:
+  (letcc success
+    (letcc x <sexp*>)
+    <sexp2>)
+  (letcc success
+    <sexp*>
+    <sexp2>)
+  然後返回<sexp2>的值
+
+  成功:
+  如果在求值<sexp1>的過程中沒有遇到x的作用
+  就返回<sexp1>的值
+
+  #+end_src
+* >< 15 the difference between men and boys...
+* 16 ready, set, bang!
+  use (set! ...) to remember valuable things between
+  two distinct uses of a function
+** from deep to deepM
+   first write deep simply
+   #+begin_src scheme
+   (define deep
+     (lambda (m)
+       (cond ((zero? m) 'pizza)
+             (else (cons (deep (sub1 m))
+                         '())))))
+   (deep 3)
+   #+end_src
+   then write deepR
+   which calls deep after a side effect remembered all input and output
+   #+begin_src scheme
+   (define Ns '())
+   (define Rs '())
+   (define deepR
+     (lambda (n)
+       (let ((result (deep n)))
+         (set! Ns (cons n Ns))
+         (set! Rs (cons result Rs))
+         result)))
+   (deepR 5)
+   (let ()
+     (display Ns)
+     (newline))
+   (let ()
+     (display Rs)
+     (newline))
+   #+end_src
+   then write deepM
+   which calls deepR
+   and will not remember the same in&output twice
+   and calls find as help function
+   and builds Ns and Rs inside let
+   + with Ns and Rs inside let means that the environment of
+     the closure called deepM
+     contains boxes called Ns and Rs with value '() in both of them
+     and only during the application of the closure
+     the value in the boxes called Ns and Rs can be
+     taken by simply calling their names
+     or changing by set!
+     so after define deepM
+     Ns and Rs are really there in the store in this way
+   #+begin_src scheme
+   (define find
+     (lambda (n Ns Rs)
+       (letrec
+           ((A (lambda (ns rs)
+                 (cond ((null? ns) #f)
+                       ((= (car ns) n) (car rs))
+                       (else (A (cdr ns) (cdr rs)))))))
+         (A Ns Rs))))
+   (find 1000000000 Ns Rs)
+   (find 5 Ns Rs)
+
+   (define deepM
+     (let ((Ns '())
+           (Rs '()))
+       (lambda (n)
+         (let ((found (find n Ns Rs)))
+           (if found
+               found
+               (deepR n))))))
+   (deepM 10)
+   #+end_src
+   and to add the side effects casused by deepM
+   to every self calling of the function deep
+   by changing the recursion in deep
+   from (deep (sub1 m)) to (deepM (sub1 m))
+   #+begin_src scheme
+   (define deep
+     (lambda (m)
+       (cond ((zero? m) 'pizza)
+             (else (cons (deepM (sub1 m))
+                         '())))))
+   #+end_src
+   after every functions was correct
+   we should simplify them by merging
+   #+begin_src scheme
+   (define deepM
+     (let ((Ns '())
+           (Rs '()))
+       (lambda (n)
+         (let ((found (find n Ns Rs)))
+           (if found
+               found
+               (let ((result (if (zero? n)
+                                 'pizza
+                                 (cons (deepM (sub1 n))
+                                       '()))))
+                 (set! Ns (cons n Ns))
+                 (set! Rs (cons result Rs))
+                 result))))))
+   (deepM 1000)
+   #+end_src
+** define recursive function length in a new way
+   #+begin_src scheme
+   (define length
+     (let ((f (lambda (l) 0)))
+       (set! f (lambda (l)
+                 (cond ((null? l) 0)
+                       (else
+                        (add1 (f (cdr l)))))))
+       f))
+
+   (define length
+     ((lambda (f)
+        (set! f (lambda (l)
+                  (cond ((null? l) 0)
+                        (else
+                         (add1 (f (cdr l)))))))
+        f)
+      (lambda (l) 0)))
+
+   (length '(1 2 3 4))
+   #+end_src
+   use (set! <var> <obj*>) for (let ((<var> <obj>)) ...)
+   if there is at least one (lambda ... between them
+   or if the new <obj*> for <var> is a function that refers to <var>
+   + in this way we can define recursive function
+   + 畢竟set!和define的實現方式是類似的
+** bang!
+   下面當procedure F需要被傳入參數
+   而在傳入參數時必須不被立刻求值時
+   會出現與Y中同樣的
+   用(lambda (x) (F x))來代替F的技巧
+
+   但是這裏爲什麼需要這種技巧
+
+   to extract a value and give it a name
+   #+begin_src scheme
+   (define length
+     (let ([f (lambda (l) 0)])
+       (set! f (L (lambda (x) (f x))))
+       f))
+
+   (define Y!
+     (lambda (F)
+       (let ([f (lambda (x) '())])
+         (set! f (F (lambda (x) (f x))))
+         f)))
+   ;letrec as syntax sugar of let and set!
+   (define Y-bang
+     (lambda (F)
+       (letrec ((f (F (lambda (x) (f x)))))
+         f)))
+   #+end_src
+** >< biz
+   對於L這類通過Y或Y!生產遞歸函數的算子來說
+   Y與Y!作用於它們的結果是完全相同的
+   但是對於其他形狀的東西作用結果就可能不同了
+   爲什麼?
+   #+begin_src scheme
+   (define biz
+     (let ((x 0))
+       (lambda (f)
+         (set! x (add1 x))
+         (lambda (a) (if (= a x)
+                     0
+                     (f a))))))
+   #+end_src
+* 17 we change, therefore we are (consC and why deepM is better than deep)
+** deepM again
+   #+begin_src scheme
+   (define deepM
+     (let ((Ns '())
+           (Rs '()))
+       (lambda (n)
+         (let ((found (find n Ns Rs)))
+           (if found
+               found
+               (let ((result (if (zero? n)
+                                 'pizza
+                                 (cons (deepM (sub1 n))
+                                       '()))))
+                 (set! Ns (cons n Ns))
+                 (set! Rs (cons result Rs))
+                 result))))))
+   #+end_src
+** consC
+   in the following
+   set! procedure conter and set-conter inside the consC
+   enable us to open the box called N
+   outside the consC's application
+   #+begin_src scheme
+   (define conter)
+   (define set-conter)
+   (define consC
+     (let ((N 0))
+       (lambda (a d)
+         (set! conter
+               (lambda () N))
+         (set! set-conter
+               (lambda (x) (set! N x)))
+         (set! N (add1 N))
+         (cons a d))))
+   (consC 1 2)
+   (conter)
+   (set-conter 0)
+   #+end_src
+** why deepM is better then deep
+   let deep and deepM using consC in the recursion first
+   #+begin_src scheme
+   (define deep
+     (lambda (m)
+       (cond ((zero? m) 'pizza)
+             (else (consC (deep (sub1 m))
+                         '())))))
+   (define deepM
+     (let ((Ns '())
+           (Rs '()))
+       (lambda (n)
+         (let ((found (find n Ns Rs)))
+           (if found
+               found
+               (let ((result (if (zero? n)
+                                 'pizza
+                                 (consC (deepM (sub1 n))
+                                       '()))))
+                 (set! Ns (cons n Ns))
+                 (set! Rs (cons result Rs))
+                 result))))))
+   #+end_src
+   >< any better way to use consC, rather than copy the code of them?
+   #+begin_src scheme
+   (define test-function-with-lots-of-numbers
+     (lambda (f n)
+       (letrec
+           ((N n)
+            (T (lambda (n)
+                 (if (zero? n)
+                     (let ()
+                       (f n)
+                       (let ()
+                         (newline)
+                         (display
+                          (list
+                           "after runing" `,f "from" N "to zero,"))
+                         (newline)
+                         (display
+                          (list
+                           "the number of cons been used is:"))
+                         (newline)
+                         ))
+                     (let ()
+                       (f n)
+                       (T (sub1 n)))))))
+         (set-conter 0)
+         (T n)
+         (conter)
+         )))
+   (test-function-with-lots-of-numbers deep 1000)
+   (test-function-with-lots-of-numbers deepM 1000)
+   #+end_src
+   test deepM one time the result is 1000
+   test deepM another time the result will be 0
+
+   ``a LISP programmer knows the value of everything
+   but the cost of nothing''
+   --alan j.perlis
+** >< rember1* again
+* 18 we change, therefore we are the same! (kkk)
+** ccc
+   sexp is constructed by ``cons''
+   and changed by ``car cdr''
+   theoretically, ``car cdr cons'' are just functions
+   that satisfy the following axioms:
+   #+begin_src scheme
+   (car (cons <obj1> <obj2>)) == <obj1>
+   (cdr (cons <obj1> <obj2>)) == <obj2>
+   #+end_src
+   it is way we have this chapter
+** add-at-end
+   we don't handle the '() here
+   so the second `add-at-end' of the following source-block is taken
+   though the `add-at-end' in the next source-block is much cooler
+   #+begin_src scheme
+   (define add-at-end
+     (lambda (l)
+       (cond ((null? l)
+              (cons 'egg '()))
+             (else
+              (cons (car l)
+                    (add-at-end (cdr l)))))))
+   (define add-at-end
+     (lambda (l)
+       (cond ((null? (cdr l))
+              (cons (car l) (cons 'egg '())))
+             (else
+              (cons (car l) (add-at-end (cdr l)))))))
+   (add-at-end '(egg1 egg2))
+   #+end_src
+   #+begin_src scheme
+   (define add-at-end-too
+     (lambda (l)
+       (letrec
+           ((A (lambda (ls)
+                 (cond ((null? (cdr ls))
+                        (set-cdr! ls (cons 'egg '())))
+                       (else (A (cdr ls)))))))
+         (A l)
+         l)))
+   (add-at-end-too '(egg1 egg2))
+   #+end_src
+** kkk
+   use ``lambda'' to make ``kar kdr kons''
+   由下面的實現看出'()並沒有什麼特殊性
+   + 比如說如果我本身沒有'()
+     我可以挑<atom>類型中的任意一個出來當作'()
+   然後把這個東西從<atom>類型中排除 加入到<list>類型
+   如何給scheme解釋器加一個說明性的類型系統
+   #+begin_src scheme
+   :kons: (<kist> . <kist>) -> (<selector> -> <selected-obj>)
+   <kist> ::= <atom> | (<selector> -> <selected-obj>)
+   (define kons
+     (lambda (kar kdr)
+       (lambda (selector)
+         (selector kar
+                   kdr))))
+   :kar: (<selector> -> <selected-obj>) -> <selected-obj>
+   顯然爲了實現 :kar: 的類型只需在kar中
+   把(<selector> -> <selected-obj>)作用到<selector>上面
+   (define kar
+     (lambda (c)
+       (c (lambda (a d) a))))
+   (define kdr
+     (lambda (c)
+       (c (lambda (a d) d))))
+   #+end_src
+** note
+   1. 這裏明顯地需要從比數學中的函數更廣義的角度來理解lambda表達式
+      lexical scope中對lambda表達式被求值爲closure
+      closure的action 首先是一個對sexp的代換過程
+      最後是apply
+      只有在最後apply的時候 sexp的fun和args才被區分 sexp中的項纔是不平等的
+      這樣lambda表達式 能比數學中傳統意義上的函數表達更多的東西
+      就在於做代換的時候fun位置也可以被代換
+   2. 設想現在要設計一種函數式編程範式的新語法
+      因爲我並不滿足scheme中的apply
+      因爲apply的語義很侷限
+      它總把sexp的頭一個位置的項理解爲fun 然後其他的項被它作用
+   3. 要設計一個函數式編程範式的編程語言
+      首先要找一個表示方式
+      * LISP ::
+           sexp（等價於tree）
+      然後要設計出“函數的作用”這個語義應該如何實現 這正是“函數式”的所指
+      * LISP ::
+           用lambda表達式來實現一種代換方式
+           這種代換方式指明瞭lambda表達式被化爲closure後作用於參數的方式
+           然後用apply去指明procedure（primitive或non-primitive的closure）
+           在明確了的方式下作用於參數將得到什麼
+   4. 想像一下
+      我的新語言用一般的圖來做爲表達方式
+      同樣有類似lambda表達式的東西來指明作用方式
+      但是apply就完全不一樣了
+      要求它不能提前特殊化圖中的某些位置
+      那麼它應該如何完成一次作用呢？
+      如果它去檢測元素的類型的話 procedure就不能作用於procedure了！
+   5. 回過頭來想一下
+      想要追求的語義是什麼？
+      可以說在數學中 並不是把作用死板地理解爲一個函數在作用 一些參在被作用
+      正相反 參數和函數的地位是可以相互轉化的
+      把參數明確了 然後把函數空下來 我就得到一個泛函(*,#)
+      但是這樣的一個東西也可以被看作是一個二元函數
+      也就說這兩個空位(*,*)不僅僅是兩個空位而已
+      我寫出它們的同時還指定了當這兩個空位被填上時我應該以什麼方式
+      從這兩個信息得到計算的結果 即(*,*) == f(*,*)
+      所以LISP的能力其實是不被我的“新語言”所超越的
+   6. (*,#) (*,*) f(*,*) 不同的表達方式可能代表了不同的計算方式
+   7. 這真是狂想
+      把一個作用方式結構化
+      那麼這個結構所給出的豐富信息如何影響作用方式呢？
+   8. 回憶一下friedman想要在這本書中教導人們計算的本質
+      計算是有複雜性的
+      這在於
+      我在利用計算機進行計算
+      我把我想要計算的東西表達成計算機能理解的形式
+      然後計算機以它的方式把我表達的計算分解爲它對它存儲狀態的操作
+      複雜性正產生與這裏
+      順應計算機的行爲方式 我才能把我希望的計算做好
+      就是在這樣惡劣的條件下 我要利用計算機來幫助我的某些數學思考
+      可以說 那些控制對人的理解而言的複雜性的技術
+      正是我爲了獲得計算機對我的幫助而學習的
+** kkk with set!
+   爲了定義set-kdr 而利用下面的bons 重新定義``kar kdr kons''
+   + why bons and kons are separated?
+     because we need to bind kdr to set! it letter
+     but when closure is constructed
+     no name will be bound to any loaction
+     it is in the first step of the apply
+     where the binding should happen temporarily
+   #+begin_src scheme
+   :kons: <kist> -> (<selector> -> <selected-obj>)
+   (define bons
+     (lambda (kar)
+       (let [(kdr '())]
+         (lambda (selector)
+           (selector (lambda (x) (set! kdr x))
+                     kar
+                     kdr)))))
+   :kar: (<selector> -> <selected-obj>) -> <selected-obj>
+   (define kar
+     (lambda (c)
+       (c (lambda (s a d) a))))
+   (define kdr
+     (lambda (c)
+       (c (lambda (s a d) d))))
+   (define set-kdr
+     (lambda (c x)
+       ((c (lambda (s a d) s))
+        x)))
+   :kons: (<kist> . <kist>) -> (<selector> -> <selected-obj>)
+   (define kons
+     (lambda (a d)
+       (let [(c (bons a))]
+         (set-kdr c d)
+         c)))
+   (bons 1)
+   (kar (bons 1))
+   (kdr (bons 1))
+   (kons 1 2)
+   (kar (kons 1 2))
+   (kdr (kons 1 2))
+   #+end_src
+   + 嘗試描述類型的過程中來看
+     好像要想實現完備的類型系統就要對語言作很多限制
+   + what the visual model of our kkk may looks like
+     (*,*) is not a good one
+     there are something more basic that is not in our define of kkk
+** >< play with kkk with set!
+   when we use ``add-at-end''
+   we will make a new list
+   but when we change to use ``add-at-end-too''
+   the konses are the same except fot the last one
+   and the value of the <arg> of ``add-at-end-too'' is change
+   ``we change, therefore we are the same!''
+   #+begin_src scheme
+   (define kounter)
+   (define set-kounter)
+   (define konsC
+     (lambda ()))
+
+
+   (define lots
+     (lambda (m)
+       (cond ((zero? m) '())
+             (else (konsC 'egg (lots (sub1 m)))))))
+   (define lenkth
+     (lambda (l)
+       (cond ((null? l) 0)
+             (else (add1 (lenkth (kdr l)))))))
+   (define add-at-end
+     (lambda (l)
+       (cond ((null? (kdr l))
+              (konsC (kar l) (kons 'egg '())))
+             (else
+              (konsC (kar l) (add-at-end (kdr l)))))))
+   (define add-at-end-too
+     (lambda (l)
+       (letrec
+           ((A (lambda (ls)
+                 (cond ((null? (kdr ls))
+                        (set-kdr ls (konsC 'egg '())))
+                       (else (A (kdr ls)))))))
+         (A l)
+         l)))
+   #+end_src
+** >< same?
+   #+begin_src scheme
+   (define eklist?
+     (lambda (ls1 ls2)
+       (cond (())
+             (())
+             (else
+              ()))))
+   #+end_src
+
+   there is a new idea of ``sameness'' once we introduce (set! ...)
+   ``two konses are the same if changing one changes the other''
+   by ``changing'' it means we are using the ``set-kdr''
+   by ``two konses'' it means two different names
+   + notice `c1 c2' must be non-empty kons-list
+   #+begin_src scheme
+   (define same?
+     (lambda (c1 c2)
+       (let ((t1 (kdr c1))
+             (t2 (kdr c2)))
+         (set-kdr c1 1)
+         (set-kdr c2 2)
+         (let ((v (= (kdr c1) (kdr c2))))
+           (set-kdr c1 1)
+           (set-kdr c2 2)
+           v))))
+   #+end_src
+** >< play with same?
+** >< play with set-kdr
+** finite-lenkth
+   循環者返回#f
+   不循環者計數其長度
+   + because we are doing recursion
+     the order of the questions is matter
+   + 這裏數的是一個線性的list中的元素 而不是一般的kons-sexp
+     它所能形成的循環很簡單
+   + 一般的kons-sexp能形成多麼一般的圖？
+     首先是一顆樹
+     要明白 這裏是用list做爲樹的模型 而不是用pair
+     因爲pair對branch的數目有顯示
+     例如((1) (2) (3))是一個節點
+     它的子節點是 三個葉節點：(1) (2) (3)
+     而1 2 3是用來區分這些葉節點的標記
+     這樣每個節點就都是一個list
+     在這種模型下
+     把list末尾cons的'()換成樹中的其它節點的地址的過程
+     就可以被視爲是給原來的樹中的節點之間增添有向邊
+     如果忽略這些增添的有向邊的方向
+     那麼顯然就得到了一個任意無向圖的一般表示方法
+     問題是很難判斷兩個表示是否表示着同一個圖
+     這是所需要的最基本的謂詞 這總是表示的難點
+     + sexp對樹結構的表示 其性質是：
+       1) 每一個表示都表示着唯一的一個樹
+       2) 並且所有的樹都能用sexp表示出來
+       這樣sexp和樹就是等價的
+     ><還有一個問題就是一般的有向圖怎麼辦？
+     ><無窮的圖又怎麼辦？
+     ><有限狀態機可以用來寫謂詞 但是很不理想
+   #+begin_src scheme
+   (define finite-lenkth
+     (lambda (p)
+       (letcc infinite
+              (letrec
+                  ((C (lambda (p q)
+                        (cond ((null? q) 0)
+                              ((null? (kdr q)) 1)
+                              ((same? p q) (infinite #f))
+                              (else
+                               (+ (C (sl p) (qk q))
+                                  2)))))
+                   (qk (lambda (x) (kdr (kdr x))));quickly
+                   (sl (lambda (x) (kdr x)));slowly
+                   )
+                (cond ((null? p) 0)
+                      (else
+                       (add1 (C p (kdr p)))))))))
+   #+end_src
+* 19 absconding with the jewels
+** deep again
+   #+begin_src scheme
+   (define deep
+     (lambda (m)
+       (if (zero? m)
+           'pizza
+           (cons (deep (sub1 m)) '()))))
+   (deep 12)
+
+   (define toppings)
+   (define deepB
+     (lambda (m)
+       (cond ((zero? m)
+              (letcc jump
+                     (set! toppings jump)
+                     'pizza))
+             (else
+              (cons (deepB (sub1 m)) '())))))
+   (deepB 2)
+   (cons (toppings 'k) (toppings 'kk))
+
+   (define deep&co;collector
+     (lambda (m k)
+       (cond ((zero? m) (k 'pizza))
+             (else
+              (deep&co (sub1 m)
+                       (lambda (x)
+                         (k (cons x '()))))))))
+   (deep&co 10 (lambda (x) x))
+
+   (define deep&coB
+     (lambda (m k)
+       (cond ((zero? m)
+              (let ()
+                (set! toppings k)
+                (k 'pizza)))
+             (else
+              (deep&coB (sub1 m)
+                        (lambda (x)
+                          (k (cons x '()))))))))
+   (deep&coB 20 (lambda (x) x))
+   (cons (toppings 'a)
+         (cons (toppings 'b)
+               (cons (toppings 'c)
+                     '())))
+   #+end_src
+** kill-the-orc-hero
+   ><letcc到底是如何實現的？
+
+   雖然我知道它是的幾種使用方式
+   但是不知道它是如何實現的就沒法完全瞭解它
+
+   letcc是人族大法師的一個魔法
+   大法師用這個魔法制作一個標記爲<marker>的傳送卷軸
+   (letcc <marker>
+   <sexp1>
+   <sexp2>
+   ...)
+   大法師作這個卷軸的目的是
+   希望戰士們把他渴望得到的寶物或者渴望交手的敵人<sexp*>
+   從戰場上帶到他面前
+   大法師把卷軸發放給這個戰場上的人族戰士們
+   戰士可以通過(<marker> <sexp*>)來使用卷軸
+   把自己和自己面前的<sexp*>傳送回製作卷軸的地方
+   戰士也可以用(set! <var> <marker>)把卷軸通過<var>帶出當前的戰場
+   然後在別的地方以(<var> <sexp*>)之名使用卷軸
+   把使用者與使用者面前的<sexp*>傳送回製作卷軸的地方
+   #+begin_src scheme
+   (define kill-the-orc-hero
+     (lambda (battle-field)
+       (let ((find-him (lambda (battle-field)
+                        (letcc bring-him-to-master
+                               (set! knight bring-him-to-master)
+                               (go-and-search battle-field))))
+             (kill-him (lambda (him)
+                         (list 'kill-you 'aha "--->>>" him))))
+         (kill-him (find-him battle-field)))))
+   (define knight)
+   (define go-and-search
+     (lambda (battle-field)
+       (cond ((null? battle-field) "nobody in the battle-field")
+             ((atom? (car battle-field))
+              (if (eq? (car battle-field) 'orc-hero)
+                  (knight (car battle-field))
+                  (go-and-search (cdr battle-field))))
+             (else
+              (let ()
+                (go-and-search (car battle-field))
+                (go-and-search (cdr battle-field)))))))
+   (kill-the-orc-hero
+    '((((1(331(3((3(1()31)4))132) 412414() 43241() ()) () 1344((43(((124())3413) ('orc-hero)))143))423)134)324))
+   #+end_src
+** >< two-in-a-row*?
+   #+begin_src scheme
+   (define two-in-a-row?
+     (lambda (lat)
+       (letrec
+           ((W (lambda (a lat)
+                 (cond ((null? lat) #f)
+                       (else
+                        (let ((nxt (car lat)))
+                          (or (eq? a nxt)
+                              (W nxt (cdr lat)))))))))
+         (cond ((null? lat) #f)
+               (else
+                (W (car lat) (cdr lat)))))))
+   (two-in-a-row? '(1 2 3 4 5 6))
+   #+end_src
+
+   then two-in-a-row*? will do the same, regardless of parentheses
+   but it is long way to go
+
+   walk is like ``leftmost'' if we put the rigth kind of value into leave
+   其實是把leftmost分解成幾部分 因爲需要分別命名 以在別處靈活使用
+   + 使用letcc的另一種典型方式
+     更好的方法
+     因爲更靈活
+     因爲這樣就可以把函數分開來寫
+   下面的函數名``walk'' ``waddle''是說你只不過是在蹣跚學步呢 所以不要牛逼
+   #+begin_src scheme
+   (define leave)
+   (define walk
+     (lambda (l)
+       (cond ((null? l) '())
+             ((atom? (car l))
+              (leave (car l)))
+             (else
+              (let ()
+                (walk (car l))
+                (walk (cdr l)))))))
+   (define start-it
+     (lambda (l)
+       (letcc here
+              (set! leave here)
+              (walk l))))
+   (start-it '(((((((((((((!)))))132)3)12)3)213)))))
+   (define fill)
+   (define waddle
+     (lambda (l)
+       (cond ((null? l) '())
+             ((atom? (car l))
+              (let ()
+                (letcc rest
+                       (set! fill rest)
+                       (leave (car l)))
+                (waddle (cdr l))))
+             (else
+              (let ()
+                (waddle (car l))
+                (waddle (cdr l)))))))
+   ;; why we need the following get-next then this one?
+   ;; (define start-it2
+   ;;   (lambda (l)
+   ;;     (letcc here
+   ;;            (set! leave here)
+   ;;            (waddle l))))
+   ;; (start-it2 '(((((((((((((!)))))132)3)12)3)213)))))
+   ;; (start-it2 '())
+   (define get-next
+     (lambda (x)
+       (letcc here-again
+              (set! leave here-again)
+              (fill 'go))))
+   (get-next 'go)
+   (define get-first
+     (lambda (l)
+       (letcc here
+              (set! leave here)
+              (waddle l)
+              (leave '()))))
+   (get-first '(((((((((((((!)))))132)3)12)3)213)))))
+   (get-first '())
+   #+end_src
+   上面因爲使用了很多set!而使get-next完全處離了數學函數的範圍
+
+   then it is easy to define two-in-a-row*?
+   #+begin_src scheme
+
+   #+end_src
+** note
+   ``during the evaluation of a scheme expression
+   the implementation must keep track of two things:
+   1) what to evaluate
+   2) what to do with the value.''
+
+   ``we call `what to do with the value'
+   the continuation of a computation''
+
+   --kent dybvig
+
+   原來call/cc中的``cc''就是指展開遞歸函數的過程中遇到call/cc時的``當前狀態''
+   而(set! fill rest)將把(letcc rest ...)位置處的狀態保存起來
+   在外面出現作用fill的時候將回到這個位置所對應的計算狀態
+   + 因此把(letcc <marker> <sexp>)使用在最外面
+     並且在<sexp>中直接使用(<marker> <sexp*>)的效果就是
+     直接中斷遞歸計算而返回<sexp*>的結果
+   在(letcc <marker> <sexp>)的<sexp>之中
+   + 或者在多個<sexp>組成的<body>之中
+     一些用來副作用
+     最後一個用來返回值
+     如果<body>中前面的<sexp>中有<marker>的action出現 後面的當然會被忽略
+     #+begin_src scheme
+     (define test-cc
+       (lambda ()
+         (letcc kkk
+                123
+                456
+                (kkk "good")
+                (kkk "bad"))))
+     (test-cc)
+     #+end_src
+   <marker>是一個單參數的procedure的name
+   這個procedure的action：(<marker> <sexp*>)
+   將把<sexp*>代入到在展開遞歸函數的過程中遇到(letcc ...)的那個位置
+
+   更好的說
+   procedure的action的求值是一個展開過程
+   因爲它要等待fun部分和args部分的求值結果
+   在這個展開過程中
+   把任意一個需要被等待求值結果的位置空出來
+   就會形成一個一元的procedure
+   + 當然 對fun部分和args部分的求值是按順序一個一個求的
+     要想形成一個一元的procedure
+     就必須要記住那些還在等待中的位置應該如何被求值
+   這個一元的procedure就是``call/cc''中的``cc''
+   如果一個需要被等待求值結果的位置原本是<sexp>
+   那麼只要把它替換爲(letcc <marker> <sexp>)
+   就可以把上面所說的一元的procedure保存到
+   爲名字<marker>所開闢的存儲地址當中
+   + 這個<marker>的binding只在這個(letcc ...)中可見
+     因此
+     如果在<sexp>中不出現這個<marker>所對應的一元的procedure的action
+     也不把這個一元的procedure利用(set! <var> <marker>)保存在別處
+     的話
+     那麼letcc的出現是沒有意義的
+     其實也可以是有意義的 比如下面這個例子
+     #+begin_src scheme
+     ((lambda (x)
+        (x (lambda (ignore) "hi")))
+      (letcc k k))
+     #+end_src
+   這樣一切就都明白了
+   + 而letcc給出了這種語義的最清晰的語法
+     又爲什麼有call/cc這種不清晰的語法?
+     因爲它揭示了call/cc的實現方式嗎?
+   + 一個問題是可不可以嵌套？
+     即 代入之後是不是得(letcc <marker> <sexp*>)
+     #+begin_src scheme
+     (define test-cc
+       (lambda ()
+         (letcc kkk
+                (kkk
+                 (kkk "good")))))
+     (test-cc)
+     #+end_src
+     結果確實是如此<marker>在<sexp>中的出現是可以嵌套的
+** play with call/cc
+   #+begin_src scheme
+   (let ([x (call/cc (lambda (k) k))])
+     (x (lambda (ignore) "hi")))
+   ((lambda (x)
+      (x (lambda (ignore) "hi")))
+    (letcc k k))
+
+   (define k (letcc x x))
+   (k (lambda (ignore) "hi"))
+   ;; 第一次求值的時候會
+   ;; (define k (lambda (ignore) "hi"))
+   ;; 再次求值的時候就與(letcc x x)無關了
+
+   (((letcc k k)
+     (lambda (x) x))
+    "HEY!")
+   #+end_src
+
+   the following mechanism could be the basis
+   for a breakpoint package implemented with call/cc
+   each time a breakpoint is encountered
+   the continuation of the breakpoint is saved
+   so that the computation may be restarted from the breakpoint
+   more than once if desired
+   #+begin_src scheme
+   (define retry)
+   (define factorial
+     (lambda (x)
+       (if (= x 0)
+           (letcc k
+                  (set! retry k)
+                  1)
+           (* x (factorial (- x 1))))))
+   #+end_src
+
+   如何使用lwp? 什麼是multitasking
+   就是函數們在返回值之前相互商量?
+   ``the simple "light-weight process" mechanism
+   defined below allows multiple computations to be interleaved
+   since it is nonpreemptive
+   it requires that each process voluntarily "pause" from time to time
+   in order to allow the others to run''
+   #+begin_src scheme
+   (define lwp-list '())
+   (define lwp;; denote light-weight process
+     (lambda (thunk)
+       (set! lwp-list (append lwp-list (list thunk)))))
+   (define start
+     (lambda ()
+       (let ([p (car lwp-list)])
+         (set! lwp-list (cdr lwp-list))
+         (p))))
+   (define pause
+     (lambda ()
+       (letcc k
+              (lwp (lambda () (k #f)))
+              (start))))
+   #+end_src
+* CPS
+  ``把任意一個需要被等待求值結果的位置空出來
+  就會形成一個一元的procedure''
+  但是這種想法只能作出一元procedure
+  CPS可以實現作爲多元procedure的continuation
+
+  1. 我所擅長的就是在下面這種頭腦風暴中總結我所觀察到的規律
+     不管正確不正確
+     先形成一個自己的認識
+     對所形成的這種認識的態度當然是
+     只要有更清晰更有力的方式 我就一定讓它代替我的舊認識
+  2. h被調用的位置的改變
+     h被一個cons的作用調用(這個調用所形成的cc被明顯的寫了出來)
+     置爲
+     h的作用 其中h是在後面增加了一個參數位置的
+     那個cc被明顯地寫出來並且被放入那個新的參數位置
+  3. h的定義位置的改變 h的定義調用了g 因此這也是g的被調用的位置的改變
+     因爲直接是g的作用
+     所以幾乎沒什麼改變只是繼續把這個cc傳給被h調用的g
+     不用改變cc
+  4. g的定義位置的改變 也是f的調用位置的改變
+     cons的作用調用f
+     這個作用形成一個一元cc (調用f的作用的cc可以被記爲cc-f(denote cc of f))
+     原來的cc要被 這個作用所形成的cc來擴充
+     之後才能被傳入f的新參數位置
+     這個擴充簡單地說就是把原來的cc作用在這個cc-f上形成一個新的cc
+  5. f的定義位置的改變
+     f不再調用任何non-primitive了
+     所以這裏簡單的就是這裏的表達式要被傳入f的新參數位置的cc作用
+  #+begin_src scheme
+  (cons 'd
+        (cons 'b
+              (cons 'a
+                    (cons 'c '()))))
+
+  (letrec ([f (lambda (x) (cons 'a x))]
+           [g (lambda (x) (cons 'b (f x)))]
+           [h (lambda (x) (g (cons 'c x)))])
+    (cons 'd (h '())))
+
+  (letrec ([f (lambda (x k) (k (cons 'a x)))]
+           [g (lambda (x k) (f x
+                           (lambda (v) (k (cons 'b v)))))]
+           [h (lambda (x k) (g (cons 'c x)
+                           k))])
+    (h '()
+       (lambda (v) (cons 'd v))))
+  #+end_src
+  not-CPS and CPS
+  #+begin_src scheme
+  (define f (x)
+    <sexp>)
+  (g (f x))
+
+  (define f (x cc-f)
+    (cc-f <sexp>))
+  (f x
+     (lambda (y) (g y)))
+  #+end_src
+
+  CPS可以實現一個函數作用在不同的條件下獲得不同的cc的效果
+  下面的函數接受cc參數的參數位置是後兩個
+  integer-divide成功時返回商與餘數的list
+  #+begin_src scheme
+  (define integer-divide
+    (lambda (x y success failure)
+      (if (= y 0)
+          (failure "divide by zero")
+          (let ([q (quotient x y)])
+            (success q (- x (* q y)))))))
+  (integer-divide 10 3 list (lambda (x) x))
+  (integer-divide 10 0 list (lambda (x) x))
+  #+end_src
+  ``explicit success and failure continuations
+  can sometimes help to avoid the extra communication necessary
+  to separate successful execution of a procedure
+  from unsuccessful execution
+  furthermore
+  it is possible to have multiple success or failure continuations
+  for different flavors of success or failure
+  each possibly taking different numbers and types of arguments''
+
+  ``any program that uses call/cc can be rewritten in cps without call/cc
+  but a total rewrite of the program
+  (sometimes including even system-defined primitives)
+  might be necessary''
+  #+begin_src scheme
+  (define product
+    (lambda (ls)
+      (letcc break
+             (let f ([ls ls])
+               (cond
+                [(null? ls) 1]
+                [(= (car ls) 0) (break 0)]
+                [else (* (car ls) (f (cdr ls)))])))))
+  (define product
+    (lambda (ls)
+      (letcc break
+             (letrec
+                 ([f (lambda (ls)
+                       (cond
+                        [(null? ls) 1]
+                        [(= (car ls) 0) (break 0)]
+                        [else (* (car ls) (f (cdr ls)))]))]
+                  )
+               (f ls)))))
+  (product '(1 2 3 4 5))
+  (product '(7 3 8 0 1 9 5))
+  (define product
+    (lambda (ls k)
+      (let ([break k]);這個賦值只爲了區分k的語義 並且與上面一致
+        (letrec ([f (lambda (ls k)
+                      (cond
+                       [(null? ls) (k 1)]
+                       [(= (car ls) 0) (break 0)]
+                       [else (f (cdr ls)
+                                (lambda (x)
+                                  (k (* (car ls) x))))]))]
+                 )
+          (f ls k)))))
+  (define product
+    (lambda (ls k)
+      (letrec ([f (lambda (ls k)
+                    (cond
+                     [(null? ls) (k 1)]
+                     [(= (car ls) 0) (k 0)]
+                     [else (f (cdr ls)
+                              (lambda (x)
+                                (k (* (car ls) x))))]))]
+               )
+        (f ls k))))
+  (product '(1 2 3 4 5)
+           (lambda (x) x))
+  (product '(7 3 8 0 1 9 5)
+           (lambda (x) x))
+  #+end_src
+  CPS中recursion在於改變cc
+  其實這種技巧在the little schemer的第8章已經學過了
+* internal definitions
+  *internal definitions can appear only at the front of a body*
+  *syntax definitions may appear among the internal definitions*
+  怎麼能有這種東西?
+  它不影響代碼清晰性的用法如下
+  #+begin_src scheme
+  (let ()
+    (define-syntax <key>
+      (syntax-rules ()
+        [<p> <t>]))
+    (define <var1> <sexp1>)
+    (define <var2> <sexp2>)
+    (<sexp3>))
+
+  (begin
+    (define-syntax <key>
+      (syntax-rules ()
+        [<p> <t>]))
+    (define <var1> <sexp1>)
+    (define <var2> <sexp2>)
+    (<sexp3>))
+  #+end_src
+  如同emacs-lisp中的progn
+  可以在大的環境中分出來獨立的區域
+  #+begin_src emacs-lisp
+  (progn
+    (defun <var1> <sexp1>)
+    (defun <var2> <sexp2>)
+    (<sexp3>))
+  #+end_src
+  在scheme中 可能需要用這種表示方法的 就是下面的情況
+  ``variable definitions are guaranteed
+  to be evaluated from left to right
+  while the bindings of a letrec may be evaluated in any order''
+  ``however, use letrec*, which, like let*, guarantees
+  left-to-right evaluation order''
+
+  ``internal definitions may be used in conjunction with
+  top-level definitions and assignments to help modularize programs
+  each module of a program should make visible only those bindings
+  that are needed by other modules
+  while hiding other bindings
+  that would otherwise clutter the top-level namespace
+  and possibly result in unintended use
+  or redefinition of those bindings''
+  ``it does not support the publication of keyword bindings
+  since there is no analogue to set! for keywords''
+  #+begin_src scheme
+  (define export-var #f)
+  (let ()
+    (define <var1> <sexp1>)
+    (define <var2> <sexp2>)
+    (set! export-var <var1>)
+    <sexp3>
+    )
+  #+end_src
+* libraries
+  #+begin_src scheme
+  (library (grades)
+           (export gpa->grade gpa)
+           (import (rnrs))
+           (define in-range?
+             (lambda (x n y)
+               (and (>= n x) (< n y))))
+           (define-syntax range-case
+             (syntax-rules (- else)
+               [(_ expr ((x - y) e1 e2 ...) ... [else ee1 ee2 ...])
+                (let ([tmp expr])
+                  (cond
+                   [(in-range? x tmp y) e1 e2 ...]
+                   ...
+                   [else ee1 ee2 ...]))]
+               [(_ expr ((x - y) e1 e2 ...) ...)
+                (let ([tmp expr])
+                  (cond
+                   [(in-range? x tmp y) e1 e2 ...]
+                   ...))]))
+           (define letter->number
+             (lambda (x)
+               (case x
+                 [(a)  4.0]
+                 [(b)  3.0]
+                 [(c)  2.0]
+                 [(d)  1.0]
+                 [(f)  0.0]
+                 [else (assertion-violation 'grade "invalid letter grade" x)])))
+           (define gpa->grade
+             (lambda (x)
+               (range-case x
+                           [(0.0 - 0.5) 'f]
+                           [(0.5 - 1.5) 'd]
+                           [(1.5 - 2.5) 'c]
+                           [(2.5 - 3.5) 'b]
+                           [else 'a])))
+           (define-syntax gpa
+             (syntax-rules ()
+               [(_ g1 g2 ...)
+                (let ([ls (map letter->number '(g1 g2 ...))])
+                  (/ (apply + ls) (length ls)))])))
+  #+end_src
+  #+begin_src scheme
+  (import (grades))
+  (gpa c a c b b)
+  (gpa->grade 2.8)
+  #+end_src
+* 20 what's in the store? (interpreter-with-define-and-set!)
+** note
+   1. 這一章寫一個新的有define和set!的解釋器
+      有一個全局的命名空間global-table
+      以元解釋器中的procedure爲新的table(of environment)的數據結構
+      一個table就是一個procedure
+      它作用於一個name返回這個name所對應的value
+      table中name與box綁定 box中存放着value
+      全局生成新box的是define 局部生成新box的是closure的作用
+      box利用lambda-exp的技巧實現（或者說模擬）一種訪問機制
+      有了訪問機制 就實現了set!
+   2. 只有實現了命名機制在我的解釋器裏解釋自身才成爲可能
+   3. 注意這裏沒有apply
+      *const與*lambda都直接把e求值成了元解釋器中的procedure
+      解釋了一些東西卻又矇蔽了另一些東西
+      >< 爲了實現上面的性狀而必須這樣做嗎？
+   4. 新增加了*letcc
+      但是並沒有觸及letcc的本質
+      在我的這個解釋器中使用letcc是爲了找不到name時的報錯
+      而增加這個*letcc就使得
+      在我的這個解釋器中可是實現一個相同的
+      可以在找不到name時報錯的解釋器
+** >< hack
+   1. 既然已經會使用letcc和set!了 那麼我能和這個解釋器玩的花樣就有趣多了
+   2. 試着在這個解釋器中使用apply
+   3. 試着補全<formals>的形式：
+      <variable>
+      (<variable>*)
+      (<variable> <variable>* . <variable>)
+   4. 用元解釋器創造一箇中文的解釋器
+      以這個中文的解釋器爲元解釋器再寫出純中文的解釋器就是可以解釋自身的了
+      有趣之處在於這會完全改變寫代碼和讀代碼時的感受
+** table as procedures and value and the-meaning and meaning
+   #+begin_src scheme
+   (define the-empty-table
+     (lambda (name)
+       (abort
+        (cons 'no-answer
+              (cons name '())))))
+   (define global-table the-empty-table)
+   (define lookup
+     (lambda (table name)
+       (table name)))
+   ;; 在全局擴展global-table的是*define
+   ;; 而*lambda作用於lambda-exp所形成的ciosure在作用於args時
+   ;; 會爲closure的body臨時擴展global-table
+   (define extend
+     (lambda (name1 value table)
+       (lambda (name2)
+         (cond ((eq? name1 name2) value)
+               (else (table name2))))))
+
+   (define abort);; 遇到the-empty-table時跳出來報錯
+   (define value
+     (lambda (e)
+       (letcc the-end
+         (set! abort the-end)
+         (cond ((define? e) (*define e))
+               (else (the-meaning e))))))
+   (define the-meaning
+     (lambda (e)
+       (meaning e lookup-in-global-table)))
+   (define meaning
+     (lambda (e table)
+       ((expression-to-action e) e table)))
+   (define lookup-in-global-table
+     (lambda (name)
+       (lookup global-table name)))
+   ;; 這裏通過調用lookup來作一個closure
+   ;; 這個closure把當前的global-table保護起來
+   ;; (define lookup-in-global-table
+   ;;   (lambda (name) (global-table name)))
+   ;; 爲什麼需要這個closure？
+   ;; 保護起來的意思就是要延遲這個closure的body的求值
+   ;; 使得求值時這個body中的global-table可以是最新的
+   ;; 現在懂得使用closure的技巧了
+   ;; 正是這種技巧使得利用define來定義遞歸函數成爲可能
+   ;; 這樣也就明白了Y!和letrec
+   #+end_src
+** classification
+   #+begin_src scheme
+   (define expression-to-action
+     (lambda (e)
+       (cond ((atom? e) (atom-to-action e))
+             (else (list-to-action e)))))
+   (define atom-to-action
+     (lambda (e)
+       (cond [(number? e) *const]
+             [(eq? e #t) *const]
+             [(eq? e #f) *const]
+             [(eq? e 'cons) *const]
+             [(eq? e 'car) *const]
+             [(eq? e 'cdr) *const]
+             [(eq? e 'null?) *const]
+             [(eq? e 'eq?) *const]
+             [(eq? e 'atom?) *const]
+             [(eq? e 'zero?) *const]
+             [(eq? e 'add1) *const]
+             [(eq? e 'sub1) *const]
+             [(eq? e 'number?) *const]
+             [else *identifer])))
+   (define list-to-action
+     (lambda (e)
+       (cond [(null? e) *null]
+             [(atom? (car e))
+              (cond [(eq? (car e) 'quote)
+                     ,*quote]
+                    [(eq? (car e) 'lambda)
+                     ,*lambda]
+                    [(eq? (car e) 'letcc)
+                     ,*letcc]
+                    [(eq? (car e) 'set!)
+                     ,*set]
+                    [(eq? (car e) 'cond)
+                     ,*cond]
+                    [else *application])]
+             [else *application])))
+   #+end_src
+** *define and box
+   #+begin_src scheme
+   (define define?
+     (lambda (e)
+       (cond ((atom? e) #f)
+             ((atom? (car e))
+              (eq? (car e) 'define))
+             (else #f))))
+   (define *define
+     (lambda (e)
+       (set! global-table
+             (extend (name-of e)
+                     (box (the-meaning
+                           (rigth-side-of e)))
+                     global-table))))
+   (define box
+     (lambda (it)
+       (lambda (selector)
+         (selector it
+                   (lambda (new) (set! it new))))))
+   ;; 下面是兩個selector
+   ;; selector的用法是：(從哪選 (lambda (有那些) (選哪個與如何處理)))
+   (define setbox
+     (lambda (box new)
+       (box (lambda (it set) (set new)))))
+   (define unbox
+     (lambda (box)
+       (box (lambda (it set) it))))
+   #+end_src
+** *null
+   #+begin_src scheme
+   (define *null
+     (lambda (e table)
+       '()))
+   #+end_src
+** *quote
+   #+begin_src scheme
+   (define *quote
+     (lambda (e table)
+       (text-of e)))
+   #+end_src
+** *identifer and *set
+   #+begin_src scheme
+   (define *identifer
+     (lambda (e table)
+       (unbox (lookup table e))))
+   (define *set
+     (lambda (e table)
+       (setbox (lookup table (name-of e))
+               (meaning (rigth-side-of e) table))))
+   #+end_src
+** *lambda
+   1. 這裏實現了在<body>中可以包含多個<sexp>這一特性
+      *lambda作用於e與table將形成一個元解釋器中的closure
+      這個closure作用時beglis將在擴展的table中對<body>求值
+      closure作用的時候evlis返回的參數值會被處理爲list
+      所以這裏使用了args這個形參名
+      + 在下面的*const中還需要把這些參數從args中拿出來再讓primitive作用
+        但是closure的作用僅僅是利用args來擴展table因此不需要這樣
+   2. 這裏*lambda所形成的closure用元解釋器中的closure來實現了
+      這樣就不用分別實現primitive與non-primitive的apply了
+      但是這是必須的嗎？
+      畢竟在上一個解釋器中我能學到關於closure的知識
+      正是因爲我用一個數據結構實現了closure
+   #+begin_src scheme
+   (define *lambda
+     (lambda (e table)
+       (lambda (args)
+         (beglis (body-of e)
+                 (multi-extend (formals-of e)
+                               (box-all args)
+                               table)))))
+   ;; beglis denote? begain list
+   ;; 它對<body>中的所有<sexp>求值
+   ;; 只返回最後一個<sexp>的值 其他的<sexp>用來形成副作用
+   (define beglis
+     (lambda (es table)
+       (cond ((null? (cdr es));so body-of e con't be empty
+              (meaning (car es) table))
+             (else
+              ;; 這裏需要一個賦值
+              ;; 因爲後面的東西(beglis (cdr es) table)
+              ;; 需要在前面的副作用所形成新環境中求值
+              ((lambda (val)
+                 (beglis (cdr es) table))
+               (meaning (car es) table))))))
+   (define box-all
+     (lambda (vals)
+       (cond ((null? vals) '())
+             (else
+              (cons (box (car vals))
+                    (box-all (cdr vals)))))))
+   (define multi-extend
+     (lambda (names values table)
+       (cond ((null? names) table)
+             (else
+              (extend (car names)
+                      (car values)
+                      (multi-extend (cdr names)
+                                    (cdr values)
+                                    table))))))
+   #+end_src
+** *application
+   #+begin_src scheme
+   (define *application
+     (lambda (e table)
+       ((meaning (function-of e) table)
+        (evlis (arguments-of e) table))))
+   (define evlis
+     (lambda (args table)
+       (cond ((null? args) '())
+             (else
+              ;; 這裏爲什麼需要一個賦值？
+              ;; 賦值在於在作用之前就先求某些表達式的值
+              ;; 賦值在於控制求值順序
+              ;; 需要這個賦值可能是因爲我們不能預料cons對它參數的求值順序
+              ((lambda (val)
+                 (cons val
+                       (evlis (cdr args) table)))
+               (meaning (car args) table))))))
+   #+end_src
+** *const
+   #+begin_src scheme
+   ;; 因爲evlis返回的參數值會被處理爲list
+   ;; 所以用下面的兩個東西把參數從args-in-a-list中拿出來
+   (define a-prim
+     (lambda (p)
+       (lambda (args-in-a-list)
+         (p (car args-in-a-list)))))
+   (define b-prim
+     (lambda (p)
+       (lambda (args-in-a-list)
+         (p (car args-in-a-list)
+            (cadr args-in-a-list)))))
+   ;; 避免重複使用a-prim與b-prim
+   ;; 因此在最外層對它們的作用結果進行賦值
+   ;; 這樣定義*const後 以*const爲名字的closure中
+   ;; 這些本來需要被a-prim與b-prim作用才能獲得的值
+   ;; 只要經過一個*identifer的查找就能獲得了
+   (define *const
+     ((lambda (:cons :car :cdr :null? :eq? :atom? :zero? :add1 :sub1 :number?)
+        (lambda (e table)
+          (cond ((number? e) e)
+                ((eq? e #t) #t)
+                ((eq? e #f) #f)
+                ((eq? e 'cons) :cons)
+                ((eq? e 'car) :car)
+                ((eq? e 'cdr) :cdr)
+                ((eq? e 'null?) :null?)
+                ((eq? e 'eq?) :eq?)
+                ((eq? e 'atom?) :atom?)
+                ((eq? e 'zero?) :zero?)
+                ((eq? e 'add1) :add1)
+                ((eq? e 'sub1) :sub1)
+                ((eq? e 'number?) :number?)
+                )))
+      (b-prim cons)
+      (a-prim car)
+      (a-prim cdr)
+      (a-prim null?)
+      (b-prim eq?)
+      (a-prim atom?)
+      (a-prim zero?)
+      (a-prim add1)
+      (a-prim sub1)
+      (a-prim number?)
+      ))
+   #+end_src
+** *cond
+   #+begin_src scheme
+   (define *cond
+     (lambda (e table)
+       (evcon (cond-lines-of e) table)))
+   (define evcon
+     (lambda (lines table)
+       (cond ((else? (question-of (car lines)))
+              (meaning (answer-of (car lines)) table))
+             ((meaning (question-of (car lines)) table)
+              (meaning (answer-of (car lines)) table))
+             (else (evcon (cdr lines) table)))))
+   #+end_src
+** *letcc
+   #+begin_src scheme
+   ;; 其實寫解釋器學的就是closure的使用方式
+   ;; 比如下面這個把letcc直接加入我的解釋器中的過程就根本不觸及letcc的本質
+   (define *letcc
+     (lambda (e table)
+       (letcc skip
+              (beglis (ccbody-of e)
+                      (extend (name-of e)
+                              (box (a-prim skip))
+                              table)))))
+   #+end_src
+** auxiliary functions
+   #+begin_src scheme
+   (define text-of
+     (lambda (x) (car (cdr x))))
+   (define formals-of
+     (lambda (x) (car (cdr x))))
+   (define body-of
+     (lambda (x) (cdr (cdr x))))
+   (define ccbody-of
+     (lambda (x) (cdr (cdr x))))
+   (define name-of
+     (lambda (x) (car (cdr x))))
+   (define rigth-side-of
+     (lambda (x)
+       (cond ((null? (cdr (cdr x))) 0)
+             ;; this handles definitions like (define kkk)
+             (else (car (cdr (cdr x)))))))
+   (define cond-lines-of
+     (lambda (x) (cdr x)))
+   (define else?
+     (lambda (x)
+       (cond ((atom? x) (eq? x 'else))
+             (else #f))))
+   (define question-of
+     (lambda (x) (car x)))
+   (define answer-of
+     (lambda (x) (car (cdr x))))
+   (define function-of
+     (lambda (x) (car x)))
+   (define arguments-of
+     (lambda (x) (cdr x)))
+   #+end_src
+   use (let ...) to name the values of repeated expressions
+   in a function definition if they may be evaluated twice
+   for one and the same use of the function
+   and use (let ...) to name the values of expressions (without set!)
+   that are re-evaluated every time a function is used
+** 測試於下面的中文元解釋器
+* 中文解釋器零
+  除了把所有的語法詞與基礎函數名翻譯成中文以外
+  這個解釋器同上面的解釋器完全一樣
+  是寫在元解釋器中的
+  而之所以又稱之爲 零
+  是因爲 就下面的中文解釋器而言它是元解釋器
+** table as procedures and value and the-meaning and meaning
+   #+begin_src scheme
+   (define the-empty-table
+     (lambda (name)
+       (abort
+        (cons 'no-answer
+              (cons name '())))))
+   (define global-table the-empty-table)
+   (define lookup
+     (lambda (table name)
+       (table name)))
+   (define extend
+     (lambda (name1 value table)
+       (lambda (name2)
+         (cond [(eq? name1 name2) value]
+               [else (table name2)]))))
+
+   (define abort)
+   (define 求
+     (lambda (e)
+       (letcc the-end
+              (set! abort the-end)
+              (cond [(define? e) (*define e)]
+                    [else (the-meaning e)]))))
+   (define the-meaning
+     (lambda (e)
+       (meaning e lookup-in-global-table)))
+   (define meaning
+     (lambda (e table)
+       ((expression-to-action e) e table)))
+   (define lookup-in-global-table
+     (lambda (name)
+       (lookup global-table name)))
+   #+end_src
+** classification
+   #+begin_src scheme
+   (define expression-to-action
+     (lambda (e)
+       (cond ((atom? e) (atom-to-action e))
+             (else (list-to-action e)))))
+   (define atom-to-action
+     (lambda (e)
+       (cond ((number? e) *const)
+             ((eq? e #t) *const)
+             ((eq? e #f) *const)
+             ((eq? e '鏈) *const)
+             ((eq? e '容) *const)
+             ((eq? e '址) *const)
+             ((eq? e '空?) *const)
+             ((eq? e '等?) *const)
+             ((eq? e '原子?) *const)
+             ((eq? e '零?) *const)
+             ((eq? e '增一) *const)
+             ((eq? e '減一) *const)
+             ((eq? e '數?) *const)
+             (else *identifer))))
+   (define list-to-action
+     (lambda (e)
+       (cond [(null? e) *null]
+             [(atom? (car e))
+              (cond [(eq? (car e) '引)
+                     ,*quote]
+                    [(eq? (car e) 'λ)
+                     ,*lambda]
+                    [(eq? (car e) '捕)
+                     ,*letcc]
+                    [(eq? (car e) '置!)
+                     ,*set]
+                    [(eq? (car e) '控)
+                     ,*cond]
+                    [else *application]
+                    )]
+             [else *application]
+             )))
+   #+end_src
+** *define and box
+   #+begin_src scheme
+   (define define?
+     (lambda (e)
+       (cond ((atom? e) #f)
+             ((atom? (car e))
+              (eq? (car e) '定))
+             (else #f))))
+   (define *define
+     (lambda (e)
+       (set! global-table
+             (extend (name-of e)
+                     (box (the-meaning
+                           (rigth-side-of e)))
+                     global-table))))
+   (define box
+     (lambda (it)
+       (lambda (selector)
+         (selector it
+                   (lambda (new) (set! it new))))))
+
+   (define setbox
+     (lambda (box new)
+       (box (lambda (it set) (set new)))))
+   (define unbox
+     (lambda (box)
+       (box (lambda (it set) it))))
+   #+end_src
+** *null
+   #+begin_src scheme
+   (define *null
+     (lambda (e table)
+       '()))
+   #+end_src
+** *quote
+   #+begin_src scheme
+   (define *quote
+     (lambda (e table)
+       (text-of e)))
+   #+end_src
+** *identifer and *set
+   #+begin_src scheme
+   (define *identifer
+     (lambda (e table)
+       (unbox (lookup table e))))
+   (define *set
+     (lambda (e table)
+       (setbox (lookup table (name-of e))
+               (meaning (rigth-side-of e) table))))
+   #+end_src
+** *lambda
+   #+begin_src scheme
+   (define *lambda
+     (lambda (e table)
+       (lambda (args)
+         (beglis (body-of e)
+                 (multi-extend (formals-of e)
+                               (box-all args)
+                               table)))))
+
+   (define beglis
+     (lambda (es table)
+       (cond ((null? (cdr es))
+              (meaning (car es) table))
+             (else
+              ((lambda (val)
+                 (beglis (cdr es) table))
+               (meaning (car es) table))))))
+   (define box-all
+     (lambda (vals)
+       (cond ((null? vals) '())
+             (else
+              (cons (box (car vals))
+                    (box-all (cdr vals)))))))
+   (define multi-extend
+     (lambda (names values table)
+       (cond ((null? names) table)
+             (else
+              (extend (car names)
+                      (car values)
+                      (multi-extend (cdr names)
+                                    (cdr values)
+                                    table))))))
+   #+end_src
+** *application
+   #+begin_src scheme
+   (define *application
+     (lambda (e table)
+       ((meaning (function-of e) table)
+        (evlis (arguments-of e) table))))
+   (define evlis
+     (lambda (args table)
+       (cond ((null? args) '())
+             (else
+              ((lambda (val)
+                 (cons val
+                       (evlis (cdr args) table)))
+               (meaning (car args) table))))))
+   #+end_src
+** *const
+   #+begin_src scheme
+   (define a-prim
+     (lambda (p)
+       (lambda (args-in-a-list)
+         (p (car args-in-a-list)))))
+   (define b-prim
+     (lambda (p)
+       (lambda (args-in-a-list)
+         (p (car args-in-a-list)
+            (car (cdr args-in-a-list))))))
+   (define *const
+     ((lambda (:cons :car :cdr :null? :eq? :atom? :zero? :add1 :sub1 :number?)
+        (lambda (e table)
+          (cond ((number? e) e)
+                ((eq? e #t) #t)
+                ((eq? e #f) #f)
+                ((eq? e '鏈) :cons)
+                ((eq? e '容) :car)
+                ((eq? e '址) :cdr)
+                ((eq? e '空?) :null?)
+                ((eq? e '等?) :eq?)
+                ((eq? e '原子?) :atom?)
+                ((eq? e '零?) :zero?)
+                ((eq? e '增一) :add1)
+                ((eq? e '減一) :sub1)
+                ((eq? e '數?) :number?)
+                )))
+      (b-prim cons)
+      (a-prim car)
+      (a-prim cdr)
+      (a-prim null?)
+      (b-prim eq?)
+      (a-prim atom?)
+      (a-prim zero?)
+      (a-prim add1)
+      (a-prim sub1)
+      (a-prim number?)
+      ))
+   #+end_src
+** *cond
+   #+begin_src scheme
+   (define *cond
+     (lambda (e table)
+       (evcon (cond-lines-of e) table)))
+   (define evcon
+     (lambda (lines table)
+       (cond ((else? (question-of (car lines)))
+              (meaning (answer-of (car lines)) table))
+             ((meaning (question-of (car lines)) table)
+              (meaning (answer-of (car lines)) table))
+             (else (evcon (cdr lines) table)))))
+   #+end_src
+** *letcc
+   #+begin_src scheme
+   (define *letcc
+     (lambda (e table)
+       (letcc skip
+              (beglis (ccbody-of e)
+                      (extend (name-of e)
+                              (box (a-prim skip))
+                              table)))))
+   #+end_src
+** auxiliary functions
+   #+begin_src scheme
+   (define text-of
+     (lambda (x) (car (cdr x))))
+   (define formals-of
+     (lambda (x) (car (cdr x))))
+   (define body-of
+     (lambda (x) (cdr (cdr x))))
+   (define ccbody-of
+     (lambda (x) (cdr (cdr x))))
+   (define name-of
+     (lambda (x) (car (cdr x))))
+   (define rigth-side-of
+     (lambda (x)
+       (cond ((null? (cdr (cdr x))) 0)
+             (else (car (cdr (cdr x)))))))
+   (define cond-lines-of
+     (lambda (x) (cdr x)))
+   (define else?
+     (lambda (x)
+       (cond ((atom? x) (eq? x '否則))
+             (else #f))))
+   (define question-of
+     (lambda (x) (car x)))
+   (define answer-of
+     (lambda (x) (car (cdr x))))
+   (define function-of
+     (lambda (x) (car x)))
+   (define arguments-of
+     (lambda (x) (cdr x)))
+   #+end_src
+* 中文解釋器一
+** >< 記
+   1. [X] 用kkk而不用ccc
+   2. [ ] 加入apply
+      這可能嗎?
+   3. [ ] 補全<formals>的形式：
+      <variable>
+      (<variable>*)
+      (<variable> <variable>* . <variable>)
+   4. [ ] 補全用於創造語法的匹配語言
+      匹配語言是同樣重要的
+   5. 在解釋器中寫解釋器
+      可以作爲一種方式來漸進地改變解釋器的性質
+      但是非常慢
+      有沒有方法優化?
+   6. 如果是編譯器那很可能就可以優化
+      保持所編譯處理的東西能編譯自身
+      並且生成的目標代碼質量相同
+      那就是實現了編譯器的層進開發
+** 表 求 其意 意
+   #+begin_src scheme
+   (定 空表
+       (λ (名)
+           (失敗
+            (鏈 (引 無值之名)
+                (鏈 名 (引 ()))))))
+   (定 總表 空表)
+   (定 查
+       (λ (表 名)
+           (表 名)))
+   (定 擴展
+       (λ (名1 值 表)
+           (λ (名2)
+               (控 [(等? 名1 名2) 值]
+                   [否則 (表 名2)]))))
+
+   (定 失敗)
+   (定 求
+       (λ (e)
+           (捕 終
+               (置! 失敗 終)
+               (控 [(定? e) (*定 e)]
+                   [否則 (其意 e)]))))
+   (定 其意
+       (λ (e)
+           (意 e 查總表)))
+   (定 意
+       (λ (e 表)
+           ((式之作用 e) e 表)))
+   (定 查總表
+       (λ (名)
+           (查 總表 名)))
+   #+end_src
+** 分類
+   #+begin_src scheme
+   (定 式之作用
+       (λ (e)
+           (控 [(原子? e) (原子之作用 e)]
+               [否則 (鏈之作用 e)])))
+   (定 原子之作用
+       (λ (e)
+           (控 [(數? e) *常元]
+               [(等? e #t) *常元]
+               [(等? e #f) *常元]
+               [(等? e (引 鏈)) *常元]
+               [(等? e (引 容)) *常元]
+               [(等? e (引 址)) *常元]
+               [(等? e (引 空?)) *常元]
+               [(等? e (引 等?)) *常元]
+               [(等? e (引 原子?)) *常元]
+               [(等? e (引 零?)) *常元]
+               [(等? e (引 增一)) *常元]
+               [(等? e (引 減一)) *常元]
+               [(等? e (引 數?)) *常元]
+               [否則 *變元])))
+   (定 鏈之作用
+       (λ (e)
+           (控 [(空? e) *空]
+               [(原子? (容 e))
+                (控 [(等? (容 e) (引 引))
+                     ,*引]
+                    [(等? (容 e) (引 λ))
+                     ,*λ]
+                    [(等? (容 e) (引 捕))
+                     ,*捕]
+                    [(等? (容 e) (引 置!))
+                     ,*置]
+                    [(等? (容 e) (引 控))
+                     ,*控]
+                    [否則 *作用])]
+               [否則 *作用])))
+   #+end_src
+** *定 盒
+   #+begin_src scheme
+   (定 定?
+       (λ (e)
+           (控 [(原子? e) #f]
+               [(原子? (容 e))
+                (等? (容 e) (引 定))]
+               [否則 #f])))
+   (定 *定
+       (λ (e)
+           (置! 總表
+                (擴展 (名部 e)
+                      (盒 (其意
+                           (值部 e)))
+                      總表))))
+   (定 盒
+       (λ (物)
+           (λ (選擇子)
+               (選擇子 物
+                       (λ (新物) (置! 物 新物))))))
+   ;; 下面是兩個選擇子
+   (定 重置盒
+       (λ (盒 新物)
+           (盒 (λ (之物 之置) (之置 新物)))))
+   (定 取於盒
+       (λ (盒)
+           (盒 (λ (之物 之置) 之物))))
+   #+end_src
+** *空
+   #+begin_src scheme
+   (定 *空
+       (λ (e 表)
+           (引 ())))
+   #+end_src
+** *引
+   #+begin_src scheme
+   (定 *引
+     (λ (e 表)
+       (文部 e)))
+   #+end_src
+** *變元 *置
+   #+begin_src scheme
+   (定 *變元
+       (λ (e 表)
+           (取於盒 (查 表 e))))
+   (定 *置
+       (λ (e 表)
+           (重置盒 (查 表 (名部 e))
+                   (意 (值部 e) 表))))
+   #+end_src
+** *λ
+   #+begin_src scheme
+   (定 *λ
+       (λ (e 表)
+         (λ (實參鏈)
+           (求於體 (體部 e)
+                   (多擴展 (形參部 e)
+                           (多盒 實參鏈)
+                           表)))))
+
+   (定 求於體
+       (λ (式鏈 表)
+         (控 [(空? (址 式鏈))
+              (意 (容 式鏈) 表)]
+             [否則
+              ((λ (賦參)
+                 (求於體 (址 式鏈) 表))
+               (意 (容 式鏈) 表))])))
+   (定 多盒
+       (λ (實參鏈)
+         (控 [(空? 實參鏈) (引 ())]
+             [否則
+              (鏈 (盒 (容 實參鏈))
+                  (多盒 (址 實參鏈)))])))
+   (定 多擴展
+       (λ (名鏈 值鏈 表)
+         (控 [(空? 名鏈) 表]
+             [否則
+              (擴展 (容 名鏈)
+                    (容 值鏈)
+                    (多擴展 (址 名鏈)
+                            (址 值鏈)
+                            表))])))
+   #+end_src
+** *作用
+   #+begin_src scheme
+   (定 *作用
+       (λ (e 表)
+           ((意 (函數部 e) 表)
+            (求於鏈 (參數鏈部 e) 表))))
+   (定 求於鏈
+       (λ (式鏈 表)
+           (控 [(空? 式鏈) (引 ())]
+               [否則
+                ((λ (賦參)
+                     (鏈 賦參
+                         (求於鏈 (址 式鏈) 表)))
+                 (意 (容 式鏈) 表))]
+               )))
+   #+end_src
+** *常元
+   #+begin_src scheme
+   (定 準備一元函數
+       (λ (一元函數)
+           (λ (實參鏈)
+               (一元函數 (容 實參鏈)))))
+   (定 準備二元函數
+       (λ (二元函數)
+           (λ (實參鏈)
+               (二元函數 (容 實參鏈)
+                         (容 (址 實參鏈))))))
+
+   (定 *常元
+       ((λ (:鏈 :容 :址
+                 :空? :等? :原子?
+                 :零? :增一 :減一 :數?)
+            (λ (e 表)
+                (控 [(數? e) e]
+                    [(等? e #t) #t]
+                    [(等? e #f) #f]
+                    [(等? e (引 鏈)) :鏈]
+                    [(等? e (引 容)) :容]
+                    [(等? e (引 址)) :址]
+                    [(等? e (引 空?)) :空?]
+                    [(等? e (引 等?)) :等?]
+                    [(等? e (引 原子?)) :原子?]
+                    [(等? e (引 零?)) :零?]
+                    [(等? e (引 增一)) :增一]
+                    [(等? e (引 減一)) :減一]
+                    [(等? e (引 數?)) :數?]
+                    )))
+        (準備二元函數 鏈)
+        (準備一元函數 容)
+        (準備一元函數 址)
+        (準備一元函數 空?)
+        (準備二元函數 等?)
+        (準備一元函數 原子?)
+        (準備一元函數 零?)
+        (準備一元函數 增一)
+        (準備一元函數 減一)
+        (準備一元函數 數?)
+        ))
+
+   ;; 用λ實現鏈 很容易通過增加鏈中被選之物 來改變鏈的結構
+   (定 初鏈
+       (λ (容)
+           ((λ (賦址)
+                (λ (選擇子)
+                    (選擇子 (λ (x) (置! 賦址 x))
+                            容
+                            賦址)))
+            (引 ()))))
+   (定 鏈
+       (λ (容 址)
+           ((λ (賦鏈)
+                (置址 賦鏈 址)
+                賦鏈)
+            (初鏈 容))))
+   (定 置址
+       (λ (鏈 新址)
+           ((鏈 (λ (之置 之容 之址) 之置))
+            新址)))
+   (定 容
+       (λ (鏈)
+           (鏈 (λ (之置 之容 之址) 之容))))
+   (定 址
+       (λ (鏈)
+           (鏈 (λ (之置 之容 之址) 之址))))
+   #+end_src
+** *控
+   #+begin_src scheme
+   (定 *控
+       (λ (e 表)
+           (求於控 (問答鏈部 e) 表)))
+   (定 求於控
+       (λ (問答鏈 表)
+           (控 [(否則? (問部 (容 問答鏈)))
+                (意 (答部 (容 問答鏈)) 表)]
+               [(意 (問部 (容 問答鏈)) 表)
+                (意 (答部 (容 問答鏈)) 表)]
+               [否則 (求於控 (址 問答鏈) 表)]
+               )))
+   #+end_src
+** *捕
+   #+begin_src scheme
+   (定 *捕
+       (λ (e 表)
+         (捕 捕之標
+             (求於體 (捕之體部 e)
+                     (擴展 (名部 e)
+                           (盒 (準備一元函數 捕之標))
+                           表)))))
+   #+end_src
+** 輔
+   #+begin_src scheme
+   (定 文部
+       (λ (x) (容 (址 x))))
+   (定 形參部
+       (λ (x) (容 (址 x))))
+   (定 體部
+       (λ (x) (址 (址 x))))
+   (定 捕之體部
+       (λ (x) (址 (址 x))))
+   (定 名部
+       (λ (x) (容 (址 x))))
+   (定 值部
+       (λ (x)
+           (控 [(空? (址 (址 x))) 0]
+               [否則 (容 (址 (址 x)))]
+               )))
+   (定 問答鏈部
+       (λ (x) (址 x)))
+   (定 否則?
+       (λ (x)
+           (控 [(原子? x) (等? x (引 否則))]
+               [否則 #f]
+               )))
+   (定 問部
+       (λ (x) (容 x)))
+   (定 答部
+       (λ (x) (容 (址 x))))
+   (定 函數部
+       (λ (x) (容 x)))
+   (定 參數鏈部
+       (λ (x) (址 x)))
+   #+end_src
+* 測試
+** load one
+   #+name: 在元解釋器中加載value一層
+   #+begin_src scheme
+   ;; (load "dependence.scm")
+   ;; (load "interpreter-with-define-and-set!.scm")
+
+   (value
+    '(define the-empty-table
+       (lambda (name)
+         (abort
+          (cons 'no-answer
+                (cons name '()))))))
+   ;; ((value 'value) 'the-empty-table)
+   (value
+    '(define global-table the-empty-table))
+   (value
+    '(define lookup
+       (lambda (table name)
+         (table name))))
+   ;; 在全局擴展global-table的是*define
+   ;; 而*lambda作用於lambda-exp所形成的ciosure在作用於args時
+   ;; 會爲closure的body臨時擴展global-table
+   (value
+    '(define extend
+       (lambda (name1 value table)
+         (lambda (name2)
+           (cond ((eq? name1 name2) value)
+                 (else (table name2)))))))
+
+   (value
+    '(define abort)) ;; 遇到the-empty-table時跳出來報錯
+   (value
+    '(define value
+       (lambda (e)
+         (letcc the-end
+                (set! abort the-end)
+                (cond ((define? e) (*define e))
+                      (else (the-meaning e)))))))
+   (value
+    '(define the-meaning
+       (lambda (e)
+         (meaning e lookup-in-global-table))))
+   (value
+    '(define meaning
+       (lambda (e table)
+         ((expression-to-action e) e table))))
+   (value
+    '(define lookup-in-global-table
+       (lambda (name)
+         (lookup global-table name))))
+   ;; 這裏通過調用lookup來作一個closure
+   ;; 這個closure把當前的global-table保護起來
+   ;; (define lookup-in-global-table
+   ;;   (lambda (name) (global-table name)))
+   ;; 爲什麼需要這個closure？
+   ;; 保護起來的意思就是要延遲這個closure的body的求值
+   ;; 使得求值時這個body中的global-table可以是最新的
+   ;; 現在懂得使用closure的技巧了
+   ;; 正是這種技巧使得利用define來定義遞歸函數成爲可能
+   ;; 這樣也就明白了Y!和letrec
+
+   (value
+    '(define expression-to-action
+       (lambda (e)
+         (cond ((atom? e) (atom-to-action e))
+               (else (list-to-action e))))))
+   (value
+    '(define atom-to-action
+       (lambda (e)
+         (cond [(number? e) *const]
+               [(eq? e #t) *const]
+               [(eq? e #f) *const]
+               [(eq? e 'cons) *const]
+               [(eq? e 'car) *const]
+               [(eq? e 'cdr) *const]
+               [(eq? e 'null?) *const]
+               [(eq? e 'eq?) *const]
+               [(eq? e 'atom?) *const]
+               [(eq? e 'zero?) *const]
+               [(eq? e 'add1) *const]
+               [(eq? e 'sub1) *const]
+               [(eq? e 'number?) *const]
+               [else *identifer]))))
+   (value
+    '(define list-to-action
+       (lambda (e)
+         (cond [(null? e) *null]
+               [(atom? (car e))
+                (cond [(eq? (car e) 'quote)
+                       ,*quote]
+                      [(eq? (car e) 'lambda)
+                       ,*lambda]
+                      [(eq? (car e) 'letcc)
+                       ,*letcc]
+                      [(eq? (car e) 'set!)
+                       ,*set]
+                      [(eq? (car e) 'cond)
+                       ,*cond]
+                      [else *application])]
+               [else *application]))))
+
+   (value
+    '(define define?
+       (lambda (e)
+         (cond ((atom? e) #f)
+               ((atom? (car e))
+                (eq? (car e) 'define))
+               (else #f)))))
+   (value
+    '(define *define
+       (lambda (e)
+         (set! global-table
+               (extend (name-of e)
+                       (box (the-meaning
+                             (rigth-side-of e)))
+                       global-table)))))
+   (value
+    '(define box
+       (lambda (it)
+         (lambda (selector)
+           (selector it
+                     (lambda (new) (set! it new)))))))
+   ;; 下面是兩個selector
+   ;; selector的用法是：(從哪選 (lambda (有那些) (選哪個與如何處理)))
+   (value
+    '(define setbox
+       (lambda (box new)
+         (box (lambda (it set) (set new))))))
+   (value
+    '(define unbox
+       (lambda (box)
+         (box (lambda (it set) it)))))
+
+   (value
+    '(define *null
+       (lambda (e table)
+         '())))
+
+   (value
+    '(define *quote
+       (lambda (e table)
+         (text-of e))))
+
+   (value
+    '(define *identifer
+       (lambda (e table)
+         (unbox (lookup table e)))))
+   (value
+    '(define *set
+       (lambda (e table)
+         (setbox (lookup table (name-of e))
+                 (meaning (rigth-side-of e) table)))))
+
+   (value
+    '(define *lambda
+       (lambda (e table)
+         (lambda (args)
+           (beglis (body-of e)
+                   (multi-extend (formals-of e)
+                                 (box-all args)
+                                 table))))))
+   ;; beglis denote? begain list
+   ;; 它對<body>中的所有<sexp>求值
+   ;; 只返回最後一個<sexp>的值 其他的<sexp>用來形成副作用
+   (value
+    '(define beglis
+       (lambda (es table)
+         (cond ((null? (cdr es))           ;so body-of e con't be empty
+                (meaning (car es) table))
+               (else
+                ;; 這裏需要一個賦值
+                ;; 因爲後面的東西(beglis (cdr es) table)
+                ;; 需要在前面的副作用所形成新環境中求值
+                ((lambda (val)
+                   (beglis (cdr es) table))
+                 (meaning (car es) table)))))))
+   (value
+    '(define box-all
+       (lambda (vals)
+         (cond ((null? vals) '())
+               (else
+                (cons (box (car vals))
+                      (box-all (cdr vals))))))))
+   (value
+    '(define multi-extend
+       (lambda (names values table)
+         (cond ((null? names) table)
+               (else
+                (extend (car names)
+                        (car values)
+                        (multi-extend (cdr names)
+                                      (cdr values)
+                                      table)))))))
+
+   (value
+    '(define *application
+       (lambda (e table)
+         ((meaning (function-of e) table)
+          (evlis (arguments-of e) table)))))
+   (value
+    '(define evlis
+       (lambda (args table)
+         (cond ((null? args) '())
+               (else
+                ;; 這裏爲什麼需要一個賦值？
+                ;; 賦值在於在作用之前就先求某些表達式的值
+                ;; 賦值在於控制求值順序
+                ;; 需要這個賦值可能是因爲我們不能預料cons對它參數的求值順序
+                ((lambda (val)
+                   (cons val
+                         (evlis (cdr args) table)))
+                 (meaning (car args) table)))))))
+
+   ;; 因爲evlis返回的參數值會被處理爲list
+   ;; 所以用下面的兩個東西把參數從args-in-a-list中拿出來
+   (value
+    '(define a-prim
+       (lambda (p)
+         (lambda (args-in-a-list)
+           (p (car args-in-a-list))))))
+   (value
+    '(define b-prim
+       (lambda (p)
+         (lambda (args-in-a-list)
+           (p (car args-in-a-list)
+              (car (cdr args-in-a-list)))))))
+   ;; 避免重複使用a-prim與b-prim
+   ;; 因此在最外層對它們的作用結果進行賦值
+   ;; 這樣定義*const後 以*const爲名字的closure中
+   ;; 這些本來需要被a-prim與b-prim作用才能獲得的值
+   ;; 只要經過一個*identifer的查找就能獲得了
+   (value
+    '(define *const
+       ((lambda (:cons :car :cdr :null? :eq? :atom? :zero? :add1 :sub1 :number?)
+          (lambda (e table)
+            (cond ((number? e) e)
+                  ((eq? e #t) #t)
+                  ((eq? e #f) #f)
+                  ((eq? e 'cons) :cons)
+                  ((eq? e 'car) :car)
+                  ((eq? e 'cdr) :cdr)
+                  ((eq? e 'null?) :null?)
+                  ((eq? e 'eq?) :eq?)
+                  ((eq? e 'atom?) :atom?)
+                  ((eq? e 'zero?) :zero?)
+                  ((eq? e 'add1) :add1)
+                  ((eq? e 'sub1) :sub1)
+                  ((eq? e 'number?) :number?)
+                  )))
+        (b-prim cons)
+        (a-prim car)
+        (a-prim cdr)
+        (a-prim null?)
+        (b-prim eq?)
+        (a-prim atom?)
+        (a-prim zero?)
+        (a-prim add1)
+        (a-prim sub1)
+        (a-prim number?)
+        )))
+
+   (value
+    '(define *cond
+       (lambda (e table)
+         (evcon (cond-lines-of e) table))))
+   (value
+    '(define evcon
+       (lambda (lines table)
+         (cond ((else? (question-of (car lines)))
+                (meaning (answer-of (car lines)) table))
+               ((meaning (question-of (car lines)) table)
+                (meaning (answer-of (car lines)) table))
+               (else (evcon (cdr lines) table))))))
+
+   ;; 其實寫解釋器學的就是closure的使用方式
+   ;; 比如下面這個把letcc直接加入我的解釋器中的過程就根本不觸及letcc的本質
+   (value
+    '(define *letcc
+       (lambda (e table)
+         (letcc skip
+                (beglis (ccbody-of e)
+                        (extend (name-of e)
+                                (box (a-prim skip))
+                                table))))))
+
+   (value
+    '(define text-of
+       (lambda (x) (car (cdr x)))))
+   (value
+    '(define formals-of
+       (lambda (x) (car (cdr x)))))
+   (value
+    '(define body-of
+       (lambda (x) (cdr (cdr x)))))
+   (value
+    '(define ccbody-of
+       (lambda (x) (cdr (cdr x)))))
+   (value
+    '(define name-of
+       (lambda (x) (car (cdr x)))))
+   (value
+    '(define rigth-side-of
+       (lambda (x)
+         (cond ((null? (cdr (cdr x))) 0)
+               ;; this handles definitions like (define kkk)
+               (else (car (cdr (cdr x))))))))
+   (value
+    '(define cond-lines-of
+       (lambda (x) (cdr x))))
+   (value
+    '(define else?
+       (lambda (x)
+         (cond ((atom? x) (eq? x 'else))
+               (else #f)))))
+   (value
+    '(define question-of
+       (lambda (x) (car x))))
+   (value
+    '(define answer-of
+       (lambda (x) (car (cdr x)))))
+   (value
+    '(define function-of
+       (lambda (x) (car x))))
+   (value
+    '(define arguments-of
+       (lambda (x) (cdr x))))
+   #+end_src
+** >< load two
+   爲什麼需要list之後才能正常測試?
+   #+name: 在value中加載value二層
+   #+begin_src scheme
+   ;; (define value-one
+   ;;   (lambda (e)
+   ;;     ((value 'value) e)))
+   ;; (value-one
+   ;;  '((lambda (x) (cons 1 x)) 2))
+   (define value-one
+     (lambda (e)
+       ((value 'value) (list e))))
+   (value-one
+    '(define the-empty-table
+       (lambda (name)
+         (abort
+          (cons 'no-answer
+                (cons name '()))))))
+   (value-one
+    '(define global-table the-empty-table))
+   (value-one
+    '(define lookup
+       (lambda (table name)
+         (table name))))
+   ;; 在全局擴展global-table的是*define
+   ;; 而*lambda作用於lambda-exp所形成的ciosure在作用於args時
+   ;; 會爲closure的body臨時擴展global-table
+   (value-one
+    '(define extend
+       (lambda (name1 value table)
+         (lambda (name2)
+           (cond ((eq? name1 name2) value)
+                 (else (table name2)))))))
+
+   (value-one
+    '(define abort)) ;; 遇到the-empty-table時跳出來報錯
+   (value-one
+    '(define value
+       (lambda (e)
+         (letcc the-end
+                (set! abort the-end)
+                (cond ((define? e) (*define e))
+                      (else (the-meaning e)))))))
+   (value-one
+    '(define the-meaning
+       (lambda (e)
+         (meaning e lookup-in-global-table))))
+   (value-one
+    '(define meaning
+       (lambda (e table)
+         ((expression-to-action e) e table))))
+   (value-one
+    '(define lookup-in-global-table
+       (lambda (name)
+         (lookup global-table name))))
+   ;; 這裏通過調用lookup來作一個closure
+   ;; 這個closure把當前的global-table保護起來
+   ;; (define lookup-in-global-table
+   ;;   (lambda (name) (global-table name)))
+   ;; 爲什麼需要這個closure？
+   ;; 保護起來的意思就是要延遲這個closure的body的求值
+   ;; 使得求值時這個body中的global-table可以是最新的
+   ;; 現在懂得使用closure的技巧了
+   ;; 正是這種技巧使得利用define來定義遞歸函數成爲可能
+   ;; 這樣也就明白了Y!和letrec
+
+   (value-one
+    '(define expression-to-action
+       (lambda (e)
+         (cond ((atom? e) (atom-to-action e))
+               (else (list-to-action e))))))
+   (value-one
+    '(define atom-to-action
+       (lambda (e)
+         (cond [(number? e) *const]
+               [(eq? e #t) *const]
+               [(eq? e #f) *const]
+               [(eq? e 'cons) *const]
+               [(eq? e 'car) *const]
+               [(eq? e 'cdr) *const]
+               [(eq? e 'null?) *const]
+               [(eq? e 'eq?) *const]
+               [(eq? e 'atom?) *const]
+               [(eq? e 'zero?) *const]
+               [(eq? e 'add1) *const]
+               [(eq? e 'sub1) *const]
+               [(eq? e 'number?) *const]
+               [else *identifer]))))
+   (value-one
+    '(define list-to-action
+       (lambda (e)
+         (cond [(null? e) *null]
+               [(atom? (car e))
+                (cond [(eq? (car e) 'quote)
+                       ,*quote]
+                      [(eq? (car e) 'lambda)
+                       ,*lambda]
+                      [(eq? (car e) 'letcc)
+                       ,*letcc]
+                      [(eq? (car e) 'set!)
+                       ,*set]
+                      [(eq? (car e) 'cond)
+                       ,*cond]
+                      [else *application])]
+               [else *application]))))
+
+   (value-one
+    '(define define?
+       (lambda (e)
+         (cond ((atom? e) #f)
+               ((atom? (car e))
+                (eq? (car e) 'define))
+               (else #f)))))
+   (value-one
+    '(define *define
+       (lambda (e)
+         (set! global-table
+               (extend (name-of e)
+                       (box (the-meaning
+                             (rigth-side-of e)))
+                       global-table)))))
+   (value-one
+    '(define box
+       (lambda (it)
+         (lambda (selector)
+           (selector it
+                     (lambda (new) (set! it new)))))))
+   ;; 下面是兩個selector
+   ;; selector的用法是：(從哪選 (lambda (有那些) (選哪個與如何處理)))
+   (value-one
+    '(define setbox
+       (lambda (box new)
+         (box (lambda (it set) (set new))))))
+   (value-one
+    '(define unbox
+       (lambda (box)
+         (box (lambda (it set) it)))))
+
+   (value-one
+    '(define *null
+       (lambda (e table)
+         '())))
+
+   (value-one
+    '(define *quote
+       (lambda (e table)
+         (text-of e))))
+
+   (value-one
+    '(define *identifer
+       (lambda (e table)
+         (unbox (lookup table e)))))
+   (value-one
+    '(define *set
+       (lambda (e table)
+         (setbox (lookup table (name-of e))
+                 (meaning (rigth-side-of e) table)))))
+
+   (value-one
+    '(define *lambda
+       (lambda (e table)
+         (lambda (args)
+           (beglis (body-of e)
+                   (multi-extend (formals-of e)
+                                 (box-all args)
+                                 table))))))
+   ;; beglis denote? begain list
+   ;; 它對<body>中的所有<sexp>求值
+   ;; 只返回最後一個<sexp>的值 其他的<sexp>用來形成副作用
+   (value-one
+    '(define beglis
+       (lambda (es table)
+         (cond ((null? (cdr es))           ;so body-of e con't be empty
+                (meaning (car es) table))
+               (else
+                ;; 這裏需要一個賦值
+                ;; 因爲後面的東西(beglis (cdr es) table)
+                ;; 需要在前面的副作用所形成新環境中求值
+                ((lambda (val)
+                   (beglis (cdr es) table))
+                 (meaning (car es) table)))))))
+   (value-one
+    '(define box-all
+       (lambda (vals)
+         (cond ((null? vals) '())
+               (else
+                (cons (box (car vals))
+                      (box-all (cdr vals))))))))
+   (value-one
+    '(define multi-extend
+       (lambda (names values table)
+         (cond ((null? names) table)
+               (else
+                (extend (car names)
+                        (car values)
+                        (multi-extend (cdr names)
+                                      (cdr values)
+                                      table)))))))
+
+   (value-one
+    '(define *application
+       (lambda (e table)
+         ((meaning (function-of e) table)
+          (evlis (arguments-of e) table)))))
+   (value-one
+    '(define evlis
+       (lambda (args table)
+         (cond ((null? args) '())
+               (else
+                ;; 這裏爲什麼需要一個賦值？
+                ;; 賦值在於在作用之前就先求某些表達式的值
+                ;; 賦值在於控制求值順序
+                ;; 需要這個賦值可能是因爲我們不能預料cons對它參數的求值順序
+                ((lambda (val)
+                   (cons val
+                         (evlis (cdr args) table)))
+                 (meaning (car args) table)))))))
+
+   ;; 因爲evlis返回的參數值會被處理爲list
+   ;; 所以用下面的兩個東西把參數從args-in-a-list中拿出來
+   (value-one
+    '(define a-prim
+       (lambda (p)
+         (lambda (args-in-a-list)
+           (p (car args-in-a-list))))))
+   (value-one
+    '(define b-prim
+       (lambda (p)
+         (lambda (args-in-a-list)
+           (p (car args-in-a-list)
+              (cadr args-in-a-list))))))
+   ;; 避免重複使用a-prim與b-prim
+   ;; 因此在最外層對它們的作用結果進行賦值
+   ;; 這樣定義*const後 以*const爲名字的closure中
+   ;; 這些本來需要被a-prim與b-prim作用才能獲得的值
+   ;; 只要經過一個*identifer的查找就能獲得了
+   (value-one
+    '(define *const
+       ((lambda (:cons :car :cdr :null? :eq? :atom? :zero? :add1 :sub1 :number?)
+          (lambda (e table)
+            (cond ((number? e) e)
+                  ((eq? e #t) #t)
+                  ((eq? e #f) #f)
+                  ((eq? e 'cons) :cons)
+                  ((eq? e 'car) :car)
+                  ((eq? e 'cdr) :cdr)
+                  ((eq? e 'null?) :null?)
+                  ((eq? e 'eq?) :eq?)
+                  ((eq? e 'atom?) :atom?)
+                  ((eq? e 'zero?) :zero?)
+                  ((eq? e 'add1) :add1)
+                  ((eq? e 'sub1) :sub1)
+                  ((eq? e 'number?) :number?)
+                  )))
+        (b-prim cons)
+        (a-prim car)
+        (a-prim cdr)
+        (a-prim null?)
+        (b-prim eq?)
+        (a-prim atom?)
+        (a-prim zero?)
+        (a-prim add1)
+        (a-prim sub1)
+        (a-prim number?)
+        )))
+
+   (value-one
+    '(define *cond
+       (lambda (e table)
+         (evcon (cond-lines-of e) table))))
+   (value-one
+    '(define evcon
+       (lambda (lines table)
+         (cond ((else? (question-of (car lines)))
+                (meaning (answer-of (car lines)) table))
+               ((meaning (question-of (car lines)) table)
+                (meaning (answer-of (car lines)) table))
+               (else (evcon (cdr lines) table))))))
+
+   ;; 其實寫解釋器學的就是closure的使用方式
+   ;; 比如下面這個把letcc直接加入我的解釋器中的過程就根本不觸及letcc的本質
+   (value-one
+    '(define *letcc
+       (lambda (e table)
+         (letcc skip
+                (beglis (ccbody-of e)
+                        (extend (name-of e)
+                                (box (a-prim skip))
+                                table))))))
+
+   (value-one
+    '(define text-of
+       (lambda (x) (car (cdr x)))))
+   (value-one
+    '(define formals-of
+       (lambda (x) (car (cdr x)))))
+   (value-one
+    '(define body-of
+       (lambda (x) (cdr (cdr x)))))
+   (value-one
+    '(define ccbody-of
+       (lambda (x) (cdr (cdr x)))))
+   (value-one
+    '(define name-of
+       (lambda (x) (car (cdr x)))))
+   (value-one
+    '(define rigth-side-of
+       (lambda (x)
+         (cond ((null? (cdr (cdr x))) 0)
+               ;; this handles definitions like (define kkk)
+               (else (car (cdr (cdr x))))))))
+   (value-one
+    '(define cond-lines-of
+       (lambda (x) (cdr x))))
+   (value-one
+    '(define else?
+       (lambda (x)
+         (cond ((atom? x) (eq? x 'else))
+               (else #f)))))
+   (value-one
+    '(define question-of
+       (lambda (x) (car x))))
+   (value-one
+    '(define answer-of
+       (lambda (x) (car (cdr x)))))
+   (value-one
+    '(define function-of
+       (lambda (x) (car x))))
+   (value-one
+    '(define arguments-of
+       (lambda (x) (cdr x))))
+   #+end_src
+** 加載 零
+   #+name: 在中文解釋器零中加載中文解釋器一
+   #+begin_src scheme
+   (load "dependence.scm")
+   (load "中文解釋器零.scm")
+   (求 '(定 空表
+            (λ (名)
+                (失敗
+                 (鏈 (引 無值之名)
+                     (鏈 名 (引 ())))))))
+
+   (求 '(定 空表
+        (λ (名)
+            (失敗
+             (鏈 (引 無值之名)
+                 (鏈 名 (引 ())))))))
+   (求 '(定 總表 空表))
+   (求 '(定 查
+        (λ (表 名)
+            (表 名))))
+   (求 '(定 擴展
+        (λ (名1 值 表)
+            (λ (名2)
+                (控 [(等? 名1 名2) 值]
+                    [否則 (表 名2)])))))
+
+   (求 '(定 失敗))
+   (求 '(定 求
+        (λ (e)
+            (捕 終
+                (置! 失敗 終)
+                (控 [(定? e) (*定 e)]
+                    [否則 (其意 e)])))))
+   (求 '(定 其意
+        (λ (e)
+            (意 e 查總表))))
+   (求 '(定 意
+        (λ (e 表)
+            ((式之作用 e) e 表))))
+   (求 '(定 查總表
+        (λ (名)
+            (查 總表 名))))
+
+   (求 '(定 式之作用
+        (λ (e)
+            (控 [(原子? e) (原子之作用 e)]
+                [否則 (鏈之作用 e)]))))
+   (求 '(定 原子之作用
+        (λ (e)
+            (控 [(數? e) *常元]
+                [(等? e #t) *常元]
+                [(等? e #f) *常元]
+                [(等? e (引 鏈)) *常元]
+                [(等? e (引 容)) *常元]
+                [(等? e (引 址)) *常元]
+                [(等? e (引 空?)) *常元]
+                [(等? e (引 等?)) *常元]
+                [(等? e (引 原子?)) *常元]
+                [(等? e (引 零?)) *常元]
+                [(等? e (引 增一)) *常元]
+                [(等? e (引 減一)) *常元]
+                [(等? e (引 數?)) *常元]
+                [否則 *變元]))))
+   (求 '(定 鏈之作用
+        (λ (e)
+            (控 [(空? e) *空]
+                [(原子? (容 e))
+                 (控 [(等? (容 e) (引 引))
+                      ,*引]
+                     [(等? (容 e) (引 λ))
+                      ,*λ]
+                     [(等? (容 e) (引 捕))
+                      ,*捕]
+                     [(等? (容 e) (引 置!))
+                      ,*置]
+                     [(等? (容 e) (引 控))
+                      ,*控]
+                     [否則 *作用])]
+                [否則 *作用]))))
+
+   (求 '(定 定?
+        (λ (e)
+            (控 [(原子? e) #f]
+                [(原子? (容 e))
+                 (等? (容 e) (引 定))]
+                [否則 #f]))))
+   (求 '(定 *定
+        (λ (e)
+            (置! 總表
+                 (擴展 (名部 e)
+                       (盒 (其意
+                            (值部 e)))
+                       總表)))))
+   (求 '(定 盒
+        (λ (物)
+            (λ (選擇子)
+                (選擇子 物
+                        (λ (新物) (置! 物 新物)))))))
+   ;; 下面是兩個選擇子
+   (求 '(定 重置盒
+        (λ (盒 新物)
+            (盒 (λ (之物 之置) (之置 新物))))))
+   (求 '(定 取於盒
+        (λ (盒)
+            (盒 (λ (之物 之置) 之物)))))
+
+   (求 '(定 *空
+        (λ (e 表)
+            (引 ()))))
+
+   (求 '(定 *引
+        (λ (e 表)
+            (文部 e))))
+
+   (求 '(定 *變元
+        (λ (e 表)
+            (取於盒 (查 表 e)))))
+   (求 '(定 *置
+        (λ (e 表)
+            (重置盒 (查 表 (名部 e))
+                    (意 (值部 e) 表)))))
+
+   (求 '(定 *λ
+        (λ (e 表)
+            (λ (實參鏈)
+                (求於體 (體部 e)
+                        (多擴展 (形參部 e)
+                                (多盒 實參鏈)
+                                表))))))
+
+   (求 '(定 求於體
+        (λ (式鏈 表)
+            (控 [(空? (址 式鏈))
+                 (意 (容 式鏈) 表)]
+                [否則
+                 ((λ (賦參)
+                      (求於體 (址 式鏈) 表))
+                  (意 (容 式鏈) 表))]))))
+   (求 '(定 多盒
+        (λ (實參鏈)
+            (控 [(空? 實參鏈) (引 ())]
+                [否則
+                 (鏈 (盒 (容 實參鏈))
+                     (多盒 (址 實參鏈)))]))))
+   (求 '(定 多擴展
+        (λ (名鏈 值鏈 表)
+            (控 [(空? 名鏈) 表]
+                [否則
+                 (擴展 (容 名鏈)
+                       (容 值鏈)
+                       (多擴展 (址 名鏈)
+                               (址 值鏈)
+                               表))]))))
+
+   (求 '(定 *作用
+        (λ (e 表)
+            ((意 (函數部 e) 表)
+             (求於鏈 (參數鏈部 e) 表)))))
+   (求 '(定 求於鏈
+        (λ (式鏈 表)
+            (控 [(空? 式鏈) (引 ())]
+                [否則
+                 ((λ (賦參)
+                      (鏈 賦參
+                          (求於鏈 (址 式鏈) 表)))
+                  (意 (容 式鏈) 表))]
+                ))))
+
+   (求 '(定 準備一元函數
+        (λ (一元函數)
+            (λ (實參鏈)
+                (一元函數 (容 實參鏈))))))
+   (求 '(定 準備二元函數
+        (λ (二元函數)
+            (λ (實參鏈)
+                (二元函數 (容 實參鏈)
+                          (容 (址 實參鏈)))))))
+
+   (求 '(定 *常元
+        ((λ (:鏈 :容 :址
+                  :空? :等? :原子?
+                  :零? :增一 :減一 :數?)
+             (λ (e 表)
+                 (控 [(數? e) e]
+                     [(等? e #t) #t]
+                     [(等? e #f) #f]
+                     [(等? e (引 鏈)) :鏈]
+                     [(等? e (引 容)) :容]
+                     [(等? e (引 址)) :址]
+                     [(等? e (引 空?)) :空?]
+                     [(等? e (引 等?)) :等?]
+                     [(等? e (引 原子?)) :原子?]
+                     [(等? e (引 零?)) :零?]
+                     [(等? e (引 增一)) :增一]
+                     [(等? e (引 減一)) :減一]
+                     [(等? e (引 數?)) :數?]
+                     )))
+         (準備二元函數 鏈)
+         (準備一元函數 容)
+         (準備一元函數 址)
+         (準備一元函數 空?)
+         (準備二元函數 等?)
+         (準備一元函數 原子?)
+         (準備一元函數 零?)
+         (準備一元函數 增一)
+         (準備一元函數 減一)
+         (準備一元函數 數?)
+         )))
+
+   ;; 用λ實現鏈 很容易通過增加鏈中被選之物 來改變鏈的結構
+   (求 '(定 初鏈
+        (λ (容)
+            ((λ (賦址)
+                 (λ (選擇子)
+                     (選擇子 (λ (x) (置! 賦址 x))
+                             容
+                             賦址)))
+             (引 ())))))
+   (求 '(定 鏈
+        (λ (容 址)
+            ((λ (賦鏈)
+                 (置址 賦鏈 址)
+                 賦鏈)
+             (初鏈 容)))))
+   (求 '(定 置址
+        (λ (鏈 新址)
+            ((鏈 (λ (之置 之容 之址) 之置))
+             新址))))
+   (求 '(定 容
+        (λ (鏈)
+            (鏈 (λ (之置 之容 之址) 之容)))))
+   (求 '(定 址
+        (λ (鏈)
+            (鏈 (λ (之置 之容 之址) 之址)))))
+
+   (求 '(定 *控
+        (λ (e 表)
+            (求於控 (問答鏈部 e) 表))))
+   (求 '(定 求於控
+        (λ (問答鏈 表)
+            (控 [(否則? (問部 (容 問答鏈)))
+                 (意 (答部 (容 問答鏈)) 表)]
+                [(意 (問部 (容 問答鏈)) 表)
+                 (意 (答部 (容 問答鏈)) 表)]
+                [否則 (求於控 (址 問答鏈) 表)]
+                ))))
+
+   (求 '(定 *捕
+        (λ (e 表)
+            (捕 捕之標
+                (求於體 (捕之體部 e)
+                        (擴展 (名部 e)
+                              (盒 (準備一元函數 捕之標))
+                              表))))))
+
+   (求 '(定 文部
+        (λ (x) (容 (址 x)))))
+   (求 '(定 形參部
+        (λ (x) (容 (址 x)))))
+   (求 '(定 體部
+        (λ (x) (址 (址 x)))))
+   (求 '(定 捕之體部
+        (λ (x) (址 (址 x)))))
+   (求 '(定 名部
+        (λ (x) (容 (址 x)))))
+   (求 '(定 值部
+        (λ (x)
+            (控 [(空? (址 (址 x))) 0]
+                [否則 (容 (址 (址 x)))]
+                ))))
+   (求 '(定 問答鏈部
+        (λ (x) (址 x))))
+   (求 '(定 否則?
+        (λ (x)
+            (控 [(原子? x) (等? x (引 否則))]
+                [否則 #f]
+                ))))
+   (求 '(定 問部
+        (λ (x) (容 x))))
+   (求 '(定 答部
+        (λ (x) (容 (址 x)))))
+   (求 '(定 函數部
+        (λ (x) (容 x))))
+   (求 '(定 參數鏈部
+        (λ (x) (址 x))))
+   #+end_src
+** >< 加載 一
+   爲什麼需要把參數列表之後才能作中文解釋器中的求值?
+   從錯誤信息看出一開始就在作用(car x)
+   #+name: 在中文解釋器一中加載自身第一層
+   #+begin_src scheme
+   (define 中文解釋器一
+     (lambda (x)
+       ((求 '求) (list x))))
+
+   (中文解釋器一
+    '(定 空表
+         (λ (名)
+           (失敗
+            (鏈 (引 無值之名)
+                (鏈 名 (引 ())))))))
+   (中文解釋器一
+    '(定 總表 空表))
+   (中文解釋器一
+    '(定 查
+         (λ (表 名)
+           (表 名))))
+   (中文解釋器一
+    '(定 擴展
+         (λ (名1 值 表)
+           (λ (名2)
+             (控 [(等? 名1 名2) 值]
+                 [否則 (表 名2)])))))
+
+   (中文解釋器一
+    '(定 失敗))
+   (中文解釋器一
+    '(定 求
+         (λ (e)
+           (捕 終
+               (置! 失敗 終)
+               (控 [(定? e) (*定 e)]
+                   [否則 (其意 e)])))))
+   (中文解釋器一
+    '(定 其意
+         (λ (e)
+           (意 e 查總表))))
+   (中文解釋器一
+    '(定 意
+         (λ (e 表)
+           ((式之作用 e) e 表))))
+   (中文解釋器一
+    '(定 查總表
+         (λ (名)
+           (查 總表 名))))
+
+   (中文解釋器一
+    '(定 式之作用
+         (λ (e)
+           (控 [(原子? e) (原子之作用 e)]
+               [否則 (鏈之作用 e)]))))
+   (中文解釋器一
+    '(定 原子之作用
+         (λ (e)
+           (控 [(數? e) *常元]
+               [(等? e #t) *常元]
+               [(等? e #f) *常元]
+               [(等? e (引 鏈)) *常元]
+               [(等? e (引 容)) *常元]
+               [(等? e (引 址)) *常元]
+               [(等? e (引 空?)) *常元]
+               [(等? e (引 等?)) *常元]
+               [(等? e (引 原子?)) *常元]
+               [(等? e (引 零?)) *常元]
+               [(等? e (引 增一)) *常元]
+               [(等? e (引 減一)) *常元]
+               [(等? e (引 數?)) *常元]
+               [否則 *變元]))))
+   (中文解釋器一
+    '(定 鏈之作用
+         (λ (e)
+           (控 [(空? e) *空]
+               [(原子? (容 e))
+                (控 [(等? (容 e) (引 引))
+                     ,*引]
+                    [(等? (容 e) (引 λ))
+                     ,*λ]
+                    [(等? (容 e) (引 捕))
+                     ,*捕]
+                    [(等? (容 e) (引 置!))
+                     ,*置]
+                    [(等? (容 e) (引 控))
+                     ,*控]
+                    [否則 *作用])]
+               [否則 *作用]))))
+
+   (中文解釋器一
+    '(定 定?
+         (λ (e)
+           (控 [(原子? e) #f]
+               [(原子? (容 e))
+                (等? (容 e) (引 定))]
+               [否則 #f]))))
+   (中文解釋器一
+    '(定 *定
+         (λ (e)
+           (置! 總表
+                (擴展 (名部 e)
+                      (盒 (其意
+                           (值部 e)))
+                      總表)))))
+   (中文解釋器一
+    '(定 盒
+         (λ (物)
+           (λ (選擇子)
+             (選擇子 物
+                     (λ (新物) (置! 物 新物)))))))
+   ;; 下面是兩個選擇子
+   (中文解釋器一
+    '(定 重置盒
+         (λ (盒 新物)
+           (盒 (λ (之物 之置) (之置 新物))))))
+   (中文解釋器一
+    '(定 取於盒
+         (λ (盒)
+           (盒 (λ (之物 之置) 之物)))))
+
+   (中文解釋器一
+    '(定 *空
+         (λ (e 表)
+           (引 ()))))
+
+   (中文解釋器一
+    '(定 *引
+         (λ (e 表)
+           (文部 e))))
+
+   (中文解釋器一
+    '(定 *變元
+         (λ (e 表)
+           (取於盒 (查 表 e)))))
+   (中文解釋器一
+    '(定 *置
+         (λ (e 表)
+           (重置盒 (查 表 (名部 e))
+                   (意 (值部 e) 表)))))
+
+   (中文解釋器一
+    '(定 *λ
+         (λ (e 表)
+           (λ (實參鏈)
+             (求於體 (體部 e)
+                     (多擴展 (形參部 e)
+                             (多盒 實參鏈)
+                             表))))))
+
+   (中文解釋器一
+    '(定 求於體
+         (λ (式鏈 表)
+           (控 [(空? (址 式鏈))
+                (意 (容 式鏈) 表)]
+               [否則
+                ((λ (賦參)
+                   (求於體 (址 式鏈) 表))
+                 (意 (容 式鏈) 表))]))))
+   (中文解釋器一
+    '(定 多盒
+         (λ (實參鏈)
+           (控 [(空? 實參鏈) (引 ())]
+               [否則
+                (鏈 (盒 (容 實參鏈))
+                    (多盒 (址 實參鏈)))]))))
+   (中文解釋器一
+    '(定 多擴展
+         (λ (名鏈 值鏈 表)
+           (控 [(空? 名鏈) 表]
+               [否則
+                (擴展 (容 名鏈)
+                      (容 值鏈)
+                      (多擴展 (址 名鏈)
+                              (址 值鏈)
+                              表))]))))
+
+   (中文解釋器一
+    '(定 *作用
+         (λ (e 表)
+           ((意 (函數部 e) 表)
+            (求於鏈 (參數鏈部 e) 表)))))
+   (中文解釋器一
+    '(定 求於鏈
+         (λ (式鏈 表)
+           (控 [(空? 式鏈) (引 ())]
+               [否則
+                ((λ (賦參)
+                   (鏈 賦參
+                       (求於鏈 (址 式鏈) 表)))
+                 (意 (容 式鏈) 表))]
+               ))))
+
+   (中文解釋器一
+    '(定 準備一元函數
+         (λ (一元函數)
+           (λ (實參鏈)
+             (一元函數 (容 實參鏈))))))
+   (中文解釋器一
+    '(定 準備二元函數
+         (λ (二元函數)
+           (λ (實參鏈)
+             (二元函數 (容 實參鏈)
+                       (容 (址 實參鏈)))))))
+
+   (中文解釋器一
+    '(定 *常元
+         ((λ (:鏈 :容 :址
+                   :空? :等? :原子?
+                   :零? :增一 :減一 :數?)
+            (λ (e 表)
+              (控 [(數? e) e]
+                  [(等? e #t) #t]
+                  [(等? e #f) #f]
+                  [(等? e (引 鏈)) :鏈]
+                  [(等? e (引 容)) :容]
+                  [(等? e (引 址)) :址]
+                  [(等? e (引 空?)) :空?]
+                  [(等? e (引 等?)) :等?]
+                  [(等? e (引 原子?)) :原子?]
+                  [(等? e (引 零?)) :零?]
+                  [(等? e (引 增一)) :增一]
+                  [(等? e (引 減一)) :減一]
+                  [(等? e (引 數?)) :數?]
+                  )))
+          (準備二元函數 鏈)
+          (準備一元函數 容)
+          (準備一元函數 址)
+          (準備一元函數 空?)
+          (準備二元函數 等?)
+          (準備一元函數 原子?)
+          (準備一元函數 零?)
+          (準備一元函數 增一)
+          (準備一元函數 減一)
+          (準備一元函數 數?)
+          )))
+
+   ;; 用λ實現鏈 很容易通過增加鏈中被選之物 來改變鏈的結構
+   (中文解釋器一
+    '(定 初鏈
+         (λ (容)
+           ((λ (賦址)
+              (λ (選擇子)
+                (選擇子 (λ (x) (置! 賦址 x))
+                        容
+                        賦址)))
+            (引 ())))))
+   (中文解釋器一
+    '(定 鏈
+         (λ (容 址)
+           ((λ (賦鏈)
+              (置址 賦鏈 址)
+              賦鏈)
+            (初鏈 容)))))
+   (中文解釋器一
+    '(定 置址
+         (λ (鏈 新址)
+           ((鏈 (λ (之置 之容 之址) 之置))
+            新址))))
+   (中文解釋器一
+    '(定 容
+         (λ (鏈)
+           (鏈 (λ (之置 之容 之址) 之容)))))
+   (中文解釋器一
+    '(定 址
+         (λ (鏈)
+           (鏈 (λ (之置 之容 之址) 之址)))))
+
+   (中文解釋器一
+    '(定 *控
+         (λ (e 表)
+           (求於控 (問答鏈部 e) 表))))
+   (中文解釋器一
+    '(定 求於控
+         (λ (問答鏈 表)
+           (控 [(否則? (問部 (容 問答鏈)))
+                (意 (答部 (容 問答鏈)) 表)]
+               [(意 (問部 (容 問答鏈)) 表)
+                (意 (答部 (容 問答鏈)) 表)]
+               [否則 (求於控 (址 問答鏈) 表)]
+               ))))
+
+   (中文解釋器一
+    '(定 *捕
+         (λ (e 表)
+           (捕 捕之標
+               (求於體 (捕之體部 e)
+                       (擴展 (名部 e)
+                             (盒 (準備一元函數 捕之標))
+                             表))))))
+
+   (中文解釋器一
+    '(定 文部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器一
+    '(定 形參部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器一
+    '(定 體部
+         (λ (x) (址 (址 x)))))
+   (中文解釋器一
+    '(定 捕之體部
+         (λ (x) (址 (址 x)))))
+   (中文解釋器一
+    '(定 名部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器一
+    '(定 值部
+         (λ (x)
+           (控 [(空? (址 (址 x))) 0]
+               [否則 (容 (址 (址 x)))]
+               ))))
+   (中文解釋器一
+    '(定 問答鏈部
+         (λ (x) (址 x))))
+   (中文解釋器一
+    '(定 否則?
+         (λ (x)
+           (控 [(原子? x) (等? x (引 否則))]
+               [否則 #f]
+               ))))
+   (中文解釋器一
+    '(定 問部
+         (λ (x) (容 x))))
+   (中文解釋器一
+    '(定 答部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器一
+    '(定 函數部
+         (λ (x) (容 x))))
+   (中文解釋器一
+    '(定 參數鏈部
+         (λ (x) (址 x))))
+
+   #+end_src
+** 加載 二
+   爲什麼每增加一層都要給參數增加一次list
+   #+name: 在中文解釋器一中加載自身第二層
+   #+begin_src scheme
+   (define 中文解釋器二
+     (lambda (x)
+       ((中文解釋器一 '求) (list (list x)))))
+
+   (中文解釋器二
+    '(定 空表
+         (λ (名)
+             (失敗
+              (鏈 (引 無值之名)
+                  (鏈 名 (引 ())))))))
+
+   (中文解釋器二
+    '(定 空表
+         (λ (名)
+             (失敗
+              (鏈 (引 無值之名)
+                  (鏈 名 (引 ())))))))
+   (中文解釋器二
+    '(定 總表 空表))
+   (中文解釋器二
+    '(定 查
+         (λ (表 名)
+             (表 名))))
+   (中文解釋器二
+    '(定 擴展
+         (λ (名1 值 表)
+             (λ (名2)
+                 (控 [(等? 名1 名2) 值]
+                     [否則 (表 名2)])))))
+
+   (中文解釋器二
+    '(定 失敗))
+   (中文解釋器二
+    '(定 求
+         (λ (e)
+             (捕 終
+                 (置! 失敗 終)
+                 (控 [(定? e) (*定 e)]
+                     [否則 (其意 e)])))))
+   (中文解釋器二
+    '(定 其意
+         (λ (e)
+             (意 e 查總表))))
+   (中文解釋器二
+    '(定 意
+         (λ (e 表)
+             ((式之作用 e) e 表))))
+   (中文解釋器二
+    '(定 查總表
+         (λ (名)
+             (查 總表 名))))
+
+   (中文解釋器二
+    '(定 式之作用
+         (λ (e)
+             (控 [(原子? e) (原子之作用 e)]
+                 [否則 (鏈之作用 e)]))))
+   (中文解釋器二
+    '(定 原子之作用
+         (λ (e)
+             (控 [(數? e) *常元]
+                 [(等? e #t) *常元]
+                 [(等? e #f) *常元]
+                 [(等? e (引 鏈)) *常元]
+                 [(等? e (引 容)) *常元]
+                 [(等? e (引 址)) *常元]
+                 [(等? e (引 空?)) *常元]
+                 [(等? e (引 等?)) *常元]
+                 [(等? e (引 原子?)) *常元]
+                 [(等? e (引 零?)) *常元]
+                 [(等? e (引 增一)) *常元]
+                 [(等? e (引 減一)) *常元]
+                 [(等? e (引 數?)) *常元]
+                 [否則 *變元]))))
+   (中文解釋器二
+    '(定 鏈之作用
+         (λ (e)
+             (控 [(空? e) *空]
+                 [(原子? (容 e))
+                  (控 [(等? (容 e) (引 引))
+                       ,*引]
+                      [(等? (容 e) (引 λ))
+                       ,*λ]
+                      [(等? (容 e) (引 捕))
+                       ,*捕]
+                      [(等? (容 e) (引 置!))
+                       ,*置]
+                      [(等? (容 e) (引 控))
+                       ,*控]
+                      [否則 *作用])]
+                 [否則 *作用]))))
+
+   (中文解釋器二
+    '(定 定?
+         (λ (e)
+             (控 [(原子? e) #f]
+                 [(原子? (容 e))
+                  (等? (容 e) (引 定))]
+                 [否則 #f]))))
+   (中文解釋器二
+    '(定 *定
+         (λ (e)
+             (置! 總表
+                  (擴展 (名部 e)
+                        (盒 (其意
+                             (值部 e)))
+                        總表)))))
+   (中文解釋器二
+    '(定 盒
+         (λ (物)
+             (λ (選擇子)
+                 (選擇子 物
+                         (λ (新物) (置! 物 新物)))))))
+   ;; 下面是兩個選擇子
+   (中文解釋器二
+    '(定 重置盒
+         (λ (盒 新物)
+             (盒 (λ (之物 之置) (之置 新物))))))
+   (中文解釋器二
+    '(定 取於盒
+         (λ (盒)
+             (盒 (λ (之物 之置) 之物)))))
+
+   (中文解釋器二
+    '(定 *空
+         (λ (e 表)
+             (引 ()))))
+
+   (中文解釋器二
+    '(定 *引
+         (λ (e 表)
+             (文部 e))))
+
+   (中文解釋器二
+    '(定 *變元
+         (λ (e 表)
+             (取於盒 (查 表 e)))))
+   (中文解釋器二
+    '(定 *置
+         (λ (e 表)
+             (重置盒 (查 表 (名部 e))
+                     (意 (值部 e) 表)))))
+
+   (中文解釋器二
+    '(定 *λ
+         (λ (e 表)
+             (λ (實參鏈)
+                 (求於體 (體部 e)
+                         (多擴展 (形參部 e)
+                                 (多盒 實參鏈)
+                                 表))))))
+
+   (中文解釋器二
+    '(定 求於體
+         (λ (式鏈 表)
+             (控 [(空? (址 式鏈))
+                  (意 (容 式鏈) 表)]
+                 [否則
+                  ((λ (賦參)
+                       (求於體 (址 式鏈) 表))
+                   (意 (容 式鏈) 表))]))))
+   (中文解釋器二
+    '(定 多盒
+         (λ (實參鏈)
+             (控 [(空? 實參鏈) (引 ())]
+                 [否則
+                  (鏈 (盒 (容 實參鏈))
+                      (多盒 (址 實參鏈)))]))))
+   (中文解釋器二
+    '(定 多擴展
+         (λ (名鏈 值鏈 表)
+             (控 [(空? 名鏈) 表]
+                 [否則
+                  (擴展 (容 名鏈)
+                        (容 值鏈)
+                        (多擴展 (址 名鏈)
+                                (址 值鏈)
+                                表))]))))
+
+   (中文解釋器二
+    '(定 *作用
+         (λ (e 表)
+             ((意 (函數部 e) 表)
+              (求於鏈 (參數鏈部 e) 表)))))
+   (中文解釋器二
+    '(定 求於鏈
+         (λ (式鏈 表)
+             (控 [(空? 式鏈) (引 ())]
+                 [否則
+                  ((λ (賦參)
+                       (鏈 賦參
+                           (求於鏈 (址 式鏈) 表)))
+                   (意 (容 式鏈) 表))]
+                 ))))
+
+   (中文解釋器二
+    '(定 準備一元函數
+         (λ (一元函數)
+             (λ (實參鏈)
+                 (一元函數 (容 實參鏈))))))
+   (中文解釋器二
+    '(定 準備二元函數
+         (λ (二元函數)
+             (λ (實參鏈)
+                 (二元函數 (容 實參鏈)
+                           (容 (址 實參鏈)))))))
+
+   (中文解釋器二
+    '(定 *常元
+         ((λ (:鏈 :容 :址
+                   :空? :等? :原子?
+                   :零? :增一 :減一 :數?)
+              (λ (e 表)
+                  (控 [(數? e) e]
+                      [(等? e #t) #t]
+                      [(等? e #f) #f]
+                      [(等? e (引 鏈)) :鏈]
+                      [(等? e (引 容)) :容]
+                      [(等? e (引 址)) :址]
+                      [(等? e (引 空?)) :空?]
+                      [(等? e (引 等?)) :等?]
+                      [(等? e (引 原子?)) :原子?]
+                      [(等? e (引 零?)) :零?]
+                      [(等? e (引 增一)) :增一]
+                      [(等? e (引 減一)) :減一]
+                      [(等? e (引 數?)) :數?]
+                      )))
+          (準備二元函數 鏈)
+          (準備一元函數 容)
+          (準備一元函數 址)
+          (準備一元函數 空?)
+          (準備二元函數 等?)
+          (準備一元函數 原子?)
+          (準備一元函數 零?)
+          (準備一元函數 增一)
+          (準備一元函數 減一)
+          (準備一元函數 數?)
+          )))
+
+   ;; 用λ實現鏈 很容易通過增加鏈中被選之物 來改變鏈的結構
+   (中文解釋器二
+    '(定 初鏈
+         (λ (容)
+             ((λ (賦址)
+                  (λ (選擇子)
+                      (選擇子 (λ (x) (置! 賦址 x))
+                              容
+                              賦址)))
+              (引 ())))))
+   (中文解釋器二
+    '(定 鏈
+         (λ (容 址)
+             ((λ (賦鏈)
+                  (置址 賦鏈 址)
+                  賦鏈)
+              (初鏈 容)))))
+   (中文解釋器二
+    '(定 置址
+         (λ (鏈 新址)
+             ((鏈 (λ (之置 之容 之址) 之置))
+              新址))))
+   (中文解釋器二
+    '(定 容
+         (λ (鏈)
+             (鏈 (λ (之置 之容 之址) 之容)))))
+   (中文解釋器二
+    '(定 址
+         (λ (鏈)
+             (鏈 (λ (之置 之容 之址) 之址)))))
+
+   (中文解釋器二
+    '(定 *控
+         (λ (e 表)
+             (求於控 (問答鏈部 e) 表))))
+   (中文解釋器二
+    '(定 求於控
+         (λ (問答鏈 表)
+             (控 [(否則? (問部 (容 問答鏈)))
+                  (意 (答部 (容 問答鏈)) 表)]
+                 [(意 (問部 (容 問答鏈)) 表)
+                  (意 (答部 (容 問答鏈)) 表)]
+                 [否則 (求於控 (址 問答鏈) 表)]
+                 ))))
+
+   (中文解釋器二
+    '(定 *捕
+         (λ (e 表)
+             (捕 捕之標
+                 (求於體 (捕之體部 e)
+                         (擴展 (名部 e)
+                               (盒 (準備一元函數 捕之標))
+                               表))))))
+
+   (中文解釋器二
+    '(定 文部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器二
+    '(定 形參部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器二
+    '(定 體部
+         (λ (x) (址 (址 x)))))
+   (中文解釋器二
+    '(定 捕之體部
+         (λ (x) (址 (址 x)))))
+   (中文解釋器二
+    '(定 名部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器二
+    '(定 值部
+         (λ (x)
+             (控 [(空? (址 (址 x))) 0]
+                 [否則 (容 (址 (址 x)))]
+                 ))))
+   (中文解釋器二
+    '(定 問答鏈部
+         (λ (x) (址 x))))
+   (中文解釋器二
+    '(定 否則?
+         (λ (x)
+             (控 [(原子? x) (等? x (引 否則))]
+                 [否則 #f]
+                 ))))
+   (中文解釋器二
+    '(定 問部
+         (λ (x) (容 x))))
+   (中文解釋器二
+    '(定 答部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器二
+    '(定 函數部
+         (λ (x) (容 x))))
+   (中文解釋器二
+    '(定 參數鏈部
+         (λ (x) (址 x))))
+   #+end_src
+** 加載 三
+   ikarus的速度很快
+   但是``三''在我的機器上此時已經需要十秒的時間了
+   #+name: 在中文解釋器一中加載自身第三層
+   #+begin_src scheme
+   (define 中文解釋器三
+     (lambda (x)
+       ((中文解釋器二 '求) (list (list (list x))))))
+   (中文解釋器三
+    '(定 空表
+         (λ (名)
+             (失敗
+              (鏈 (引 無值之名)
+                  (鏈 名 (引 ())))))))
+
+   (中文解釋器三
+    '(定 空表
+         (λ (名)
+             (失敗
+              (鏈 (引 無值之名)
+                  (鏈 名 (引 ())))))))
+   (中文解釋器三
+    '(定 總表 空表))
+   (中文解釋器三
+    '(定 查
+         (λ (表 名)
+             (表 名))))
+   (中文解釋器三
+    '(定 擴展
+         (λ (名1 值 表)
+             (λ (名2)
+                 (控 [(等? 名1 名2) 值]
+                     [否則 (表 名2)])))))
+
+   (中文解釋器三
+    '(定 失敗))
+   (中文解釋器三
+    '(定 求
+         (λ (e)
+             (捕 終
+                 (置! 失敗 終)
+                 (控 [(定? e) (*定 e)]
+                     [否則 (其意 e)])))))
+   (中文解釋器三
+    '(定 其意
+         (λ (e)
+             (意 e 查總表))))
+   (中文解釋器三
+    '(定 意
+         (λ (e 表)
+             ((式之作用 e) e 表))))
+   (中文解釋器三
+    '(定 查總表
+         (λ (名)
+             (查 總表 名))))
+
+   (中文解釋器三
+    '(定 式之作用
+         (λ (e)
+             (控 [(原子? e) (原子之作用 e)]
+                 [否則 (鏈之作用 e)]))))
+   (中文解釋器三
+    '(定 原子之作用
+         (λ (e)
+             (控 [(數? e) *常元]
+                 [(等? e #t) *常元]
+                 [(等? e #f) *常元]
+                 [(等? e (引 鏈)) *常元]
+                 [(等? e (引 容)) *常元]
+                 [(等? e (引 址)) *常元]
+                 [(等? e (引 空?)) *常元]
+                 [(等? e (引 等?)) *常元]
+                 [(等? e (引 原子?)) *常元]
+                 [(等? e (引 零?)) *常元]
+                 [(等? e (引 增一)) *常元]
+                 [(等? e (引 減一)) *常元]
+                 [(等? e (引 數?)) *常元]
+                 [否則 *變元]))))
+   (中文解釋器三
+    '(定 鏈之作用
+         (λ (e)
+             (控 [(空? e) *空]
+                 [(原子? (容 e))
+                  (控 [(等? (容 e) (引 引))
+                       ,*引]
+                      [(等? (容 e) (引 λ))
+                       ,*λ]
+                      [(等? (容 e) (引 捕))
+                       ,*捕]
+                      [(等? (容 e) (引 置!))
+                       ,*置]
+                      [(等? (容 e) (引 控))
+                       ,*控]
+                      [否則 *作用])]
+                 [否則 *作用]))))
+
+   (中文解釋器三
+    '(定 定?
+         (λ (e)
+             (控 [(原子? e) #f]
+                 [(原子? (容 e))
+                  (等? (容 e) (引 定))]
+                 [否則 #f]))))
+   (中文解釋器三
+    '(定 *定
+         (λ (e)
+             (置! 總表
+                  (擴展 (名部 e)
+                        (盒 (其意
+                             (值部 e)))
+                        總表)))))
+   (中文解釋器三
+    '(定 盒
+         (λ (物)
+             (λ (選擇子)
+                 (選擇子 物
+                         (λ (新物) (置! 物 新物)))))))
+   ;; 下面是兩個選擇子
+   (中文解釋器三
+    '(定 重置盒
+         (λ (盒 新物)
+             (盒 (λ (之物 之置) (之置 新物))))))
+   (中文解釋器三
+    '(定 取於盒
+         (λ (盒)
+             (盒 (λ (之物 之置) 之物)))))
+
+   (中文解釋器三
+    '(定 *空
+         (λ (e 表)
+             (引 ()))))
+
+   (中文解釋器三
+    '(定 *引
+         (λ (e 表)
+             (文部 e))))
+
+   (中文解釋器三
+    '(定 *變元
+         (λ (e 表)
+             (取於盒 (查 表 e)))))
+   (中文解釋器三
+    '(定 *置
+         (λ (e 表)
+             (重置盒 (查 表 (名部 e))
+                     (意 (值部 e) 表)))))
+
+   (中文解釋器三
+    '(定 *λ
+         (λ (e 表)
+             (λ (實參鏈)
+                 (求於體 (體部 e)
+                         (多擴展 (形參部 e)
+                                 (多盒 實參鏈)
+                                 表))))))
+
+   (中文解釋器三
+    '(定 求於體
+         (λ (式鏈 表)
+             (控 [(空? (址 式鏈))
+                  (意 (容 式鏈) 表)]
+                 [否則
+                  ((λ (賦參)
+                       (求於體 (址 式鏈) 表))
+                   (意 (容 式鏈) 表))]))))
+   (中文解釋器三
+    '(定 多盒
+         (λ (實參鏈)
+             (控 [(空? 實參鏈) (引 ())]
+                 [否則
+                  (鏈 (盒 (容 實參鏈))
+                      (多盒 (址 實參鏈)))]))))
+   (中文解釋器三
+    '(定 多擴展
+         (λ (名鏈 值鏈 表)
+             (控 [(空? 名鏈) 表]
+                 [否則
+                  (擴展 (容 名鏈)
+                        (容 值鏈)
+                        (多擴展 (址 名鏈)
+                                (址 值鏈)
+                                表))]))))
+
+   (中文解釋器三
+    '(定 *作用
+         (λ (e 表)
+             ((意 (函數部 e) 表)
+              (求於鏈 (參數鏈部 e) 表)))))
+   (中文解釋器三
+    '(定 求於鏈
+         (λ (式鏈 表)
+             (控 [(空? 式鏈) (引 ())]
+                 [否則
+                  ((λ (賦參)
+                       (鏈 賦參
+                           (求於鏈 (址 式鏈) 表)))
+                   (意 (容 式鏈) 表))]
+                 ))))
+
+   (中文解釋器三
+    '(定 準備一元函數
+         (λ (一元函數)
+             (λ (實參鏈)
+                 (一元函數 (容 實參鏈))))))
+   (中文解釋器三
+    '(定 準備二元函數
+         (λ (二元函數)
+             (λ (實參鏈)
+                 (二元函數 (容 實參鏈)
+                           (容 (址 實參鏈)))))))
+
+   (中文解釋器三
+    '(定 *常元
+         ((λ (:鏈 :容 :址
+                   :空? :等? :原子?
+                   :零? :增一 :減一 :數?)
+              (λ (e 表)
+                  (控 [(數? e) e]
+                      [(等? e #t) #t]
+                      [(等? e #f) #f]
+                      [(等? e (引 鏈)) :鏈]
+                      [(等? e (引 容)) :容]
+                      [(等? e (引 址)) :址]
+                      [(等? e (引 空?)) :空?]
+                      [(等? e (引 等?)) :等?]
+                      [(等? e (引 原子?)) :原子?]
+                      [(等? e (引 零?)) :零?]
+                      [(等? e (引 增一)) :增一]
+                      [(等? e (引 減一)) :減一]
+                      [(等? e (引 數?)) :數?]
+                      )))
+          (準備二元函數 鏈)
+          (準備一元函數 容)
+          (準備一元函數 址)
+          (準備一元函數 空?)
+          (準備二元函數 等?)
+          (準備一元函數 原子?)
+          (準備一元函數 零?)
+          (準備一元函數 增一)
+          (準備一元函數 減一)
+          (準備一元函數 數?)
+          )))
+
+   ;; 用λ實現鏈 很容易通過增加鏈中被選之物 來改變鏈的結構
+   (中文解釋器三
+    '(定 初鏈
+         (λ (容)
+             ((λ (賦址)
+                  (λ (選擇子)
+                      (選擇子 (λ (x) (置! 賦址 x))
+                              容
+                              賦址)))
+              (引 ())))))
+   (中文解釋器三
+    '(定 鏈
+         (λ (容 址)
+             ((λ (賦鏈)
+                  (置址 賦鏈 址)
+                  賦鏈)
+              (初鏈 容)))))
+   (中文解釋器三
+    '(定 置址
+         (λ (鏈 新址)
+             ((鏈 (λ (之置 之容 之址) 之置))
+              新址))))
+   (中文解釋器三
+    '(定 容
+         (λ (鏈)
+             (鏈 (λ (之置 之容 之址) 之容)))))
+   (中文解釋器三
+    '(定 址
+         (λ (鏈)
+             (鏈 (λ (之置 之容 之址) 之址)))))
+
+   (中文解釋器三
+    '(定 *控
+         (λ (e 表)
+             (求於控 (問答鏈部 e) 表))))
+   (中文解釋器三
+    '(定 求於控
+         (λ (問答鏈 表)
+             (控 [(否則? (問部 (容 問答鏈)))
+                  (意 (答部 (容 問答鏈)) 表)]
+                 [(意 (問部 (容 問答鏈)) 表)
+                  (意 (答部 (容 問答鏈)) 表)]
+                 [否則 (求於控 (址 問答鏈) 表)]
+                 ))))
+
+   (中文解釋器三
+    '(定 *捕
+         (λ (e 表)
+             (捕 捕之標
+                 (求於體 (捕之體部 e)
+                         (擴展 (名部 e)
+                               (盒 (準備一元函數 捕之標))
+                               表))))))
+
+   (中文解釋器三
+    '(定 文部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器三
+    '(定 形參部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器三
+    '(定 體部
+         (λ (x) (址 (址 x)))))
+   (中文解釋器三
+    '(定 捕之體部
+         (λ (x) (址 (址 x)))))
+   (中文解釋器三
+    '(定 名部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器三
+    '(定 值部
+         (λ (x)
+             (控 [(空? (址 (址 x))) 0]
+                 [否則 (容 (址 (址 x)))]
+                 ))))
+   (中文解釋器三
+    '(定 問答鏈部
+         (λ (x) (址 x))))
+   (中文解釋器三
+    '(定 否則?
+         (λ (x)
+             (控 [(原子? x) (等? x (引 否則))]
+                 [否則 #f]
+                 ))))
+   (中文解釋器三
+    '(定 問部
+         (λ (x) (容 x))))
+   (中文解釋器三
+    '(定 答部
+         (λ (x) (容 (址 x)))))
+   (中文解釋器三
+    '(定 函數部
+         (λ (x) (容 x))))
+   (中文解釋器三
+    '(定 參數鏈部
+         (λ (x) (址 x))))
+   #+end_src
+* >< *the reasoned schemer*
+* syntactic extension
+  1. syntax-rules被理解爲是用syntax-case實現的
+  2. 用syntax-case實現它本身是可能的 因爲有類似於(quote ...)的機制
+  3. (syntax-rules ...)會被解釋成transformer
+     正如(lambda ...)會被解釋成closure
+     但是並不盡然
+  #+begin_src scheme
+  (define-syntax cond
+    (syntax-rules (else)
+      [(_ (else e1 e2 ...)) (begin e1 e2 ...)]
+      [(_ (e0 e1 e2 ...)) (if e0 (begin e1 e2 ...))]
+      [(_ (e0 e1 e2 ...) c1 c2 ...)
+       (if e0 (begin e1 e2 ...) (cond c1 c2 ...))]))
+  (define-syntax my-syntax-rules
+    (lambda (x)
+      (syntax-case x
+          ()
+        [(my-syntax-rules (i ...)
+               [(keyword . pattern) template]
+               ...)
+         #'(lambda (x)
+             (syntax-case x
+                 (i ...)
+               [(_ . pattern) #'template]
+               ...))]
+        )))
+  (define-syntax or
+    (syntax-rules ()
+      [(_) #f]
+      [(_ e) e]
+      [(_ e1 e2 e3 ...)
+       (let ([t e1])
+         (if t t (or e2 e3 ...)))]))
+  (define-syntax my-or
+    (lambda (x)
+      (syntax-case x
+          ()
+        [(_) #'#f]
+        [(_ e) #'e]
+        [(_ e1 e2 e3 ...)
+         #'(let ([t e1])
+             (if t t (my-or e2 e3 ...)))])))
+  (my-or 1 2)
+  if the expander encounters a syntactic extension
+  it invokes the associated transformer
+  to expand the syntactic extension
+  (syntax-case '(my-or 1 2)
+      ()
+    [(_) #'#f]
+    [(_ e) #'e]
+    [(_ e1 e2 e3 ...)
+     #'(let ([t e1])
+         (if t t (my-or e2 e3 ...)))])
+  then repeats the expansion process for the form
+  returned by the transformer
+  (#<syntax let>
+            ((#<syntax t> 1 . #<syntax ()>) . #<syntax ()>)
+            (#<syntax if> #<syntax t>
+                      #<syntax t>
+                      (#<syntax my-or> 2) . #<syntax ()>) . #<syntax ()>)
+  但是上上面的東西在解釋器中的返回值是上面的東西
+  這個東西如何再被expander作用呢?
+  expander會去找來對應於#<syntax let>的transformer來作用嗎?
+  如何實驗這一想法的
+  (define-syntax test1
+    (lambda (x)
+      (syntax-case x
+          ()
+        [(_) #'(let () (car '(1 2)))]
+        )))
+  (test1)
+  (syntax-case '(test1)
+      ()
+    [(_) #'(my-or)]
+    )
+  #<syntax (my-or)>
+  (syntax-case '(my-or)
+      ()
+    [(_) #'#f]
+    [(_ e) #'e]
+    [(_ e1 e2 e3 ...)
+     #'(let ([t e1])
+         (if t t (my-or e2 e3 ...)))])
+  #<syntax #f>
+  expand就這樣作用於返回的syntax-object
+  直到syntax-object的頭一個位置變成了core中的東西
+
+  因爲一種分離機制的存在
+  所以根本沒法實驗一些東西
+  想要實驗的話只有自己定義一個expand完全像value只不過使用的是match範式
+  它輸入<sexp>然後從環境中遞歸調用各種有名有姓的syntax-case
+  然後輸出的<sexp*>就是隻包含core中的語法關鍵詞的了
+  這可以說是實現了另一個語言了
+  如何讓這兩種語言在scheme中合作?
+
+  (define syntax-case
+    (lambda (x <help-keywords> <rules>)
+      ()))
+
+  <rules> == (<rule> ...)
+  <rule> == [<pattern> <fender> <output-sexp>]
+  <fender> == <sexp> | <syntax-obj>
+  <output-sexp> == <sexp> | <syntax-obj>
+  - match pattern 邊 matach 邊 綁定<pattern-var>
+  - 以<output-sexp>爲基礎形成類似closure的東西
+    <syntax-obj> 是爲了closure的效果嗎?
+  - syntax-case只用來做一次匹配 遞歸由expand完成
+  - scheme中的分離機制在於 這一次匹配所得的結果是不在解釋器中被使用的
+    只有expand遞歸地把一個語法匹配完了 得到全是core中的語法的東西之後
+    才能被解釋器使用
+  - (syntax <template>)
+    replaces matched pattern variables in template with their values
+    pattern variables can be referenced only within
+  #+end_src
+* core
+  [[shell:nautilus ~/kanren/ &]]
+** note
+   + 創作過程:
+     一個想法 ->
+     一些數據結構 + 一些算法: 使得這些想法能夠被機器處理
+
+   + goal: knowledge -> knowledge
+     a ``goal'' is the result of a `measurement'
+     with the quantum-mechanical connotations
+
+   + 自由邏輯變元是表達的工具
+
+     自由邏輯變元之間的關係
+     是我們描述我們知識的方式
+
+     自由邏輯變元之間的關係
+     用一種特殊的格來表示
+
+     當一個邏輯變元不是完全自由的時候
+     哪怕只有一點限制
+     哪怕在這些限制之下變元可能的取值還是無窮多個
+     我們也試着把它們打印出來
+
+     當一個邏輯變元是完全自由的時候
+     也給它一個表示 即reification
+
+     通過一步一步限制自由邏輯變元 而一步一步精確知識
+
+   + relation: can-be-anything -> goal
+
+   + 之前的錯誤理解 也許是對的:
+     如果一個座標軸上的一些代入點被代入了一些座標軸
+     那麼就形成了一個二維的東西
+     回想 函數式編程是想用確定性的變化規則之間的複合來描述函數
+     而函數是一個具有單值性的二元關係
+     因此幾何上看 函數式編程是在描述這種特殊的二元關係
+     而之前錯誤地以爲邏輯式編程是在描述 一般的多元關係
+     + 可能並不是最一般的 因爲可數性(離散性)對於計算來說是基本的
+       + 而確實又是非常一般的 因爲這很可能就是計算的本質
+
+** variable, substitution
+   ``unify'' using the ``walk''
+   to look up variables in a triangular substitution
+   :tangle mk.scm
+   #+begin_src scheme
+   ;; represent logic variables as vectors of length one
+   ;; so (eq? (var 'x) (var 'x)) ==> #f
+   ;; so (equal? (var 'x) (var 'x)) ==> #t
+   ;; but one consequence is that vectors should
+   ;; not appear in arguments passed to ``unify''
+   (define-syntax var
+     ;; logic variable
+     (syntax-rules ()
+       [(_ x) (vector x)]))
+   (define-syntax var?
+     (syntax-rules ()
+       [(_ x) (vector? x)]))
+   ;; the single argument to the var constructor should be a symbol
+   ;; (no check is done)
+   ;; representing the name of the variable
+   ;; so legal representation of logic-var is like #(x)
+
+   ;; relational-programming is special-lattice processing
+   ;; the semantic of lattice is `knowledge'
+   ;; a substitution ``s'' is a special lattice
+   ;; (without any circularity)
+   ;; (without any downward-branch to two different non-var)
+   ;; of which elements are logic-variables and terms
+   ;; using a-list to represent substitution
+   ;; in a-list: [<var> . <term>]
+   ;; in lattice: <var> --> <term> (<term> maybe <var>)
+   ;; using ``walk'' to walk <var> --> down-to-the-ground
+   ;; ``down-to-the-ground'' maens that the term returned by walk
+   ;; is not <var>
+   ;; but it maybe a list of terms where there maybe <var> in it
+   ;; at this moment one need to use ``walk*''
+   ;; to walk the <var>s in the list down-to-the-ground
+   (define empty-s '())
+   ;; extend a substitution ``s''
+   (define ext-s
+     ;; x is var, v is term
+     (lambda (x v s)
+       (cons `(,x . ,v) s)))
+   (define-syntax rhs
+     (syntax-rules ()
+       [(_ x) (cdr x)]))
+   (define-syntax lhs
+     (syntax-rules ()
+       [(_ x) (car x)]))
+
+   ;; idempotent substitutions
+   ;; ([y . 5] [x . 5])
+   ;; (define lookup
+   ;;   ;; v is var, s is idempotent-substitution
+   ;;   (lambda (v s)
+   ;;     (cond [(var? v)
+   ;;         (let ([a (assq v s)])
+   ;;           (cond [a (rhs a)]
+   ;;                 ;; if v is an unassociated variable just returns v
+   ;;                 [else v]
+   ;;                 ))]
+   ;;        ;; if v is a non-variable just returns v
+   ;;        [else v])))
+
+   ;; triangular substitution
+   ;; ([y . 5] [x . y])
+   (define walk
+     ;; v is term that maybe var, s is triangular-substitution
+     (lambda (v s)
+       (cond
+        [(var? v)
+         (let ([a (assq v s)])
+           (cond [a (walk (rhs a) s)]
+                 ;; if v is an unassociated variable just returns v
+                 [else v]
+                 ))]
+        ;; if v is a non-variable just returns v
+        [else v]
+        )))
+   ;; ``walk'' is therefore not primitive recursive
+   ;; ``walk'' can diverge if used on a substitution containing a circularity
+   ;; ([x . x]) ([x . y] [y . x])
+   ;; unification function ``unify'' ensures that
+   ;; these kinds of circularities are never introduced into a substitution
+   ;; in addition
+   ;; ``unify'' prohibits circularities of the form ([x . (x)])
+   ;; from being added to the substitution
+   ;; although this circularity will not cause walk to diverge
+   ;; it can cause divergence during reification
+   ;; (define walk ;; sugar!
+   ;;   (lambda (u S)
+   ;;     (cond
+   ;;      ((and (var? u) (assq u S)) =>
+   ;;       (lambda (pr) (walk (rhs pr) S)))
+   ;;      (else u))))
+
+
+   ;; to prevent circularities from being introduced
+   ;; we extend the substitution using ext-s√ rather than ext-s
+   (define ext-s√
+     ;; x is var, v is term
+     (lambda (x v s)
+       (cond
+        ;; if ext-s√ returns #f instead of an extended substitution
+        ;; indicating that unification has failed
+        [(occurs√ x v s) #f]
+        [else (ext-s x v s)]
+        )))
+
+   (define occurs√
+     ;; x is logic-var, v is term or list of terms
+     ;; returns #t if x --> v
+     ;; would introduce a circularity to lattice ``s''
+     (lambda (x v s)
+       ;; the following let is under the assumption
+       ;; that there is no circularity in ``s''
+       ;; >< but way we don't need walk x down????
+       (let ([v-down (walk v s)])
+         (cond
+          [(var? v-down) (eq? v-down x)]
+          ;; to prevent ([x . (x)])
+          [(pair? v-down)
+           (or (occurs√ x (car v-down) s)
+               (occurs√ x (cdr v-down) s))]
+          [else #f]
+          ))))
+
+   ;; to unifies two terms ``u'' and ``v''
+   ;; is to extend ``s``
+   (define unify
+     ;; returning a maybe-extended-substitution if unification succeeds
+     ;; returning #f if unification fails (contradiction)
+     ;; or would introduce a circularity
+     (lambda (u v s)
+       ;; find out what `u` `v` actually is given our knowledge s
+       ;; to guarantee the extend happen on the ground of the lattice
+       (let ([u-down (walk u s)]
+             [v-down (walk v s)])
+         (cond
+          ;; (equal? (var 'x) (var 'x)) ==> #t
+          ;; (eq? (var 'x) (var 'x)) ==> #f
+          [(eq? u-down v-down) s]
+          [(var? u-down) (ext-s√ u-down v-down s)]
+          [(var? v-down) (ext-s√ v-down u-down s)]
+          [(and (pair? u-down) (pair? v-down))
+           (let ([s+car (unify (car u-down) (car v-down) s)])
+             ;; ``and'' not only return boolean
+             (and s+car (unify (cdr u-down) (cdr v-down) s+car)))]
+          [(equal? u-down v-down) s]
+          [else #f]
+          ))))
+   #+end_src
+** reification algorithm
+   which converts minikanren terms into regular scheme values
+   i.e. without logic variables
+   to make the value returned by run more informative
+   :tangle mk.scm
+   #+begin_src scheme
+   (define reify
+     ;; s is substitution
+     ;; v is term that perhaps containing variables
+     (lambda (v s)
+       (let ([v-down* (walk* v s)])
+         (walk* v-down* (reify-s v-down* empty-s)))))
+
+   (define walk*
+     (lambda (v s)
+       (let ([v-down (walk v s)])
+         (cond
+          [(var? v-down)
+           v-down]
+          [(pair? v-down)
+           (cons
+            (walk* (car v-down) s)
+            (walk* (cdr v-down) s))]
+          [else v-down]))))
+
+   (define-syntax size-s
+     (syntax-rules ()
+       [(_ x) (length x)]))
+
+   (define reify-s
+     ;; return substitution which helps ``reify'' to return reified-term
+     ;; (size-s s) is smart code to recognize every different var
+     (lambda (v s)
+       (let ([v-down (walk v s)])
+         (cond
+          [(var? v-down)
+           (ext-s v-down (reify-name (size-s s)) s)]
+          [(pair? v-down)
+           (reify-s (cdr v-down)
+                    ;; the following will be eval eagerly first in scheme
+                    ;; so we control the order of reifying here
+                    ;; i.e. from left to right
+                    (reify-s (car v-down) s))]
+          [else s]))))
+
+   (define reify-name
+     (lambda (n)
+       (string->symbol
+         (string-append "_" "." (number->string n)))))
+   #+end_src
+** goals
+   goal:
+   substitution -> a∞
+   a∞ is an ordered sequence of zero or more values (stream)
+   these values are almost always substitutions
+
+   λᴳ: goal as closure
+   λ~: closure when invoked produces the remainder of a stream
+   goal constructors: ==, fresh, begin°
+   interface operator: run
+   :tangle mk.scm
+   #+begin_src scheme
+   (define-syntax λᴳ
+     ;; to protect ``e'' from being rec-call eagerly
+     (syntax-rules ()
+       [(_ (p) e)
+        (lambda (p) e)]))
+   (define-syntax λ~
+     ;; to build stream
+     (syntax-rules ()
+       [(_ () e)
+        (lambda () e)]))
+
+   ;; never used mzero
+   (define-syntax mzero
+     (syntax-rules ()
+       [(_) #f]))
+   ;; never used inc~
+   (define-syntax inc~ ;; incomplete stream == (delay e)
+     (syntax-rules ()
+       [(_ e) (λ~ () e)]))
+   ;; never used inc~
+   (define-syntax unit
+     (syntax-rules ()
+       [(_ a) a]))
+   ;; never used choice
+   ;; the name `choice' should evoke THE AXIOM OF CHOICE
+   (define-syntax choice
+     (syntax-rules ()
+       [(_ a f~) (cons a f~)]))
+   ;; stream:
+   ;; a∞ ::== (cons a d~) | (cons~ a d)
+   ;;       | #f
+   ;;       | other-scheme-val
+   ;; for to distinguish basic-step when deal with stream
+   ;; we restrict:
+   ;; other-scheme-val == {scheme-val} - {#f, (cons~ a d)}
+   ;; but in scheme one can't write good predicate about closure
+   ;; among other-scheme-val good a∞ is lattice-as-alist
+
+   ;; to ensure that streams produced by these four streams constructors
+   ;; can be distinguished
+   ;; we assume that a singleton streams is never:
+   ;; #f, a function, a pair whose cdr is a function
+   ;; and to discriminate among these four cases, we define case∞
+
+   ;; the following pattern is used three times here
+   ;; so one write a macro
+   ;; but the with out good explain it is hard to read
+   ;; 用pmatch-who重新寫試試
+   (define-syntax case∞
+     (syntax-rules ()
+       [(_ a∞
+           ;; in the following
+           ;; the f's and a's may occur in e's
+           [() e0]
+           [(f~) e1]
+           [(a) e2]
+           [(b h~) e3])
+        (cond
+         ;; a∞ == (mzero) == #f
+         [(not a∞)
+          e0]
+         ;; a∞ == (inc~ e) == (λ~ () e)
+         [(procedure? a∞)
+          (let ([f~ a∞])
+            e1)]
+         ;; a∞ == (unit a) == a{a singleton stream}
+         [(not (and (pair? a∞)
+                    (procedure? (cdr a∞))))
+          (let ([a a∞])
+            e2)]
+         ;; a∞ == (choice b h~) == (cons b h~)
+         [else
+          (let ([b (car a∞)]
+                [h~ (cdr a∞)])
+            e3)]
+         )]))
+
+   ;; (define-syntax ==
+   ;;   ;; returns either a singleton stream or an empty stream
+   ;;   ;; depending on whether the arguments ``unify'' with the implicit substitution
+   ;;   (syntax-rules ()
+   ;;     [(_ u v)
+   ;;      (λᴳ (a)
+   ;;        (cond [(unify u v a) => (lambda (a) (unit a))]
+   ;;              [else #f] ))]))
+
+   (define ==
+     (lambda (u v)
+       ;; returns a basic-goal: substitution -> substitution
+       (λᴳ (s) (unify u v s))))
+
+   (define-syntax begin°
+     ;; : goal -> messed-goal(which is not a alist-operator anymore)
+     ;; this is bad for to representation the lattice we
+     (syntax-rules ()
+       ;; transverse:    conjunction (by conj)
+       ;; longitudinal:  disjunction (by disj)
+       ;; all of the stream values will be interleaved
+       [(_ [g11 g12 ...]
+           [g21 g22 ...]
+           ...)
+        (λᴳ (s) ;; to protect-eager-rec-call
+          (λ~ () ;; what is this for?
+           (disj*
+            (conj* (g11 s) g12 ...)
+            (conj* (g21 s) g22 ...)
+            ...)))]))
+
+
+   (define-syntax conj*
+     ;; : [a∞ g ...] -> a∞
+     (syntax-rules ()
+       [(_ e) e]
+       [(_ e g1 g2 ...)
+        (conj* (conj e g1) g2 ...)]
+       ))
+   ;; (conj* (g11 s) g12 g13 g14)
+   ;; =extend=>
+   ;; (conj (conj (conj (g11 s)
+   ;;                g12)
+   ;;          g13)
+   ;;       g14)
+
+   ;; 下面的例子都還是單純地在處理alist
+   ;; 只用到case∞中的一個從句
+   ;; 但是實際使用時必須用更復雜的數據結構
+   ;; 因爲這些結果將和disj所返回的結果交織起來
+   ;; 而disj所返回的結果是stream
+   ;; ((== (var 'w) (var 'k))
+   ;;  ((== 3 (var 'z))
+   ;;   ((== 2 (var 'y))
+   ;;    ((== 1 (var 'x))
+   ;;     '()))))
+
+   ;; (conj (conj (conj ((== 1 (var 'x)) '())
+   ;;                   (== 2 (var 'y)))
+   ;;             (== 3 (var 'z)))
+   ;;       (== (var 'w) (var 'k)))
+
+   ;; (conj* ((== 1 (var 'x)) '())
+   ;;        (== 2 (var 'y))
+   ;;        (== 3 (var 'z))
+   ;;        (== (var 'w) (var 'k)))
+
+   (define conj
+     ;; : a∞ g -> a∞
+     (lambda (a∞ g)
+       (case∞ a∞
+         [() #f]
+         [(f~) (λ~ () (conj (f~) g))]
+         [(a) (g a)]
+         [(a f~) (disj
+                  (g a)
+                  (λ~ () (conj (f~) g)))]
+         )))
+
+
+   (define-syntax disj*
+     (syntax-rules ()
+       ;; : [a∞ a∞ ...] -> a∞
+       [(_ e) e]
+       [(_ e1 e2 ...)
+        (disj e1 (λ~ () (disj* e2 ...)))]
+       ))
+
+   ;; (disj* e1 e2 e3 e4)
+   ;; =extend=>
+   ;; (disj e1
+   ;;       (λ~ ()
+   ;;          (disj e2
+   ;;               (λ~ ()
+   ;;                  (disj e3
+   ;;                        (λ~ ()
+   ;;                            e4))))))
+
+   ;; 把alist並起來
+   ;; 因爲要lazy 所以並不能簡單的還得到alist
+   ;; 而必須在這裏使用stream
+   ;; disj*先幫助disj處理第二個參數 把h化爲h~
+
+   ;; 所以a∞的典型值是alist所形成的stream
+   ;; (disj ((== 1 (var 'x)) '())
+   ;;       (λ~ () ((== 2 (var 'y)) '())))
+   ;; (disj* ((== 1 (var 'x)) '())
+   ;;        ((== 2 (var 'y)) '())
+   ;;        ((== 3 (var 'z)) '())
+   ;;        ((== (var 'w) (var 'k)) '()))
+
+
+   (define disj
+     ;; : a∞ h~ -> a∞
+     (lambda (a∞ h~)
+       (case∞ a∞
+         ;; empty-stream
+         [() (h~)]
+         ;; (~ x), but why this occur?
+         [(f~) (λ~ () (disj (h~) f~))]
+         ;; a is non-stream extend the stream h~ by a
+         [(a) (cons a h~)]
+         ;; a is stream append, which order is right?
+         [(a f~) (cons a (λ~ () (disj (h~) f~)))]
+         )))
+
+
+   (define-syntax fresh
+     (syntax-rules ()
+       [(_ (x ...)
+           g1 g2 ...)
+        ;; a fresh-exp is extended to a goal
+        (λᴳ (s)
+          (λ~ ()
+            (let ([x (var 'x)] ...)
+              (conj* (g1 s) g2 ...))))]))
+
+   (define-syntax run
+     (syntax-rules ()
+       [(_ n (x)
+           g1 g2 ...)
+        (take n (λ~ ()
+                  ((fresh (x)
+                     g1 g2 ...
+                     (λᴳ (s)
+                       (cons (reify x s) '())) )
+                   ;; goal act on empty-s to reveal itself
+                   empty-s)))]))
+   (define-syntax run*
+     (syntax-rules ()
+       [(_ (x) g ...)
+        (run #f (x) g ...)]))
+
+   (define take
+     (lambda (n f)
+       (if (and n (zero? n))
+         '()
+         (case∞ (f)
+           [() '()]
+           [(f~) (take n f~)]
+           [(a) a]
+           [(a f) (cons (car a)
+                        (take (and n (sub1 n)) f))]))))
+
+   (define succeed (== #f #f))
+   (define fail (== #f #t))
+   #+end_src
+* 1 playthings
+  *the law of fresh*
+  if x is fresh
+  then (v x) succeeds and associates x with v
+
+  *the law of ==*
+  (v w) is the same as (w v)
+
+  *the law of conde*
+  to get more values from conde
+  pretend that the successful conde line has failed
+  refreshing all variables that got an association from that line
+  #+begin_src scheme
+  (run* (q)
+    fail)
+
+  (run* (q)
+    (== 1 q))
+
+  (run* (x)
+    succeed)
+
+  (run* (c)
+    (let ([a 1]
+          [d 2])
+      (== c `(,a ,d))))
+
+  ;; reified name of unbound-var
+  (run* (c)
+    (fresh (a d)
+      (== c `(,a ,d))))
+
+  (run* (r)
+    (fresh (x)
+      (let ([y x])
+        (fresh (x)
+          (== `(,y ,x ,y) r)))))
+  (run* (q)
+    (== 1 q)
+    (== 1 q))
+
+  (run* (q)
+    (let ([x q])
+      (== 1 x)))
+
+  (run* (q)
+    (fresh (x)
+      (== q x)))
+  (run* (q)
+    (fresh (x)
+      (== 1 x)
+      (== x q)))
+  (run* (q)
+    (fresh (x)
+      (== x q)
+      ;; oc-refer or share
+      (== 1 x)))
+
+  (run* (q)
+    (fresh (x)
+      (== (eq? x q) q)))
+  (run* (q)
+    (let ([x q])
+      (fresh (q)
+        (== (eq? x q) x))))
+
+  (run* (x)
+    (begin°
+     [(== 1 x) (== 1 x)]
+     [(== 2 x) (== 3 x)]
+     ))
+  (run* (x)
+    (begin° ;; ``e'' stand for ``every line''
+      [(== 'kkk x) fail]
+      [(== 'kk x) succeed]
+      [(== 'k x) succeed]
+      ))
+  (run 1 (x)
+    (begin°
+      [(== 'kkk x) succeed]
+      [(== 'kk x) succeed]
+      [(== 'k x) succeed]
+      ))
+  (run 2 (x)
+    (begin°
+      [(== 'kkk x) succeed]
+      [(== 'kk x) succeed]
+      [(== 'k x) succeed]
+      ))
+  (run #f (x)
+    (begin°
+      [(== 'kkk x) succeed]
+      [(== 'kk x) succeed]
+      [(== 'k x) succeed]
+      ))
+  (run* (x)
+    (begin°
+      [(== 'kkk x) fail]
+      [(== 'kk x) succeed]
+      [succeed succeed]
+      [(== 'k x) succeed fail]
+      ))
+  (run* (r)
+    (fresh (x y)
+      (begin°
+        [(== 'kkk x) (== 'aaa y)]
+        [(== 'kk x) (== 'aa y)] )
+      (== `(,x ,y 123) r)))
+
+  (run* (r)
+    (fresh (x y z)
+      (begin°
+        [(== y x) (fresh (x)
+                    (== z x))]
+        [(fresh (x)
+           (== y x)) (== z x)])
+      (== `(,y ,z) r)))
+  (run* (r)
+    (fresh (x y z)
+      (begin°
+        [(== y x) (fresh (x)
+                    (== z x))]
+        [(fresh (x)
+           (== y x)) (== z x)])
+      (== 1 x)
+      (== `(,y ,z) r)))
+  (run* (q)
+    (let ([a (== 1 q)]
+          [b (== 2 q)])
+      b))
+  #+end_src
+* 2 teaching old toys new tricks
+  #+begin_src scheme
+  ;; (define-syntax begin°
+  ;;   (syntax-rules ()
+  ;;     [(begin° . body)
+  ;;      (conde . body)]))
+  (run* (r)
+    (fresh (x y z)
+      (begin°
+       [(== y x) (fresh (x)
+                   (== z x))]
+       [(fresh (x)
+          (== y x)) (== z x)])
+      (== 1 x)
+      (== `(,y ,z) r)))
+
+  ;; (define car°
+  ;;   (lambda (p a)
+  ;;     (== (car p) a)))
+  (define car°
+    (lambda (p a)
+      (fresh (d)
+        (== (cons a d) p))))
+
+  (run* (r)
+    (fresh (x y)
+      (car° `(,r ,y) x)
+      ;(== (car `(,r ,y)) x)
+      (== 'kkk x)))
+  (run* (r)
+    (fresh (x y)
+      (car° '(1 2 3) x)
+      (car° '((a) (b) (c)) y)
+      (== (cons x y) r)))
+  ;; (define cdr°
+  ;;   (lambda (p a)
+  ;;     (== (cdr p) a)))
+  (define cdr°
+    (lambda (p d)
+      (fresh (a)
+        (== (cons a d) p))))
+  ;; the following is called unnesting
+  ;; looks like CPS
+  (run* (r)
+    (fresh (v)
+      (cdr° '(1 2 3) v)
+      (car° v r)))
+
+  (run* (x)
+    (cdr° '(1 2 3) `(,x 3)))
+  也就是說引發``代入事件''的==有能力看list之內的座標軸
+  (run* (x)
+    (fresh (a b)
+      (== '(1 2) `(,a ,b))
+      (== `(,a ,b) x)))
+  (run* (l)
+    (fresh (x)
+      (cdr° l '(1 2 3 4))
+      (car° l x)
+      (== 0 x)))
+  這裏cdr°的兩種定義中的前一種就錯了!
+  因爲==有能力看list之內的東西
+  所以作爲``代入事件''的cdr°必須引發對p的代入而不是對a或d的
+  即 在用==定義一個代入事件時 以結構更大的list爲基準
+  不夠的地方用fresh引入新的座標軸進行補充 就能讓所定義的東西獲得更大的能力
+  所以看來要經常使用quasiquote而不是quote了
+  (define cons°
+    (lambda (a d p)
+      (== (cons a d) p)))
+  (run* (l)
+    (cons° 1 2 l))
+  (run* (x)
+    (cons° x '(1 2) '(0 1 2)))
+  (run* (x)
+    (cons° x `(1 ,x 3) `(0 1 ,x 3)))
+  (run* (l)
+    (fresh (x)
+      (== `(0 1 ,x 3) l)
+      (cons° x `(1 ,x 3) l)))
+  (run* (l)
+    (fresh (x)
+      (cons° x `(1 ,x 3) l)
+      (== `(0 1 ,x 3) l)))
+
+  (define null°
+    (lambda (x)
+      (== x '())))
+  (run* (x)
+    (null° x))
+
+  ==有謂詞的功能 又有代入的功能
+  因爲需要判斷是否要插入一個值
+  (define eq°
+    (lambda (x y)
+      (== x y)))
+
+  ;; (define cons°
+  ;;   (lambda (a d p)
+  ;;     (== (cons a d) p)))
+  (define pair°
+    (lambda (p)
+      (fresh (a d)
+        ;; (== (cons a d) p)
+        (cons° a d p))))
+  (run* (q)
+    (pair° (cons q q))
+    (== 1 q))
+  (run* (q)
+    (pair° q)
+    (== '(1 2) q))
+  (run* (q)
+    (pair° 'atom)
+    (== 1 q))
+  (run* (x)
+    (pair° x))
+
+  (define tri°
+    (lambda (tri)
+      (fresh (x1 x2 x3)
+        (== `(,x1 ,x2 ,x3) tri))))
+  (run* (x)
+    (tri° x))
+  #+end_src
+** preparing for the following practice
+   #+begin_src scheme
+   (define car°
+     (lambda (p a)
+       (fresh (d)
+         (== (cons a d) p))))
+   (define cdr°
+     (lambda (p d)
+       (fresh (a)
+         (== (cons a d) p))))
+   (define cons°
+     (lambda (a d p)
+       (== (cons a d) p)))
+   (define null°
+     (lambda (x)
+       (== x '())))
+   (define eq°
+     (lambda (x y)
+       (== x y)))
+   (define pair°
+     (lambda (p)
+       (fresh (a d)
+         ;; (== (cons a d) p)
+         (cons° a d p))))
+   ;; (define tri°
+   ;;   (lambda (tri)
+   ;;     (fresh (x1 x2 x3)
+   ;;       (== `(,x1 ,x2 ,x3) tri))))
+   #+end_src
+* 3 seeing old friends in new ways
+  *THE FIRST COMMANDMENT*
+  to transform a function whose value is a boolean
+  into a function whose value is a goal
+  replace cond with conde and unnest each question and answer
+  unnest the answer #t (or #f) by replacing it with #s (or #u)
+  #+begin_src scheme
+  (define list?
+    (lambda (l)
+      (cond [(null? l) #t]
+            [(pair? l) (list? (cdr l))]
+            [else #f]
+            )))
+  (define list°
+    (lambda (l)
+      (begin°
+       [(null° l)]
+       [(pair° l) (fresh (d)
+                     ;; unnesting of (list? (cdr l))
+                     (cdr° l d)
+                     (list° d))]
+       )))
+  (run* (x)
+    (list° `(a b ,x d)))
+  ;; loop occur!
+  ;; (run* (x)
+  ;;   (list° x))
+  (run 10 (x)
+    (list° x))
+  (run 1 (x)
+    (list° `(a b . ,x)))
+
+  ``==有謂詞的功能 又有代入的功能
+  因爲需要判斷是否要插入一個值''
+  說的是機制
+  而有趣的是這種機制所形成的語義是:
+  比如:
+  (run 10 (x)
+    (list° `(a b . ,x)))
+  x的值爲什麼的時候(list° `(a b . ,x))是真的?
+
+  (define lol? ;; list-of-lists?
+    (lambda (l)
+      (cond [(null? l) #t]
+            [(list? (car l))
+             (lol? (cdr l))]
+            [else #f])))
+  (define lol°
+    (lambda (l)
+      (begin°
+       [(null° l)]
+       [(fresh (a)
+          (car° l a)
+          (list° a))
+        (fresh (d)
+          (cdr° l d)
+          (lol° d))]
+       )))
+  (run 1 (l)
+    (lol° l))
+  (run 1 (q)
+    (fresh (x y)
+      (lol° `((1 2) (,x 3) (4 ,y)))
+      (== `(,x ,y) q)))
+  (run 5 (x)
+    (lol° `((1) . ,x)))
+  ;; (define twins°
+  ;;   (lambda (s)
+  ;;     (fresh (x y)
+  ;;       (cons° x y s)
+  ;;       (cons° x '() y))))
+  ;; (define twins°
+  ;;   (lambda (s)
+  ;;     (fresh (x y)
+  ;;       (== `(,x ,y) s)
+  ;;       (== x y))))
+  (define twins°
+    (lambda (s)
+      (fresh (x)
+        (== `(,x ,x) s))))
+  (run* (q)
+    (twins° '(1 1))
+    (== #t q))
+  (run* (q)
+    (twins° `(1 ,q)))
+
+  (define lot° ;; list-of-twins
+    (lambda (l)
+      (begin°
+       [(null° l)]
+       [(fresh (a)
+          (car° l a)
+          (twins° a))
+        (fresh (d)
+          (cdr° l d)
+          (lot° d))]
+       )))
+  (run 10 (z)
+    (lot° `((1 1) . ,z)))
+  (define listof°
+    (lambda (pred° l) ;; pred denote predicate
+      (begin°
+       [(null° l)]
+       [(fresh (a)
+          (car° l a)
+          (pred° a))
+        (fresh (d)
+          (cdr° l d)
+          (listof° pred° d))]
+       )))
+  (run 10 (out)
+    (fresh (w x y z)
+      (== `((1 1) (2 ,w) (,x ,y) . ,z) out)
+      (listof° twins° out)))
+  (run 100 (out)
+    (fresh (w x y z)
+      (== z out)
+      (listof° null° out)))
+  (define lot°
+    (lambda (l)
+      (listof° twins° l)))
+
+  (define member?
+    (lambda (x l)
+      (cond [(null? l) #f]
+            [(eq-car? l x) #t]
+            [else (member? x (cdr l))]
+            )))
+  (define eq-car?
+    (lambda (l x)
+      (eq? (car l) x)))
+  (define eq-car°
+    (lambda (l x)
+      (car° l x)))
+  (define member°
+    (lambda (x l)
+      (begin°
+       [(eq-car° l x)]
+       [(fresh (d)
+          (cdr° l d)
+          (member° x d))]
+       )))
+  (run 10 (l)
+    (member° 1 `(,l . 1)))
+  (run* (x)
+    (member° '2 `(1 ,x 3)))
+  (run* (x)
+    (member° '2 `(1  2 ,x 3)))
+  (run* (x)
+    (member° '2 `(1 ,x 2 3)))
+  (run* (out)
+    (fresh (x y)
+      (member° '2 `(1 ,x 3 ,y))
+      (== `(,x ,y) out)))
+
+  (define list-copy
+    (lambda (l)
+      (run* (y)
+        (member° y l))))
+  (let ([test
+         '(1 2 (3 (4)))])
+    (newline)
+    (printf "test:list-copy:a version which don't handle loop,\n")
+    (printf "all answers should be #f,\n")
+    (printf "SRFI-1 con't pass this test.\n")
+    (newline)
+    (printf
+     "(list-copy test)\n==>\n~s\n\n"
+     (list-copy test))
+    (printf
+     "(eq? test (list-copy test))\n==>\n~s\n\n"
+     (eq? test (list-copy test)))
+    (printf
+     "(eq? (cdr test) (cdr (list-copy test)))\n==>\n~s\n\n"
+     (eq? (cdr test) (cdr (list-copy test))))
+    (printf
+     "(caddr test)\n==>\n~s\n\n"
+     (caddr test))
+    (printf
+     "(caddr (list-copy test))\n==>\n~s\n\n"
+     (caddr (list-copy test)))
+    (printf
+     "(eq? (caddr test) (caddr (list-copy test)))\n==>\n~s\n\n"
+     (eq? (caddr test) (caddr (list-copy test))))
+    )
+
+  (define pmember°
+    (lambda (x l)
+      (begin°
+       [(eq-car° l x) (cdr° l '())]
+       [(fresh (d)
+          (cdr° l d)
+          (pmember° x d))]
+       )))
+  (run 5 (l)
+    (pmember° 'kkk l))
+  (run* (out)
+    (pmember° 1 '(a b 1 c d 1))
+    (== #f out))
+  (run* (out)
+    (member° 1 '(a b 1 c d 1))
+    (== #f out))
+  (define pmember°
+    (lambda (x l)
+      (begin°
+       [(eq-car° l x) (cdr° l '())]
+       [(eq-car° l x)]
+       [(fresh (d)
+          (cdr° l d)
+          (pmember° x d))]
+       )))
+  (run* (out)
+    (pmember° 1 '(a b 1 c d 1))
+    (== #f out))
+  (define pmember°
+    (lambda (x l)
+      (begin°
+       [(eq-car° l x) (cdr° l '())]
+       [(eq-car° l x)
+        (fresh (a d)
+          (cdr° l `(,a . ,d)))]
+       [(fresh (d)
+          (cdr° l d)
+          (pmember° x d))]
+       )))
+  (run* (out)
+    (pmember° 1 '(a b 1 c d 1))
+    (== #f out))
+  (run 10 (l)
+    (pmember° 'kkk l))
+  (define pmember°
+    (lambda (x l)
+      (begin°
+       [(eq-car° l x)
+        (fresh (a d)
+          (cdr° l `(,a . ,d)))]
+       [(eq-car° l x) (cdr° l '())]
+       [(fresh (d)
+          (cdr° l d)
+          (pmember° x d))]
+       )))
+  (run 10 (l)
+    (pmember° 'kkk l))
+
+  (define first-value
+    (lambda (l)
+      (run 1 (y)
+        (member° y l))))
+  (first-value 1)
+  (first-value '())
+  ;; so when there is nothing to return here is a reason to return ()
+  (first-value '(1 2 3))
+  (first-value '((1) (2) (3)))
+  ;; return the list of ``the-first-value''
+
+
+  ----------------------------------
+  (define memberrev°
+    (lambda (x l)
+      (begin°
+       [(fresh (d)
+          (cdr° l d)
+          (memberrev° x d))]
+       [(eq-car° l x)]
+       )))
+  (run* (x)
+    (memberrev° x '(1 2)))
+  (define memberrev°
+    (lambda (x l)
+      (begin°
+       [(eq-car° l x)]
+       [(fresh (d)
+          (cdr° l d)
+          (memberrev° x d))]
+       )))
+  (run* (x)
+    (memberrev° x '(1 2 3 4 5)))
+  "bug here"
+  在begin°中的遞歸調用的行和一般的行不一樣
+  一般行的順序會被begin°保持 但是遞歸調用行不行
+  begin°中的遞歸調用將形成begin°的嵌套
+  嵌套的begin°不保持順序嗎?
+  (run 100 (k)
+    (begin°
+     [(== k 1)]
+     [(begin°
+       [(== k 2)])]
+     [(== k 3)]
+     ))
+  ==>
+  (1 3 2)真是這樣
+  --------------------------------
+  (define list-reverse-copy
+    (lambda (l)
+      (run* (y)
+        (memberrev° y l))))
+  (list-reverse-copy'(1 2 3))
+  #+end_src
+** preparing for the following practice
+   #+begin_src scheme
+   (define member?
+     (lambda (x l)
+       (cond [(null? l) #f]
+             [(eq-car? l x) #t]
+             [else (member? x (cdr l))]
+             )))
+   (define eq-car?
+     (lambda (l x)
+       (eq? (car l) x)))
+
+   (define list°
+     (lambda (l)
+       (begin°
+        [(null° l)]
+        [(pair° l) (fresh (d)
+                      ;; unnesting of (list? (cdr l))
+                      (cdr° l d)
+                      (list° d))]
+        )))
+
+   (define eq-car°
+     (lambda (l x)
+       (car° l x)))
+   (define member°
+     (lambda (x l)
+       (begin°
+        [(eq-car° l x)]
+        [(fresh (d)
+           (cdr° l d)
+           (member° x d))]
+        )))
+   #+end_src
+* 4 members only
+  *THE SECOND COMMANDMENT*
+  to transform a function whose value is not a boolean into
+  a function whose value is a goal
+  add an extra argument to hold its value
+  replace cond with conde
+  and unnest each question and answer
+  #+begin_src scheme
+  (define mem
+    (lambda (x l)
+      (cond [(null? l) #f]
+            [(eq-car? l x) l]
+            [else (mem x (cdr l))]
+            )))
+  (run* (out)
+    (== (mem 1 '(0 0 1 2 3)) out))
+  (mem 2
+       (mem 1
+            '(0 0 1 2 3)))
+  (define mem°
+    (lambda (x l out)
+      (begin°
+       [(eq-car° l x) (== l out)]
+       [(fresh (d)
+          (cdr° l d)
+          (mem° x d out))]
+       )))
+  (run 1 (out)
+    (mem° 1 '(0 0 1 2 3) out))
+  (run* (r)
+    (mem° r
+           '(0 0 1 2 3)
+           '(1 2 3)))
+  (run* (r)
+    (mem° 1 '(1 2 3) '(1 2 3))
+    (== #f r))
+  (run* (r)
+    (mem° 1 '(1 2 3) '(1 2))
+    (== #f r))
+  (run* (r)
+    (mem° 1 '(1 2 3) '(1 2))
+    (== #f r))
+  (run* (x)
+    (mem° 1 `(1 2) `(7 ,x)))
+  (run* (out)
+    (fresh (x)
+      (mem° 1 `(0 0 ,x 0 1 2) out)))
+  (run 12 (z)
+    (fresh (u)
+      (mem° 'kkk `(0 0 kkk 0 kkk 2 . ,z) u)))
+
+  (define rember
+    (lambda (x l)
+      (cond [(null? l) '()]
+            [(eq-car? l x) (cdr l)]
+            [else (cons (car l) (rember x (cdr l)))]
+            )))
+
+  (define rember°
+    (lambda (x l out)
+      (begin°
+       [(null° l) (== '() out)]
+       [(eq-car° l x) (cdr° l out)]
+       [(fresh (res)
+          (fresh (d)
+            (cdr° l d)
+            (rember° x d res))
+          (fresh (a)
+            (car° l a)
+            (cons° a res out)))]
+       )))
+  (define rember°
+    (lambda (x l out)
+      (begin°
+       [(null° l) (== '() out)]
+       [(eq-car° l x) (cdr° l out)]
+       [(fresh (a d r)
+          ;; (car° l a)
+          ;; (cdr° l d)
+          (cons° a d l) ;; take apart a cons
+          (rember° x d r)
+          (cons° a r out)) ;; build a cons
+        ]
+       )))
+  (run* (out)
+    (rember° 1 '(1 2 3) out))
+  (run 10 (out)
+    (fresh (y)
+      (rember° 0 `(1 2 ,y 3 0 4) out)))
+  (run* (out)
+    (fresh (y z)
+      (rember° y `(a b ,y d ,z e) out)))
+
+  (run* (r)
+    (fresh (y z)
+      (rember° y `(,y d ,z e) `(,y d e))
+      (== `(,y ,z) r)))
+
+  (run 13 (w)
+    (fresh (y z out)
+      (rember° y `(a b ,y d ,z . ,w) out)))
+
+  (define surprise°
+    (lambda (s)
+      (rember° s '(a b c) '(a b c))))
+  (run* (r)
+    (== 'd r)
+    (surprise° r))
+  --------------
+  "bug?"
+  (run* (r)
+    (== 'a r)
+    (surprise° r))
+  "no!"
+  (run* (x)
+   (rember° 'a '(a b c) '(a b c)))
+  (define rember°
+    (lambda (x l out)
+      (begin°
+       ;; [(null° l) (== '() out)]
+       [(eq-car° l x) (cdr° l out)]
+       [(fresh (a d r)
+          ;; (car° l a)
+          ;; (cdr° l d)
+          (cons° a d l) ;; take apart a cons
+          (rember° x d r)
+          (cons° a r out)) ;; build a cons
+        ]
+       )))
+  so don't handle '() in rember°
+  for there is a '() return by run* naturely
+  that means
+  ``don't follow the way you write procedure in scheme''
+  (run* (x)
+   (rember° 'a '(a b c) '(a b c)))
+  ----------------
+  (run* (r)
+    (surprise° r))
+  (run* (r)
+    (surprise° r)
+    (== 'b r))
+  #+end_src
+** preparing for the following practice
+   #+begin_src scheme
+   (define rember
+     (lambda (x l)
+       (cond [(null? l) '()]
+             [(eq-car? l x) (cdr l)]
+             [else (cons (car l) (rember x (cdr l)))]
+             )))
+
+   (define rember°
+     (lambda (x l out)
+       (begin°
+        [(null° l) (== '() out)]
+        [(eq-car° l x) (cdr° l out)]
+        [(fresh (a d r)
+           ;; (car° l a)
+           ;; (cdr° l d)
+           (cons° a d l) ;; take apart a cons
+           (rember° x d r)
+           (cons° a r out)) ;; build a cons
+         ]
+        )))
+   #+end_src
+* 5 double your fun
+  #+begin_src scheme
+  (define append
+    (lambda (proper-list sexp)
+      (cond [(null? proper-list) sexp]
+            [else
+             (cons (car proper-list)
+                   (append (cdr proper-list) sexp))]
+            )))
+  (define append°
+    (lambda (proper-list sexp out)
+      (begin°
+       [(null° proper-list) (== out sexp)]
+       [(fresh (a d rec)
+          (cons° a d proper-list)
+          (append° d sexp rec)
+          (cons° a rec out))]
+       )))
+  (run* (out)
+    (append° `(1 2 3) `(a b c) out))
+  (run 10 (x)
+    (fresh (y)
+      (append° `(a b c . ,y) `(d e) x)))
+  (run 10 (y)
+    (fresh (x)
+      (append° `(a b c . ,y) `(d e) x)))
+  (run 10 (x)
+    (fresh (y)
+      (append° `(a b c . ,y) `(d e . ,y) x)))
+
+  ;; can't run 11
+  (run 10 (x)
+    (fresh (y)
+      (append° x y `(1 2 3 4 5 6 7 8 9 10))))
+  (run 10 (y)
+    (fresh (x)
+      (append° x y `(1 2 3 4 5 6 7 8 9 10))))
+  (run 10 (out)
+    (fresh (x y)
+      (append° x y `(1 2 3 4 5 6 7 8 9 10))
+      (== `(,x ,y) out)))
+  better version:
+  (define append°
+    (lambda (proper-list sexp out)
+      (begin°
+       [(null° proper-list) (== out sexp)]
+       [(fresh (a d rec)
+          (cons° a d proper-list)
+          (cons° a rec out)
+          ;; after the above rec is (cdr out)
+          (append° d sexp rec))]
+       )))
+  ;; can run 11
+  (run 11 (x)
+    (fresh (y)
+      (append° x y `(1 2 3 4 5 6 7 8 9 10))))
+  (run 11 (y)
+    (fresh (x)
+      (append° x y `(1 2 3 4 5 6 7 8 9 10))))
+  (run 11 (out)
+    (fresh (x y)
+      (append° x y `(1 2 3 4 5 6 7 8 9 10))
+      (== `(,x ,y) out)))
+
+  (run 3 (x)
+    (fresh (y z)
+      (append° x y z)))
+  (run 3 (y)
+    (fresh (x z)
+      (append° x y z)))
+  (run 3 (z)
+    (fresh (x y)
+      (append° x y z)))
+  (run 3 (out)
+    (fresh (x y z)
+      (append° x y z)
+      (== `(,x ,y ,z) out)))
+  --------------------------------
+  "bug here as before!"
+  (define swappend°
+    (lambda (proper-list sexp out)
+      (begin°
+       [(fresh (a d rec)
+          (cons° a d proper-list)
+          (cons° a rec out)
+          (swappend° d sexp rec))]
+       [(null° proper-list) (== out sexp)]
+       )))
+  (run 1 (z)
+    (fresh (x y)
+      (swappend° x y z)))
+  (run 1 (z)
+    (fresh (x y)
+      (append° x y z)))
+  ----------------------------------
+  (define unwarp
+    (lambda (x)
+      (cond [(pair? x) (unwarp (car x))]
+            [else x]
+            )))
+  (define unwarp°
+    (lambda (x out)
+      (begin°
+       [(pair° x) (fresh (a)
+                     (car° x a)
+                     (unwarp° a out))]
+       [(== x out)]
+       )))
+  the order is wrong
+  can't stand the bug anymore
+  (run* (x)
+    (unwarp° '((((((1)))))) x))
+
+
+
+  ;; 1維的x 2維的y
+  (run 10 (y)
+    (begin°
+     [(== y (run 10 (x)
+              (begin°
+               [(== 1 x)]
+               [(== 2 x)]
+               )))]
+     [(== y (run 10 (x)
+              (begin°
+               [(== 3 x)]
+               [(== 4 x)]
+               )))] ) )
+  #+end_src
+** preparing for the following practice
+   #+begin_src scheme
+   ;; (define append°
+   ;;   (lambda (proper-list sexp out)
+   ;;     (begin°
+   ;;      [(null° proper-list) (== out sexp)]
+   ;;      [(fresh (a d rec)
+   ;;         (cons° a d proper-list)
+   ;;         (append° d sexp rec)
+   ;;         (cons° a rec out))]
+   ;;      )))
+   (define append°
+     (lambda (proper-list sexp out)
+       (begin°
+        [(null° proper-list) (== out sexp)]
+        [(fresh (a d rec)
+           (cons° a d proper-list)
+           (cons° a rec out)
+           (append° d sexp rec))]
+        )))
+   #+end_src
