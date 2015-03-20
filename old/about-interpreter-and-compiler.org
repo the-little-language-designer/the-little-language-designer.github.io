@@ -1,10 +1,4 @@
-
-layout: post
-title: about interpreter and compiler
-description: "DON'T PANIC"
-imagefeature: "lambda-1.jpg"
-categories:
-  - documentations
+about interpreter and compiler
 
 
 when you want to design a new computer programming language,
