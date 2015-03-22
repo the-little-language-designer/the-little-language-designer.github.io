@@ -199,6 +199,8 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** add documentation for explicit tail call</span>
+<span class="org-level-2">** syntax for exception handling in cicada-nymph</span>
 <span class="org-level-2">** a version of starting forth</span>
 <span class="org-level-2">** more note about assembler</span>
 <span class="org-level-1">* ===================================</span>
@@ -323,6 +325,17 @@
    * but I use
      1. "true" instead of "<span class="bold">*true*</span>"
      2. "false" instead of "<span class="bold">*false*</span>"
+<span class="org-level-2">** unique id</span>
+   * if one wish to get a named unique id
+     a jo maybe used
+     for a jo is an address in memory
+     it is unique as a memory address
+   * but there is not effort made
+     to distinguish address and fixnum
+     as different type of things
+     thus
+     this kind of unique id is not fit
+     for some tasks
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -471,152 +484,45 @@
    <span class="keyword">labeling</span>  <span class="preprocessor">equ</span> = current_free_address$un_initialized_memory
    <span class="type">preserve</span>  <span class="preprocessor">equ</span> current_free_address$un_initialized_memory = current_free_address$un_initialized_memory +
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** end</span>
-   * this makes 0 a very special jo
-     one important effect is that
-<span class="org-block-begin-line">     #+begin_src fasm
-</span>     <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
-<span class="org-block-end-line">     #+end_src
-</span>     is not allowed
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">end</span> = <span class="constant">0</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** next</span>
+</span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> tail call</span>
+   * the tail position of a function body must be recognized
+     there are two ways
+     1. recognize tail position in the threaded-code-interpreter
+<span class="org-block-begin-line">        #+begin_src fasm
+</span>        <span class="type">xx</span> function1
+        <span class="type">xx</span> fucntion2
+        <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">        #+end_src
+</span>     2. recognize tail position in the compiler
+<span class="org-block-begin-line">        #+begin_src fasm
+</span>        <span class="type">xx</span> function1
+        <span class="type">xx</span> <span class="keyword">tail_call</span>, function2
+<span class="org-block-end-line">        #+end_src
+</span>   * the secnod way is better
+     it is explicit
+<span class="org-level-2">** next</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">macro</span> <span class="function-name">next</span> {
       pop_return_stack <span class="variable-name">rbx</span>
         <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">qword</span> [<span class="variable-name">rbx</span>]
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
-        <span class="builtin">mov</span> <span class="variable-name">rcx</span>, <span class="type">qword</span> [<span class="variable-name">rbx</span>]
-        <span class="builtin">test</span> <span class="variable-name">rcx</span>, <span class="variable-name">rcx</span>
-        <span class="builtin">jz</span> @f
       push_return_stack <span class="variable-name">rbx</span>
-   <span class="function-name">@@</span>:  <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
+        <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
    }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> play with jo &amp; jojo</span>
-   1. if we have
-      * the following one jojo in the return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-jo">(square)</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>      * and 2 in the argument-stack
-        denoted by &lt;&lt; 2 &gt;&gt;
-      * and as following
-        the jo "square" is defined
-<span class="org-block-begin-line">        #+begin_src fasm
-</span>        define_function <span class="string">"square"</span>, square
-           <span class="comment">;; &lt;&lt; number -- square of number &gt;&gt;
-</span>           <span class="type">xx</span> <span class="keyword">dup</span>
-           <span class="type">xx</span> multiple
-           <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">        #+end_src
-</span>   2. when "next" is called
-      * "next" moves the jojo on top of return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>      * "next" finds the meaning of the jo just been pulled out
-        i.e. the jo "square"
-        "explain$function" is called
-        to help to explain the meaning of the function-jo "square"
-        the function body of the jo "square"
-        is pushed to return-stack as a new jojo
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(multiple)</span>
-                           <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   3. "next" is called again
-      * "next" moves the jojo on top of return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>          <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>      * "next" finds the meaning of the jo just been pulled out
-        i.e. the jo "dup"
-        as a primitive-function-jo
-        "dup" explains itself
-        the argument-stack becomes &lt;&lt; 2, 2 &gt;&gt;
-   4. "next" is called again
-      * "next" moves the jojo on top of return-stack
-        by the ending "end"
-        "next" recognizes that
-        it is the last jo in the jojo
-        so "next" pops the jojo out of return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>      * "next" finds the meaning of the jo just been pulled out
-        i.e. the jo "multiple"
-        a primitive-function-jo again
-        the argument-stack becomes &lt;&lt; 4 &gt;&gt;
-   5. "next" is called again
-      * "next" moves the jojo on top of return-stack
-        by the ending "end"
-        "next" recognizes that
-        it is the last jo in the jojo
-        so "next" pops the jojo out of return-stack
-        the return-stack is empty now
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>        <span class="return-stack-line">-</span> [  ]
-<span class="org-block-end-line">        #+end_src
-</span>      * "next" finds the meaning of the jo just been pulled out
-        i.e. the jo "square"
-        "explain$function" is called
-        to help to explain the meaning of the function-jo "square"
-        the function body of the jo "square"
-        is pushed to return-stack as a new jojo
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-jo">(multiple)</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   6. "next"
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(dup)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>      * argument-stack
-        &lt;&lt; 4, 4 &gt;&gt;
-   7. "next"
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>        <span class="return-stack-line">-</span> [  ]
-<span class="org-block-end-line">        #+end_src
-</span>      * argument-stack
-        &lt;&lt; 16 &gt;&gt;
-   8. return-stack is empty now
-      it is clear that
-      if "next" is called again
-      an error will occur
-      actually
-      in real situation
-      return-stack will never be empty
-      at the end of the return-stack
-      there is a tail recursive function [a loop]
-      which protects the return-stack from being empty
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> let us do a little review</span>
    1. at the beginning
+      * argument-stack
+        &lt;&lt; 2 &gt;&gt;
       * return-stack
 <span class="org-block-begin-line">        #+begin_src return-stack
 </span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
             <span class="return-stack-jo">(square)</span>
             <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">        #+end_src
-</span>      * argument-stack
+</span>   2. next
+      * argument-stack
         &lt;&lt; 2 &gt;&gt;
-   2. next
       * return-stack
 <span class="org-block-begin-line">        #+begin_src return-stack
 </span>            <span class="return-stack-jo">(square)</span>
@@ -625,48 +531,71 @@
                            <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">        #+end_src
 </span>   3. next
+      * argument-stack
+        &lt;&lt; 2, 2 &gt;&gt;
       * return-stack
 <span class="org-block-begin-line">        #+begin_src return-stack
 </span>            <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
         <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
             <span class="return-stack-end">(end)</span>          <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">        #+end_src
-</span>      * argument-stack
-        &lt;&lt; 2, 2 &gt;&gt;
-   4. next
+</span>   4. next
+      * argument-stack &lt;&lt; 4 &gt;&gt;
+      * return-stack
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>                           <span class="return-stack-jo">(dup)</span>
+            <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(multiple)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+            <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">        #+end_src
+</span>   5. next
+      * argument-stack &lt;&lt; 4 &gt;&gt;
       * return-stack
 <span class="org-block-begin-line">        #+begin_src return-stack
 </span>            <span class="return-stack-jo">(square)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>      * argument-stack &lt;&lt; 4 &gt;&gt;
-   5. next
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-jo">(multiple)</span>
-            <span class="return-stack-end">(end)</span>
+            <span class="return-stack-jo">(square)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+                        <span class="return-stack-jo">(multiple)</span>
+                        <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">        #+end_src
 </span>   6. next
+      * argument-stack
+        &lt;&lt; 4, 4 &gt;&gt;
       * return-stack
 <span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(dup)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>
+</span>            <span class="return-stack-jo">(square)</span>
+            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+                        <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">        #+end_src
-</span>      * argument-stack
-        &lt;&lt; 4, 4 &gt;&gt;
-   7. next
+</span>   7. next
+      * argument-stack
+        &lt;&lt; 16 &gt;&gt;
+      * return-stack
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
+            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(multiple)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+<span class="org-block-end-line">        #+end_src
+</span>   8. next
+      * argument-stack
+        &lt;&lt; 16 &gt;&gt;
+      * return-stack
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>            <span class="return-stack-jo">(square)</span>
+            <span class="return-stack-jo">(square)</span>
+        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+<span class="org-block-end-line">        #+end_src
+</span>   9. next
+      * argument-stack
+        &lt;&lt; 16 &gt;&gt;
       * return-stack
 <span class="org-block-begin-line">        #+begin_src return-stack
 </span>        <span class="return-stack-line">-</span> [  ]
 <span class="org-block-end-line">        #+end_src
-</span>      * argument-stack
-        &lt;&lt; 16 &gt;&gt;
-   8. it is really simple
-      ^-^
-      is it not ?
+</span>   10. it is really simple
+       ^-^
+       is it not ?
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* helper function in assembly code</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -1053,12 +982,12 @@
                                                  <span class="return-stack-jo">(exception_head)</span>
                                                  <span class="return-stack-jo">(!exception_1)</span>
                                                  <span class="return-stack-jo">(!exception_2)</span>
-                                                 <span class="return-stack-end">(end)</span>
+                                                 <span class="return-stack-jo">(end_of_prepare)</span>
                       <span class="return-stack-jo">(prepare_for)</span>            <span class="return-stack-jo">(function_1)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">pointer</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exception_head)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(function_2)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(!exception_1)</span> <span class="return-stack-bar-ket">]</span>
                         <span class="return-stack-jo">(!exception_1)</span>         <span class="return-stack-end">(end)</span>              <span class="return-stack-end">(end)</span>
                         <span class="return-stack-jo">(!exception_2)</span>
-                        <span class="return-stack-end">(end)</span>
+                        <span class="return-stack-jo">(end_of_prepare)</span>
                       <span class="return-stack-jo">(function_1)</span>
                       <span class="return-stack-jo">(function_2)</span>
                       <span class="return-stack-end">(end)</span>
@@ -1153,7 +1082,8 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"jo-&gt;link"</span>, jo_to_link
       <span class="comment">;; &lt;&lt; jo -- link &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, subtraction
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
+      <span class="type">xx</span> subtraction
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** last-jo,dictionary?</span>
@@ -1173,7 +1103,8 @@
       <span class="comment">;; &lt;&lt; jo -- pre-jo &gt;&gt;
 </span>      <span class="type">xx</span> jo_to_link
       <span class="type">xx</span> fetch
-      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, addition
+      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
+      <span class="type">xx</span> addition
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** jo-&gt;type</span>
@@ -1246,7 +1177,22 @@
       <span class="type">xx</span> <span class="constant">8</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* taca &amp; end</span>
+<span class="org-level-2">** taca</span>
+   * tail-call
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_primitive_function <span class="string">"&lt;&gt;"</span>, <span class="keyword">taca</span>
+      pop_return_stack <span class="variable-name">rbx</span>
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">qword</span> [<span class="variable-name">rbx</span>]
+      <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** end</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_primitive_function <span class="string">"end"</span>, <span class="keyword">end</span>
+      pop_return_stack <span class="variable-name">rbx</span>
+      next
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* the story begin</span>
 <span class="org-level-2">** begin_to_interpret_threaded_code [linux]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -1727,35 +1673,27 @@
    address$return_stack <span class="keyword">labeling</span>
       <span class="type">preserve</span> <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* special</span>
+</span><span class="org-level-1">* instruction</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> side-effect</span>
-   * a special primitive function
-     does special side-effect on return-stack
+   * an instruction
+     is a special primitive function
+     which does special side-effect on return-stack
    * note that
      side-effect on return-stack
      should all be done in primitive functions
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> naming</span>
    * the naming convention in assembly code
-     of special primitive function
+     of instruction
      is the same as it of jo
-   * the name of a special primitive function
-     is not exported to cicada-language as a function
+   * the name of an instruction
+     might not be exported to cicada-language as a function
      but as a variable
    * the name of a special primitive function in assembly code
      maybe reused as a macro word in cicada-language
      but the name of the macro in assembly code
      is prefixed by "M__"
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> about end</span>
-   * note that
-     the jo 0 is used as end
-     so
-<span class="org-block-begin-line">     #+begin_src fasm
-</span>     <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
-<span class="org-block-end-line">     #+end_src
-</span>     [and so on]
-     are not allowed
 <span class="org-level-2">** literal</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_variable <span class="string">"*literal*"</span>, V__literal
@@ -1767,11 +1705,7 @@
         <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
         push_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
-        <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
-        <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-        <span class="builtin">jz</span> .meet_end
       push_return_stack <span class="variable-name">rbx</span>
-   <span class="function-name">.meet_end</span>:
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** address</span>
@@ -1786,11 +1720,7 @@
         <span class="builtin">add</span> <span class="variable-name">rax</span>, jo_size
         push_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
-        <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
-        <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-        <span class="builtin">jz</span> .meet_end
       push_return_stack <span class="variable-name">rbx</span>
-   <span class="function-name">.meet_end</span>:
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -1804,12 +1734,7 @@
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
       <span class="builtin">imul</span> <span class="variable-name">rax</span>, jo_size
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-      <span class="comment">;; the following handles branching to "end"
-</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
-      <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">jz</span> .meet_end
       push_return_stack <span class="variable-name">rbx</span>
-   <span class="function-name">.meet_end</span>:
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** false?branch</span>
@@ -1827,22 +1752,13 @@
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
       <span class="builtin">imul</span> <span class="variable-name">rax</span>, jo_size
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-      <span class="comment">;; the following handles branching to "end"
-</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
-      <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">jz</span> .meet_end
       push_return_stack <span class="variable-name">rbx</span>
-   <span class="function-name">.meet_end</span>:
       next
 
    <span class="function-name">help__false?branch__not_to_branch</span>:
       pop_return_stack <span class="variable-name">rbx</span>
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
-      <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">jz</span> .meet_end
       push_return_stack <span class="variable-name">rbx</span>
-   <span class="function-name">.meet_end</span>:
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -1855,10 +1771,10 @@
       <span class="type">xx</span> exception_head
       <span class="type">xx</span>   !exception_1
       <span class="type">xx</span>   !exception_2
-      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span>   end_of_prepare
       <span class="type">xx</span> function_1
       <span class="type">xx</span> function_2
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> &gt;&lt;&gt;&lt;&gt;&lt; <span class="keyword">end</span>
 <span class="org-block-end-line">      #+end_src
 </span>   3. return-stack
 <span class="org-block-begin-line">      #+begin_src return-stack
@@ -1866,7 +1782,7 @@
             <span class="return-stack-jo">(exception_head)</span>
             <span class="return-stack-jo">(!exception_1)</span>
             <span class="return-stack-jo">(!exception_2)</span>
-            <span class="return-stack-end">(end)</span>
+            <span class="return-stack-jo">(end_of_prepare)</span>
           <span class="return-stack-jo">(function_1)</span>
           <span class="return-stack-jo">(function_2)</span>
           <span class="return-stack-end">(end)</span>
@@ -1879,7 +1795,7 @@
         <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exception_head)</span> <span class="return-stack-bar-ket">]</span>
             <span class="return-stack-jo">(!exception_1)</span>
             <span class="return-stack-jo">(!exception_2)</span>
-            <span class="return-stack-end">(end)</span>
+            <span class="return-stack-jo">(end_of_prepare)</span>
           <span class="return-stack-jo">(function_1)</span>
           <span class="return-stack-jo">(function_2)</span>
           <span class="return-stack-end">(end)</span>
@@ -1890,11 +1806,11 @@
                                                    <span class="return-stack-jo">(exception_head)</span>
                                                    <span class="return-stack-jo">(!exception_1)</span>
                                                    <span class="return-stack-jo">(!exception_2)</span>
-                        <span class="return-stack-jo">(prepare_for)</span>              <span class="return-stack-end">(end)</span>
+                        <span class="return-stack-jo">(prepare_for)</span>              <span class="return-stack-jo">(end_of_prepare)</span>
         <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">pointer</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exception_head)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(function_1)</span> <span class="return-stack-bar-ket">]</span>
                           <span class="return-stack-jo">(!exception_1)</span>         <span class="return-stack-jo">(function_2)</span>
                           <span class="return-stack-jo">(!exception_2)</span>         <span class="return-stack-end">(end)</span>
-                          <span class="return-stack-end">(end)</span>
+                          <span class="return-stack-jo">(end_of_prepare)</span>
                         <span class="return-stack-jo">(function_1)</span>
                         <span class="return-stack-jo">(function_2)</span>
                         <span class="return-stack-end">(end)</span>
@@ -1912,13 +1828,21 @@
    <span class="function-name">.next</span>:
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">qword</span> [<span class="variable-name">rbx</span>]
-      <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">jz</span> .then
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, end_of_prepare
+      <span class="builtin">je</span> .then
       <span class="builtin">jmp</span> .next
    <span class="function-name">.then</span>:
       <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
       push_return_stack <span class="variable-name">rbx</span>
       next
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** end_of_prepare</span>
+   * used as an unique id
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_variable <span class="string">"*end-of-prepare*"</span>, V__end_of_prepare
+
+   <span class="function-name">end_of_prepare</span>:
+      <span class="type">xx</span> <span class="constant">0</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** exception_head</span>
    * this jo is served as a label in return-stack
@@ -2152,8 +2076,7 @@
       <span class="type">xx</span> swap
       <span class="type">xx</span>   xoverxx, multiple
       <span class="type">xx</span> swap
-      <span class="type">xx</span> help__power
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, help__power
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** equal &amp; greater-than &amp; less-than</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -2310,6 +2233,7 @@
      <span class="builtin">mov</span> <span class="variable-name">al</span>, <span class="type">byte</span>[<span class="variable-name">rbx</span>]
      push_argument_stack <span class="variable-name">rax</span>
      next
+
   define_primitive_function <span class="string">"fetch-two-bytes"</span>, fetch_two_bytes
      <span class="comment">;; ( address -- value )
 </span>     pop_argument_stack <span class="variable-name">rbx</span>
@@ -2427,13 +2351,15 @@
 
    define_function <span class="string">"have-unreaded-ket-char?"</span>, have_unreaded_ket_char?
       <span class="comment">;; &lt;&lt; -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, flag$unreaded_ket_char, fetch
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, flag$unreaded_ket_char
+      <span class="type">xx</span> fetch
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"unread-ket-char"</span>, unread_ket_char
       <span class="comment">;; &lt;&lt; char -- &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, char$unreaded_ket_char, save
-      <span class="type">xx</span> true, <span class="keyword">literal</span>, flag$unreaded_ket_char, save
+      <span class="type">xx</span> true, <span class="keyword">literal</span>, flag$unreaded_ket_char
+      <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
 
 
@@ -2442,7 +2368,8 @@
       <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
 </span>      <span class="type">xx</span> have_unreaded_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">9</span>
       <span class="type">xx</span>   <span class="keyword">literal</span>, char$unreaded_ket_char, fetch_byte
-      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char, save
+      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char
+      <span class="type">xx</span>   save
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> help__read_byte
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -2575,13 +2502,15 @@
 
    define_function <span class="string">"have-unreaded-ket-char?"</span>, have_unreaded_ket_char?
       <span class="comment">;; &lt;&lt; -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, flag$unreaded_ket_char, fetch
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, flag$unreaded_ket_char
+      <span class="type">xx</span> fetch
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"unread-ket-char"</span>, unread_ket_char
       <span class="comment">;; &lt;&lt; char -- &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, char$unreaded_ket_char, save
-      <span class="type">xx</span> true, <span class="keyword">literal</span>, flag$unreaded_ket_char, save
+      <span class="type">xx</span> true, <span class="keyword">literal</span>, flag$unreaded_ket_char
+      <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
 
 
@@ -2590,7 +2519,8 @@
       <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
 </span>      <span class="type">xx</span> have_unreaded_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">9</span>
       <span class="type">xx</span>   <span class="keyword">literal</span>, char$unreaded_ket_char, fetch_byte
-      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char, save
+      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char
+      <span class="type">xx</span>   save
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> help__read_byte
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -2709,8 +2639,7 @@
 </span>      <span class="type">xx</span> greater_than?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> drop
-      <span class="type">xx</span> read_word_begin_char
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, read_word_begin_char
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-word-&gt;buffer</span>
    1. skip any space-char (whitespace newline)
@@ -2738,25 +2667,28 @@
 
    define_function <span class="string">"help,read-word-&gt;buffer,bar-ket"</span>, help__read_word_to_buffer__bar_ket
       <span class="comment">;; &lt;&lt; cursor[address in buffer], counter -- word[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> tuck, subtraction, swap
+</span>      <span class="type">xx</span> tuck, subtraction
+      <span class="type">xx</span> swap
       <span class="type">xx</span> <span class="keyword">end</span>
+
 
    define_function <span class="string">"help,read-word-&gt;buffer,regular"</span>, help__read_word_to_buffer__regular
       <span class="comment">;; &lt;&lt; cursor[address in buffer], counter -- word[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> read_byte
       <span class="type">xx</span> <span class="keyword">dup</span>, bar_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">6</span>
       <span class="type">xx</span>   unread_ket_char
-      <span class="type">xx</span>   tuck, subtraction, swap
+      <span class="type">xx</span>   tuck, subtraction
+      <span class="type">xx</span>   swap
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> <span class="keyword">dup</span>, space_char?, <span class="keyword">false?branch</span>, <span class="constant">6</span>
       <span class="type">xx</span>   drop
-      <span class="type">xx</span>   tuck, subtraction, swap
+      <span class="type">xx</span>   tuck, subtraction
+      <span class="type">xx</span>   swap
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> xoverxx, save_byte
       <span class="type">xx</span> add1
       <span class="type">xx</span> swap, add1, swap
-      <span class="type">xx</span> help__read_word_to_buffer__regular
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, help__read_word_to_buffer__regular
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-word</span>
    * read-word will override the word readed before
@@ -2785,15 +2717,15 @@
       <span class="type">xx</span> sub1, swap
       <span class="type">xx</span> <span class="keyword">dup</span>, fetch_byte, write_byte
       <span class="type">xx</span> add1, swap
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, write_string
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** pretty_write_string</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">".s"</span>, pretty_write_string
       <span class="comment">;; &lt;&lt; integer -- &gt;&gt;
 </span>      <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>
+      <span class="type">xx</span> write_byte
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -2842,8 +2774,7 @@
       <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
       <span class="type">xx</span>   drop
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> help__write_nature_number
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, help__write_nature_number
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** write-integer</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -2853,7 +2784,8 @@
       <span class="type">xx</span>   write_nature_number
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">'-'</span>, write_byte
-      <span class="type">xx</span> negate, write_nature_number
+      <span class="type">xx</span> negate
+      <span class="type">xx</span> write_nature_number
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** pretty_write_integer</span>
@@ -2861,7 +2793,8 @@
 </span>   define_function <span class="string">"."</span>, pretty_write_integer
       <span class="comment">;; &lt;&lt; integer -- &gt;&gt;
 </span>      <span class="type">xx</span> write_integer
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">32</span>, write_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">32</span>
+      <span class="type">xx</span> write_byte
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -2878,7 +2811,8 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"space-char?"</span>, space_char?
       <span class="comment">;; &lt;&lt; char -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">32</span>, less_or_equal?
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">32</span>
+      <span class="type">xx</span> less_or_equal?
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** bar-ket-char?</span>
@@ -2932,12 +2866,14 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"char-&gt;decimal-digital"</span>, char_to_decimal_digital
       <span class="comment">;; &lt;&lt; char -- decimal-digital &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">'0'</span>, subtraction
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">'0'</span>
+      <span class="type">xx</span> subtraction
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"decimal-digital-&gt;char"</span>, decimal_digital_to_char
       <span class="comment">;; &lt;&lt; decimal-digital -- char &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">'0'</span>, addition
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">'0'</span>
+      <span class="type">xx</span> addition
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* buffer</span>
@@ -2965,7 +2901,8 @@
 </span>   define_function <span class="string">"string-equal?"</span>, string_equal?
       <span class="comment">;; &lt;&lt; string[address, length], string[address, length] -- bool &gt;&gt;
 </span>      <span class="type">xx</span> xoverxx, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   swap, compare_buffer
+      <span class="type">xx</span>   swap
+      <span class="type">xx</span>   compare_buffer
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> drop, drop2
       <span class="type">xx</span> false
@@ -2981,7 +2918,8 @@
    define_function <span class="string">"string-tail,char"</span>, string_tail__char
       <span class="comment">;; &lt;&lt; string[address, length] -- [address + 1, length + 1] &gt;&gt;
 </span>      <span class="type">xx</span> sub1, swap
-      <span class="type">xx</span> add1, swap
+      <span class="type">xx</span> add1
+      <span class="type">xx</span> swap
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** string-&gt;buffer!</span>
@@ -3028,8 +2966,7 @@
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> over, fetch_byte, decimal_digital_char?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   string_tail__char
-      <span class="type">xx</span>   digital_string?
-      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span>   <span class="keyword">taca</span>, digital_string?
       <span class="type">xx</span> drop2, false
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
@@ -3076,7 +3013,8 @@
       <span class="type">xx</span>   drop2, false
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> dup2, string_head__char, <span class="keyword">literal</span>, <span class="default">'-'</span>, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   string_tail__char, digital_string?
+      <span class="type">xx</span>   string_tail__char
+      <span class="type">xx</span>   digital_string?
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> digital_string?
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -3089,7 +3027,8 @@
       <span class="type">xx</span>   digital_string_to_integer
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> string_tail__char
-      <span class="type">xx</span> digital_string_to_integer, negate
+      <span class="type">xx</span> digital_string_to_integer
+      <span class="type">xx</span> negate
       <span class="type">xx</span> <span class="keyword">end</span>
 
 
@@ -3108,7 +3047,8 @@
       <span class="type">xx</span>   help__digital_string_to_integer
       <span class="type">xx</span> string_reverse!, drop2
 
-      <span class="type">xx</span> <span class="keyword">literal</span>, sum$digital_string_to_integer, fetch
+      <span class="type">xx</span> <span class="keyword">literal</span>, sum$digital_string_to_integer
+      <span class="type">xx</span> fetch
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"help,digital-string-&gt;integer"</span>, help__digital_string_to_integer
@@ -3130,8 +3070,7 @@
       <span class="type">xx</span> add_save
 
       <span class="type">xx</span> string_tail__char
-      <span class="type">xx</span> help__digital_string_to_integer
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, help__digital_string_to_integer
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** find-char,string</span>
@@ -3142,17 +3081,18 @@
 </span>     <span class="comment">;; &lt;&lt; not found:
 </span>     <span class="comment">;;      string[address, length], char -- false &gt;&gt;
 </span>     <span class="type">xx</span> over, zero?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-     <span class="type">xx</span>   drop, drop2, false
+     <span class="type">xx</span>   drop, drop2
+     <span class="type">xx</span>   false
      <span class="type">xx</span>   <span class="keyword">end</span>
      <span class="type">xx</span> xoverxx, fetch_byte
      <span class="type">xx</span> over, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-     <span class="type">xx</span>   drop2, true
+     <span class="type">xx</span>   drop2
+     <span class="type">xx</span>   true
      <span class="type">xx</span>   <span class="keyword">end</span>
      <span class="type">xx</span> xxswapx
      <span class="type">xx</span> string_tail__char
      <span class="type">xx</span> xswapxx
-     <span class="type">xx</span> find_char__string
-     <span class="type">xx</span> <span class="keyword">end</span>
+     <span class="type">xx</span> <span class="keyword">taca</span>, find_char__string
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
@@ -3200,8 +3140,7 @@
       <span class="type">xx</span>   false
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> jo_to_pre_jo
-      <span class="type">xx</span> help__find
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, help__find
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** execute-word</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -3221,7 +3160,8 @@
 
       <span class="type">xx</span> write_undefined_word_report__for_execute_word
       <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>
+      <span class="type">xx</span> write_byte
       <span class="type">xx</span> <span class="keyword">end</span>
 
 
@@ -3251,8 +3191,7 @@
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> dup2, string_head__char, space_char?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   string_tail__char
-      <span class="type">xx</span>   space_string?
-      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span>   <span class="keyword">taca</span>, space_string?
       <span class="type">xx</span> drop2, false
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
@@ -3272,8 +3211,7 @@
       <span class="type">xx</span> space_char?, false?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> string_tail__char
-      <span class="type">xx</span> string_to_word_begin
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, string_to_word_begin
 
    define_function <span class="string">"string-&gt;word-end"</span>, string_to_word_end
       <span class="comment">;; &lt;&lt; string[address, length] -- string[address, length] &gt;&gt;
@@ -3299,8 +3237,7 @@
       <span class="type">xx</span> bar_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> string_tail__char
-      <span class="type">xx</span> help__string_to_word_end
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, help__string_to_word_end
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** string-[head|tail],word</span>
    * note that
@@ -3321,29 +3258,13 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** end-word?</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">string$end_word</span>:
-      <span class="type">db</span> <span class="string">"end"</span>
-   <span class="function-name">.end</span>:
-   length$end_word = (.end - string$end_word)
-
-   define_function <span class="string">"end-word?"</span>, end_word?
-      <span class="comment">;; &lt;&lt; word[address, length] -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$end_word
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$end_word
-      <span class="type">xx</span> string_equal?
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* basic-REPL</span>
 <span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
 </span>  define_function <span class="string">"basic-REPL"</span>, basic_REPL
      <span class="comment">;; &lt;&lt; unknown -- unknown &gt;&gt;
 </span>     <span class="type">xx</span> read_word_for_REPL
      <span class="type">xx</span> execute_word
-     <span class="type">xx</span> basic_REPL
-     <span class="type">xx</span> <span class="keyword">end</span>
+     <span class="type">xx</span> <span class="keyword">taca</span>, basic_REPL
 <span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* colon semicolon</span>
@@ -3377,12 +3298,14 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"colon-string?"</span>, colon_string?
       <span class="comment">;; &lt;&lt; string[address, length] -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">':'</span>, char_string?
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">':'</span>
+      <span class="type">xx</span> char_string?
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"semicolon-string?"</span>, semicolon_string?
       <span class="comment">;; &lt;&lt; string[address, length] -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">';'</span>, char_string?
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">';'</span>
+      <span class="type">xx</span> char_string?
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** comment-[begin|end]-string?</span>
@@ -3458,10 +3381,8 @@
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, cursor$colon
       <span class="type">xx</span>   sub_save
       <span class="type">xx</span>   ignore_comment
-      <span class="type">xx</span>   help__loop__colon
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> help__loop__colon
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span>   <span class="keyword">taca</span>, help__loop__colon
+      <span class="type">xx</span> <span class="keyword">taca</span>, help__loop__colon
 
 
    define_function <span class="string">""</span>, help__save_byte__colon
@@ -3536,14 +3457,12 @@
       <span class="type">xx</span> dup2, comment_begin_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   drop2
       <span class="type">xx</span>     ignore_comment <span class="comment">;; for the new nested-comment
-</span>      <span class="type">xx</span>   ignore_comment <span class="comment">;; for the rest-comment
-</span>      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, comment_end_string?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
+</span>      <span class="type">xx</span>   <span class="keyword">taca</span>, ignore_comment <span class="comment">;; for the rest-comment
+</span>      <span class="type">xx</span> dup2, comment_end_string?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
       <span class="type">xx</span>   drop2
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> drop2
-      <span class="type">xx</span> ignore_comment
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, ignore_comment
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
@@ -3591,7 +3510,8 @@
 
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_dictionary, save
       <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_heap, save
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string, save
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string
+      <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
 
 
@@ -3615,28 +3535,17 @@
       <span class="type">xx</span> string_head__word
       <span class="comment">;; &lt;&lt; tail[address, length], head[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> make_jojo__dispatch_word
-      <span class="type">xx</span> make_jojo
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> <span class="keyword">taca</span>, make_jojo
 
    define_function <span class="string">"make-jojo,dispatch-word"</span>, make_jojo__dispatch_word
       <span class="comment">;; &lt;&lt; string[address, length], word[address, length] --
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> dup2, end_word?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-      <span class="type">xx</span>   drop2
-      <span class="type">xx</span>   zero
-      <span class="type">xx</span>     save_into__jo_heap
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, zero_string?, <span class="keyword">false?branch</span>, <span class="constant">6</span>
-      <span class="type">xx</span>   drop2
-      <span class="type">xx</span>   <span class="keyword">literal</span>, zero
-      <span class="type">xx</span>     save_into__jo_heap
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">7</span>
+</span>      <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">7</span>
       <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
       <span class="type">xx</span>     save_into__jo_heap
       <span class="type">xx</span>   string_to_integer
       <span class="type">xx</span>     save_into__jo_heap
-      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span>     <span class="keyword">end</span>
       <span class="type">xx</span> dup2
       <span class="type">xx</span> find, false?
       <span class="type">xx</span> <span class="keyword">false?branch</span>, <span class="constant">7</span>
@@ -3645,8 +3554,7 @@
       <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
       <span class="type">xx</span>   !undo_make_jojo
       <span class="type">xx</span> xxswapx, drop2 <span class="comment">;; word
-</span>      <span class="type">xx</span> make_jojo__dispatch_jo
-      <span class="type">xx</span> <span class="keyword">end</span>
+</span>      <span class="type">xx</span> <span class="keyword">taca</span>, make_jojo__dispatch_jo
 
    define_function <span class="string">"make-jojo,dispatch-jo"</span>, make_jojo__dispatch_jo
       <span class="comment">;; &lt;&lt; string[address, length], jo --
@@ -3850,7 +3758,7 @@
       <span class="type">xx</span> prepare_for
       <span class="type">xx</span>   exception_head
       <span class="type">xx</span>   !undo_make_jojo
-      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span>   end_of_prepare
 
 
       <span class="type">xx</span> V__current_free_address__primitive_string
@@ -3899,7 +3807,7 @@
       <span class="type">xx</span> prepare_for
       <span class="type">xx</span>   exception_head
       <span class="type">xx</span>   !undo_make_jojo
-      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span>   end_of_prepare
 
 
       <span class="type">xx</span> V__current_free_address__primitive_string
@@ -3937,7 +3845,7 @@
       <span class="type">xx</span> prepare_for
       <span class="type">xx</span>   exception_head
       <span class="type">xx</span>   !undo_make_jojo
-      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span>   end_of_prepare
 
 
       <span class="type">xx</span> V__current_free_address__primitive_string
@@ -3991,7 +3899,7 @@
 </span>      <span class="comment">;; instead of drop2
 </span>      <span class="comment">;; one may wish to do some thing to the string
 </span>      <span class="type">xx</span> drop2
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span> save_into__jo_heap
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -4015,7 +3923,6 @@
 
       <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string
       <span class="type">xx</span> add_save
-
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** save-into,jo-heap</span>
@@ -4028,7 +3935,6 @@
       <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
       <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_heap
       <span class="type">xx</span> add_save
-
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -4174,7 +4080,6 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> control</span>
 <span class="org-level-1">* if &amp; else &amp; then</span>
   * one predicate can make two branchs
     three predicates can make four branchs
@@ -4320,8 +4225,7 @@
     <span class="cicada-nymph-comment">&lt;&lt; unknown -- unknown &gt;&gt;</span>
     read-word-for-REPL
     execute-word
-    basic-REPL
-    <span class="cicada-nymph-end">end</span>
+    <span class="cicada-nymph-end">&lt;&gt;</span> basic-REPL
   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
   basic-REPL

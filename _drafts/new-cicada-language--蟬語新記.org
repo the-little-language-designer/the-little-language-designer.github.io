@@ -1,6 +1,6 @@
 #+TITLE:  蟬語新記 / new note on cicada language
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
+#+EMAIL:  xyheme@gmail.com 
 
 * ===================================
 * 姓名

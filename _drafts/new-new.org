@@ -1,0 +1,31 @@
+#+TITLE:  new new
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+* 引
+  * 想要增加一個 留下數據語言
+  * 在 小蟬語中
+    使用了 taca 來做 尾調用優化
+  * 然後如何
+    是不是應該把 小蟬語 直接改制成一個 留下數據語言
+    以減少層次
+  * 也就是說
+    所實現的第一個線串碼解釋器
+    是專門爲了實現第二個語言而做的
+    而不再是一個通用的語言
+    這樣
+    就第一個語言而言
+    其語法的詳細性[explicit] 
+    就是可以接受的了
+  * byte buffer editor
+    bit buffer editor
+    * cursor = 1 cursor = c1s 
+    * buffer = 2 cursor = c2s 
+    * xxxxxx = 3 cursor = c3s
+* 交叉匯編器框架
+  * cross assembler framework
+    like line editor
+    with modes
+  * hash-table for naming
+    各種 ?
+  * 目的 爲了寫 cicada-language 的 VM 的 匯編器

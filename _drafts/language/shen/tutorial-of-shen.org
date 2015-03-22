@@ -1,7 +1,6 @@
-#+TITLE:  tutorial of shen ^-^
+#+TITLE:  tutorial of shen
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
-
 
 * note
 ** bar-ket
