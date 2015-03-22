@@ -1,14 +1,13 @@
-#+TITLE:  小蟬語引 / intro-of-cicada-nymph
+#+TITLE:  課程 / course
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
 * 綱要
-** 講
-   1. [[../architecture/overview.html][構架]]
-   2. [[../assembly/overview.html][匯編]]
-   3. [[../cicada-nymph/overview.html][小蟬語]]
-** 讀
-   1. [[../syntax-and-semantic/overview.html][語法與語義]]
+  * [[architecture/overview.html][構架]]
+  * [[assembly/overview.html][匯編]]
+  * [[1st-instar/overview.html][齡一]]
+  * [[2nd-instar/overview.html][齡二]]
+  * [[../../cicada-nymph/overview.html][小蟬語]]
 * 題解
 ** 小小語言設計家
    * 用匯編語言來實現一個簡單的程序語言的解釋器

@@ -1,0 +1,166 @@
+#+TITLE:  小蟬語引 / intro-of-cicada-nymph
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+* 題解
+  * 名爲小蟬語
+    是因爲
+    我起初爲了教學目的而實現這個程序語言
+    而其設計來源於 我所設計的
+    名爲 蟬語 的程序語言之早期版本
+  * 我從頭開始寫
+    由在之前的幾次設計中所積累的經驗
+    我得以簡化代碼
+    並使其結構更清晰
+  * 我把實現中的每個關鍵步驟凝結成
+    可以獨立工作的程序
+    並且用一些簡單測試
+    來展示每個關鍵步驟中所實現的性狀
+  * 通過這種方式
+    並補充以
+    計算機構架 和 匯編語言的基本知識
+    我得以
+    以這個簡單的程序語言的實現爲基礎
+    來講授 [[../course/overview.html][匯編語言課程的實驗課]]
+* 運行
+  * [[https://github.com/the-little-language-designer/cicada-nymph][請到這裏下載源代碼]]
+    並依照指示編譯解釋器
+* 簡單的例子
+** 執行函數
+   #+begin_src cicada-nymph
+   << 計算 3 與 4 的和 並打印出結果 >>
+   3 4 add .
+   3    << 將 3 入棧 >>
+   4    << 將 4 入棧 >>
+   add  << 將棧中兩數取出並相加 把計算結果放回棧中 >>
+   .    << 打印出棧頂數值 >>
+
+
+   << 計算 4 的平方 並打印出結果 >>
+   4 dup mul .
+
+   4    << 將 4 入棧 >>
+   dup  << 將棧頂元素複製 >>
+   mul  << 將棧中兩數取出並相乘 把計算結果放回棧中 >>
+   .    << 打印出棧頂數值 >>
+   #+end_src
+** 定義函數
+   #+begin_src cicada-nymph
+   << 定義一個函數 以計算平方 >>
+   : square
+     << number -- number >>
+     << 上面的一行註釋代表
+        這個函數
+        取棧中的一個數作爲參數
+        並返回一個數到棧中 >>
+     dup mul
+     end
+   ; define-function
+
+   << 計算 4 的平方 並打印出結果 >>
+   4 square .
+   #+end_src
+** 遞歸函數
+   #+begin_src cicada-nymph
+   << 定義階乘函數 >>
+   : factorial
+     << number -- number >>
+     dup one? if
+       end
+     then
+     dup sub1 factorial
+     mul
+     end
+   ; define-function
+
+   << 計算 4 的階乘 並打印出結果 >>
+   4 factorial .
+
+   << 計算 4 的階乘 並打印出結果 >>
+   4 3 2 1 mul mul mul .
+   #+end_src
+* ===================================
+* to explain the title
+  * the name of the language is cicada-nymph
+    because it is implemented for teaching purpose at first
+    and the design is based on
+    the early version of cicada-language
+  * I rewrite it
+    and due to the experiences that I gained
+    from previous implementations
+    I am able to simplify the code
+    and make its structure much more clear
+  * then
+    from each major steps of the development
+    I do abstract
+    to form an independently working program
+    and equip it with simple test
+    to demonstrate the feature that got implemented
+    from that specific step of development
+  * thus
+    I am able to use the implementation of this simple language
+    to teach an [[../course/overview.html][experimental assembly course]]
+    (currently Chinese version only
+     I will translate it to English when needed)
+* to run
+  * [[https://github.com/the-little-language-designer/cicada-nymph][please visit this repository to download the source code]]
+    and follow the instructions there
+    to compile the interpreter
+* simple examples
+** function application
+   #+begin_src cicada-nymph
+   << calculate the sum of 3 & 4 and print the result >>
+   3 4 add .
+
+   3    << push 3 to stack >>
+   4    << push 4 to stack >>
+   mul  << take the top two numbers off the stack
+           add them
+           and push the result back onto the stack >>
+   .    << print the value at the top of the stack >>
+
+
+   << calculate the square of 4 and print the result >>
+   4 dup mul .
+
+   4    << push 4 to stack >>
+   dup  << duplicate the value at the top of the stack >>
+   mul  << take the top two numbers off the stack
+           multiple them
+           and push the result back onto the stack >>
+   .    << print the value at the top of the stack >>
+   #+end_src
+** function definition
+   #+begin_src cicada-nymph
+   << define a function to calculate square >>
+   : square
+     << number -- number >>
+     << the above comment denotes that
+        the function defined here will
+        take one number as argument from the stack
+        return one number as return value back to the stack >>
+     dup mul
+     end
+   ; define-function
+
+   << calculate the sum of 3 & 4 and print the result >>
+   4 square .
+   #+end_src
+** recursive function
+   #+begin_src cicada-nymph
+   : factorial
+     << number -- number >>
+     dup one? if
+       end
+     then
+     dup sub1 factorial
+     mul
+     end
+   ; define-function
+
+   << calculate the factorial of 4 and print the result >>
+   4 factorial .
+
+   << calculate the factorial of 4 and print the result >>
+   4 3 2 1 mul mul mul .
+   #+end_src
