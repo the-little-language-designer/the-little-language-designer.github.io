@@ -3,9 +3,6 @@
 #+EMAIL:  xyheme@gmail.comment
 
 * todo
-* 一些先導性的文檔
-  * 取代當前的 小蟬語引
-  * 用於明天可能需要進行的課程介紹
 * write better license
 * write better intro for cicada-language
 * write better syntax and semantic

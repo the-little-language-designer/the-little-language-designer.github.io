@@ -4,7 +4,7 @@
 
 * 題解
   * 蟬語 這個名字
-    來源與曹植的[[../poem/chan-fu/show-all.html][蟬賦]]
+    來源與曹植的 [[../../poem/chan-fu/show-all.html][蟬賦]]
 * 目的
   蟬語的目的是
   爲每個人靈魂中渴望創造的精靈
@@ -24,6 +24,12 @@
   3. "數學支持" 則在於 嵌入在蟬語中的有向圖處理語言
      這個語言將被用來探索一種新的計算模型
      而這種新的計算模型將被用來探索某些基本的數學概念
+* ===================================
+* to explain the title
+  * the name cicada-language comes from 
+    the [[../../poem/chan-fu/show-all.html][cicada rhapsody]] of 
+    the ancient Chinese prince [[http://en.wikipedia.org/wiki/Cao_Zhi][CAO Zhi]] 
+    (no English translation of the poem currently)
 * purpose
   the purpose of the cicada language project
   is to provide support about programming language and math
@@ -35,7 +41,7 @@
      for they are stupid and can do less if we do not program them,
      and in my point of view,
      the more creative smart people program them,
-     the better the world will be ^_^.
+     the better the world will be.
      cicada suits this generalized purpose,
      for it is very easy to port cicada to any CPU,
      and the IDE of cicada will be a simple yet powerful text-editor,
