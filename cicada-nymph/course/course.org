@@ -2,12 +2,6 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
-* 綱要
-  * [[architecture/overview.html][構架]]
-  * [[assembly/overview.html][匯編]]
-  * [[1st-instar/overview.html][齡一]]
-  * [[2nd-instar/overview.html][齡二]]
-  * [[../../cicada-nymph/overview.html][小蟬語]]
 * 題解
 ** 小小語言設計家
    * 用匯編語言來實現一個簡單的程序語言的解釋器
@@ -21,6 +15,24 @@
      還是語法語義的設計
      都與小蟬語有共通之處 但又非常不同
      工作還在進行中
+* 綱要
+  * 構架
+    計算機的基本構架
+  * 匯編
+    匯編語言的基本知識
+    與匯編器額使用方式
+  * [[../1st-instar/overview.html][齡一]]
+    基本的線串碼解釋器
+  * [[../2nd-instar/overview.html][齡二]]
+    線串碼中的基本指令
+  * [[../3rd-instar/overview.html][齡三]]
+    基本輸入輸出
+    轉跳指令
+  * [[../4th-instar/overview.html][齡四]]
+    基本 REPL
+  * [[../overview.html][小蟬語]]
+    編譯器
+    完整的小蟬語
 * 資料
 ** forth
    * [[http://en.wikipedia.org/wiki/Forth_%28programming_language%29][forth 的 wikipedia 頁面]]

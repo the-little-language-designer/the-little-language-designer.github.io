@@ -16,6 +16,18 @@
     可以獨立工作的程序
     並且用一些簡單測試
     來展示每個關鍵步驟中所實現的性狀
+    1. [[../1st-instar/overview.html][齡一]]
+       基本的線串碼解釋器
+    2. [[../2nd-instar/overview.html][齡二]]
+       線串碼中的基本指令
+    3. [[../3rd-instar/overview.html][齡三]]
+       基本輸入輸出
+       轉跳指令
+    4. [[../4th-instar/overview.html][齡四]]
+       基本 REPL
+    5. [[../overview.html][齡五]]
+       加上 編譯器
+       就得到完整的 小蟬語
   * 通過這種方式
     並補充以
     計算機構架 和 匯編語言的基本知識
@@ -97,6 +109,18 @@
     and equip it with simple test
     to demonstrate the feature that got implemented
     from that specific step of development
+    1. [[../1st-instar/overview.html][1st-instar]]
+       the threaded code interpreter
+    2. [[../2nd-instar/overview.html][2nd-instar]]
+       basic instructions of threaded code
+    3. [[../3rd-instar/overview.html][3rd-instar]]
+       basic io
+       instructions about branching
+    4. [[../4th-instar/overview.html][4th-instar]]
+       basic REPL
+    5. [[../overview.html][5th-instar]]
+       with the compile
+       we have the complete cicada-nymph
   * thus
     I am able to use the implementation of this simple language
     to teach an [[../course/overview.html][experimental assembly course]]
