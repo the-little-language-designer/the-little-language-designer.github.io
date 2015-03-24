@@ -1,0 +1,71 @@
+;; parameters order of windows function call
+define fun_4_r9  r9
+define fun_3_r8  r8
+define fun_2_rdx rdx
+define fun_1_rcx rcx
+
+define STD_INPUT_HANDLE  -10
+define STD_OUTPUT_HANDLE -11
+
+
+include "import-windows-64.inc"
+include "calling-convention-windows-64.inc"
+
+
+format PE64 console
+entry display_massage
+
+
+section '.text' code writeable readable executable
+
+display_massage:
+
+windows_function 4
+   sub rsp, 8*4
+   mov fun_1_rcx, STD_OUTPUT_HANDLE
+   call [GetStdHandle]
+   mov [_output_handle], rax
+end_windows_function
+
+windows_function 5
+   push 0
+   sub rsp, 8*4
+   mov fun_4_r9, counter
+   mov fun_3_r8, massage_size
+   mov fun_2_rdx, massage
+   mov fun_1_rcx, [_output_handle]
+   call [WriteFile]
+end_windows_function
+
+windows_function 4
+   sub rsp, 8*4
+   mov fun_1_rcx, 0
+   call [ExitProcess]
+end_windows_function
+
+
+massage:
+   db "kkk took my baby away !", 10
+massage_size = ($ - massage)
+
+counter:
+   dq 0
+
+_output_handle:
+   dq 0
+
+
+
+section '.idata' import data readable writeable
+
+library kernel32,'KERNEL32.DLL',\
+        user32,'USER32.DLL'
+
+import kernel32,\
+       ExitProcess,'ExitProcess',\
+       ReadFile,'ReadFile',\
+       WriteFile,'WriteFile',\
+       GetStdHandle,'GetStdHandle'
+
+import user32,\
+       

@@ -32,6 +32,22 @@
 
 @font-face
 {
+    font-family: "Envy-Code-R";
+    src: url("{{ site.url }}/assets/font/Envy-Code-R-PR7/Envy-Code-R.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "Envy-Code-R";
+    src: url("{{ site.url }}/assets/font/Envy-Code-R-PR7/Envy-Code-R-Bold.woff") format("woff");
+    font-weight: normal;
+    font-style:  bold;
+}
+
+@font-face
+{
     font-family: "lmmono10";
     src: url("{{ site.url }}/assets/font/Latin-Modern-Mono/lmmono10-regular.woff") format("woff");
     font-weight: normal;

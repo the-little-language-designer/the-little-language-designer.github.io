@@ -1,0 +1,106 @@
+;; parameters order of windows function call
+define fun_4_r9  r9
+define fun_3_r8  r8
+define fun_2_rdx rdx
+define fun_1_rcx rcx
+
+define STD_INPUT_HANDLE  -10
+define STD_OUTPUT_HANDLE -11
+
+
+include "import-windows-64.inc"
+
+
+format PE64 console
+entry display_massage
+
+
+section '.text' code writeable readable executable
+
+display_massage:
+   number_of_arguments = 4
+   push rbp
+   mov rbp, rsp
+
+   mov rax, rsp
+   add rax, 8*number_of_arguments
+   mov rbx, 1111b
+   and rbx, rax
+
+   sub rsp, 16
+   add rsp, rbx
+
+   sub rsp, 8*4
+   mov fun_1_rcx, STD_OUTPUT_HANDLE
+   call [GetStdHandle]
+   mov [_output_handle], rax
+
+   mov rsp, rbp
+   pop rbp
+
+
+   number_of_arguments = 5
+   push rbp
+   mov rbp, rsp
+
+   mov rax, rsp
+   add rax, 8*number_of_arguments
+   mov rbx, 1111b
+   and rbx, rax
+
+   sub rsp, 16
+   add rsp, rbx
+
+   push 0
+   sub rsp, 8*4
+   mov fun_4_r9, counter
+   mov fun_3_r8, massage_size
+   mov fun_2_rdx, massage
+   mov fun_1_rcx, [_output_handle]
+   call [WriteFile]
+
+   mov rsp, rbp
+   pop rbp
+
+
+   number_of_arguments = 4
+   push rbp
+   mov rbp, rsp
+
+   mov rax, rsp
+   add rax, 8*number_of_arguments
+   mov rbx, 1111b
+   and rbx, rax
+
+   sub rsp, 16
+   add rsp, rbx
+
+   sub rsp, 8*4
+   mov fun_1_rcx, 0
+   call [ExitProcess]
+
+   mov rsp, rbp
+   pop rbp
+
+
+massage:
+   db "kkk took my baby away !", 10
+massage_size = ($ - massage)
+
+counter:
+   dq 0
+
+_output_handle:
+   dq 0
+
+
+
+section '.idata' import data readable writeable
+
+library kernel32,'KERNEL32.DLL'
+
+import kernel32,\
+       ExitProcess,'ExitProcess',\
+       ReadFile,'ReadFile',\
+       WriteFile,'WriteFile',\
+       GetStdHandle,'GetStdHandle'

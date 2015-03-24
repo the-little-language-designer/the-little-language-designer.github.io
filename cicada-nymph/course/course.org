@@ -30,7 +30,7 @@
     轉跳指令
   * [[../4th-instar/overview.html][齡四]]
     基本 REPL
-  * [[../overview.html][小蟬語]]
+  * [[../overview.html][齡五]]
     編譯器
     完整的小蟬語
 * 資料
@@ -55,6 +55,10 @@
    * emacs
 ** 操作系統
    * linux
+   * windows
+     在 windows 上用於運行命令行程序的虛擬終端
+** 版本控制     
+   * git
 * 尾聲
 ** 開放源代碼運動
    * [[https://en.wikipedia.org/wiki/Free_software_movement][free software movement]]
@@ -62,3 +66,5 @@
 ** hackerspace & makerspace
    * [[http://www.szdiy.org/][深圳 SZDIY]]
    * [[http://www.chaihuo.org/][深圳 柴火]]
+on some windows machine it works fine  
+while on other windows machine it does not

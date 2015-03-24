@@ -2,29 +2,87 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
-* 棧
-  * cicada 中使用棧的約定是
-    1. 指針指向 current-free-address
-    2. push 時 指針的值增加
-    3. 兩個棧 兩個指針
-       以實現 參數傳遞 與 函數調用
-  * x86 中使用棧的約定是
-    1. 指針指向 last-pushed-content
-       [這是一種設計失誤 因爲它把空的棧變成了一種特殊情況]
-    2. push 時 指針的值減小
-       [這是一種設計失誤 因爲它徒然與人們的直覺相違背]
-    3. 一個棧 兩個指針
-       以實現 參數傳遞 與 函數調用
-       一個專門用來找到 stack 中的 return-address
-       因爲 return-address 將要被夾在 argument 和 local variable 之間
-       所以 需要一個機制來找打它的位置
-       [這是一種設計失誤 因爲它引入了不必要的技巧]
-    4. http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/
-    5. http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/
-* 匯編語言作爲特殊的程序語言
-  * 通常把匯編語言理解爲指令編碼的助記符
-    但是其實
-    也可以把匯編語言理解爲
-    在輸出文件裏 以相對線性的方式 去遺留數據 的語言
-    尤其是對於 fasm 來說更是如此
-  * 某些重要的 directive 的作用這是如此
+* 來源
+  * 本節內容來自 fasm 作者的教程
+    原始教程文檔 :
+    ><><>< tutorial.pdf
+  * 原文檔是針對 古老的 DOS 操作系統的
+    我把內容更改得適於在 64 位的 linux 上展示     
+* 匯編語言
+** 匯編器
+   * nasm
+   * gas
+   * fasm
+   * yasm
+** 把數據留下-語言
+   * 當使用匯編器的時候
+     你其實是在命令匯編器
+     幫你 以各種方式 把數據留在所生成的輸出文件當中
+     directive 指導匯編器應該如何留下數據
+   * 單純地留下數據
+     #+begin_src fasm
+     db 97
+     db 98
+     db 99          
+
+     db 97, 62h, "c"
+     
+     db "abc"         
+     #+end_src
+   * 通常把匯編語言理解爲指令編碼的助記符
+     即你用一些數字 編碼了指令
+     比如
+     0 代表 加
+     1 代表 減
+     等等
+     然後你需要一種
+   * 
+   * 你用匯編器所生成的可執行文件  
+     需要被操作系統處理之後纔會被加載到內存中
+     從而得到運行
+** 啓動扇區
+   #+begin_src fasm
+   
+   #+end_src
+* 操作流程概覽
+** 例子
+   * 
+** 命令行接口
+   * 被成爲 CLI (command line interface)
+   * 概括
+     1. 最簡陋低級的 用戶接口
+        因爲容易實現 而被使用氾濫
+   * 原理
+     1. 最簡單的輸入輸出
+        不是鍵盤的擊鍵
+        而是字符串
+   * 問
+     1. 對此種接口的使用
+        應該持什麼態度
+** 圖形界面接口 
+   * 被成爲 GUI ()
+     或 IDE ()
+   * 
+* 對用戶接口的解釋
+* 匯編器的使用
+* 計算機對程序的加載 
+* 散記
+** 棧
+   * cicada 中使用棧的約定是
+     1. 指針指向 current-free-address
+     2. push 時 指針的值增加
+     3. 兩個棧 兩個指針
+        以實現 參數傳遞 與 函數調用
+   * x86 中使用棧的約定是
+     1. 指針指向 last-pushed-content
+        [這是一種設計失誤 因爲它把空的棧變成了一種特殊情況]
+     2. push 時 指針的值減小
+        [這是一種設計失誤 因爲它徒然與人們的直覺相違背]
+     3. 一個棧 兩個指針
+        以實現 參數傳遞 與 函數調用
+        一個專門用來找到 stack 中的 return-address
+        因爲 return-address 將要被夾在 argument 和 local variable 之間
+        所以 需要一個機制來找打它的位置
+        [這是一種設計失誤 因爲它引入了不必要的技巧]
+     4. http://eli.thegreenplace.net/2011/02/04/where-the-top-of-the-stack-is-on-x86/
+     5. http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/
