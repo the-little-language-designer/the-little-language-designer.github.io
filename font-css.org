@@ -10,7 +10,7 @@
       src: url("{{ site.url }}/assets/font/MS-Song/MS-Song.woff") format("woff");
       font-weight: normal;
       font-style:  normal;
-  }  
+  }
   #+end_src
 * 宋
   #+begin_src css :tangle _includes/font.css
@@ -20,7 +20,7 @@
       src: url("{{ site.url }}/assets/font/臺灣早期印刷字形之細明體/R-PMingLiU-TW.woff") format("woff");
       font-weight: normal;
       font-style:  normal;
-  }    
+  }
   #+end_src
 * 黑
   #+begin_src css :tangle _includes/font.css
