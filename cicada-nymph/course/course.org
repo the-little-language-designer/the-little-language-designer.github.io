@@ -39,6 +39,7 @@
 ** [匯編器] fasm
    * [[http://flatassembler.net][主頁]]
    * [[http://board.flatassembler.net/][論壇]]
+   * [[http://en.wikipedia.org/wiki/FASM][維基百科頁面]]
    * fasm 是一個波蘭人在大學時候寫的
      我很欣賞其設計
      關於其設計決策有作者的兩篇文章 :
@@ -46,15 +47,18 @@
      2. [[http://flatassembler.net/docs.php?article=design][Design Principles]]
 ** [匯編器] nasm
    * [[http://www.nasm.us/][主頁]]
+   * [[http://en.wikipedia.org/wiki/Netwide_Assembler][維基百科頁面]]
+** [匯編器] gas
+   * [[http://en.wikipedia.org/wiki/GNU_Assembler][維基百科頁面]]
 ** [操作系統] linux
    * [[http://distrowatch.com/][各種發佈版本的比較]]
-   * archlinux     
+   * archlinux
      * [[https://www.archlinux.org/][主頁]]
      * [[https://wiki.archlinux.org/index.php/Main_page_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][中文 wiki]]
      * [[https://wiki.archlinux.org/index.php/The_Arch_Way_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][arch 之道]]
      * [[https://wiki.archlinux.org/index.php/Beginners%27_guide_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][新手安裝指南]]
      * [[https://wiki.archlinux.org/index.php/Installation_guide_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][簡明安裝指南]]
-   * ubuntu       
+   * ubuntu
      * [[http://www.ubuntu.com/download/desktop][下載]]
      * [[http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows][鏡像燒錄指南 (windows)]]
      * [[http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx][鏡像燒錄指南 (mac)]]
@@ -76,25 +80,25 @@
    * [[https://www.gnu.org/software/emacs/][主頁]]
    * [[http://ftpmirror.gnu.org/emacs/][下載]]
      windows 用戶請點擊最上面的 "windows/"
-     以下載 windows 版本  
+     以下載 windows 版本
 ** [代理] goagent
    * [[https://github.com/goagent/goagent][主頁]]
 ** hackerspace & makerspace
    * [[http://www.szdiy.org/][深圳 SZDIY]]
    * [[http://www.chaihuo.org/][深圳 柴火]]
-* 關於實驗流程  
+* 關於實驗流程
   * 並不限於我下面將要介紹的方法
     你可以用你所希望的任何方式來使用我所提供的代碼
-* 使用 windows 的同學的實驗流程   
+* 使用 windows 的同學的實驗流程
 ** 利用 fasm 所提供的集成開發環境
    * 
-   * 
+   *
 ** 利用 github 與 git 所提供的 git shell
-   * 
-   * 
+   *
+   *
 ** 利用 emacs
-   * 
-   * 
+   *
+   *
 * 使用 linux 的同學的實驗流程
   * 我想
     使用 linux 的同學自己就明白
@@ -102,8 +106,8 @@
     我不必多言了
 * 我向使用 mac 的同學道歉
   * 對不起
-    我沒能做到對 mac 的很好支持    
-  * 要知道 
+    我沒能做到對 mac 的很好支持
+  * 要知道
     mac 並不鼓勵開源程序的開發
     想要給 mac 寫匯編程序
     並且對程序進行有效測試
@@ -111,4 +115,3 @@
   * 這也是 fasm 的作者
     沒有能提供 fasm 的 mac 版本的主要原因
   * 我推薦你們給自己的電腦安裝 linux & mac 雙系統
-    
