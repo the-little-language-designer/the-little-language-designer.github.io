@@ -25,9 +25,13 @@
        轉跳指令
     4. [[../4th-instar/overview.html][齡四]]
        基本 REPL
-    5. [[../overview.html][齡五]]
+    5. [[../5th-instar/overview.html][齡五]]
        加上 編譯器
        就得到完整的 小蟬語
+    6. [[../overview.html][進行中的小蟬語]]
+       對性狀的一些豐富與補充
+       使得 小蟬語 在教學目的之外
+       也能勝於其他任務
   * 通過這種方式
     並補充以
     計算機構架 和 匯編語言的基本知識
@@ -119,9 +123,12 @@
        instructions about branching
     4. [[../4th-instar/overview.html][4th-instar]]
        basic REPL
-    5. [[../overview.html][5th-instar]]
+    5. [[../5th-instar/overview.html][5th-instar]]
        with the compile
        we have the complete cicada-nymph
+    6. [[../overview.html][the ongoing cicada-nymph]]
+       add more features
+       to let cicada-nymph be fit for missions other than teaching
   * thus
     I am able to use the implementation of this simple language
     to teach an [[../course/overview.html][experimental assembly course]]
