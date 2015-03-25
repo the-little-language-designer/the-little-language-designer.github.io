@@ -37,6 +37,7 @@
    * [[http://www.bradrodriguez.com/papers/moving1.htm][forth 各種實現技術的比較]]
    * [[http://www.forth.org/][forth 興趣小組]]
    * [[http://www.figuk.plus.com/][英國 forth 興趣小組]]
+   * [[http://jeforth.com/][另外一個與 forth 有關的中文項目]]
    * [[http://www.forth.com/starting-forth/sf0/sf0.html][forth 的經典入門教程]]
    * [[http://www.complang.tuwien.ac.at/forth/][其他一些東西]]
    * [[https://github.com/xieyuheng/jonesforth][我爲 jonesforth 作的備份]]
@@ -44,6 +45,7 @@
    * [[http://flatassembler.net][主頁]]
    * [[http://board.flatassembler.net/][論壇]]
    * [[http://en.wikipedia.org/wiki/FASM][維基百科頁面]]
+   * [[https://github.com/the-little-language-designer/fasm][我在 github 上爲 fasm 所做的鏡像]]
    * fasm 是一個波蘭人在大學時候寫的
      我很欣賞其設計
      關於其設計決策有作者的兩篇文章 :
