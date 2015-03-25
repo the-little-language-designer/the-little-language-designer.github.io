@@ -103,6 +103,9 @@
   * 並不限於我下面將要介紹的方法
     你可以用你所希望的任何方式來使用我所提供的代碼
 * 使用 windows 的同學的實驗流程
+** 主要程序的下載
+   * [[https://codeload.github.com/the-little-language-designer/fasm/zip/master][fasm 匯編器]]
+   * [[https://codeload.github.com/the-little-language-designer/cicada-nymph/zip/master][小蟬語的代碼]]
 ** 利用 fasm 所提供的集成開發環境
    難度較低
    但是所獲得的開發環境
