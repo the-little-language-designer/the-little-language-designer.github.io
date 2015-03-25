@@ -2,9 +2,13 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
+* ===================================
 * 題解
 ** 小小語言設計家
    * 用匯編語言來實現一個簡單的程序語言的解釋器
+     我期望
+     相比 用匯編語言做一些平凡的練習程序
+     在這門課上你能學到更多的東西
 * 綱要
   * 構架
     計算機的基本構架
@@ -51,6 +55,9 @@
 ** [匯編器] gas
    * [[http://en.wikipedia.org/wiki/GNU_Assembler][維基百科頁面]]
 ** [操作系統] linux
+   * 首先
+     不要盲目崇拜 linux
+     這個操作系統的設計有很多不良之處
    * [[http://distrowatch.com/][各種發佈版本的比較]]
    * archlinux
      * [[https://www.archlinux.org/][主頁]]
@@ -77,28 +84,51 @@
      頁面內容的生成
      還利用到了 [[http://jekyllrb.com/][jekyll]] 和 eamcs
 ** [文本編輯器] emacs
+   * 首先
+     不要盲目崇拜 emacs
+     這個文本編輯器的設計有很多不良之處
    * [[https://www.gnu.org/software/emacs/][主頁]]
    * [[http://ftpmirror.gnu.org/emacs/][下載]]
      windows 用戶請點擊最上面的 "windows/"
      以下載 windows 版本
+   * [[http://orgmode.org/][emacs org-mode]] 可以提供的 [[http://orgmode.org/worg/org-contrib/babel/intro.html][文學編程]] 支持
+     [[http://en.wikipedia.org/wiki/Literate_programming][文學編程的維基百科頁面]]
 ** [代理] goagent
    * [[https://github.com/goagent/goagent][主頁]]
 ** hackerspace & makerspace
    * [[http://www.szdiy.org/][深圳 SZDIY]]
    * [[http://www.chaihuo.org/][深圳 柴火]]
+* -----------------------------------
 * 關於實驗流程
   * 並不限於我下面將要介紹的方法
     你可以用你所希望的任何方式來使用我所提供的代碼
 * 使用 windows 的同學的實驗流程
 ** 利用 fasm 所提供的集成開發環境
-   * 
-   *
+   難度較低
+   但是所獲得的開發環境
+   在我看來並不良好
+   使用 包含在 fasm 的 windows 版本中的 fasmw.exe
+   來編輯和編譯代碼
 ** 利用 github 與 git 所提供的 git shell
-   *
-   *
+   難度適中
+   用 git shell 所提供的命令行用戶接口來運行程序
+   你可以使用任何文本編輯器來編輯代碼
+   你可以去 [[https://github.com/showcases/text-editors][guthub 的展示頁面]] 挑選一個你喜歡的
+   1. 下載 [[https://windows.github.com/][github 的 windows 應用]]
+      其中帶有 git shell
+      其使用方式
+      類似與 linux 中對命令行用戶界面的使用方式
 ** 利用 emacs
-   *
-   *
+   難度較大
+   使用 emacs 來編輯代碼
+   以 [[http://wikemacs.org/wiki/Eshell][eshell]] 所提供的命令行用戶接口來運行程序
+   或者使用 [[https://github.com/the-little-language-designer/cicada-nymph-mode][cicada-nymph-mode]]
+   所提供的 inferior-cicada-nymph-mode
+   來運行 cicada-nymph 的解釋器
+   1. 下載 [[http://ftpmirror.gnu.org/emacs/][emacs]]
+      並在歡迎界面所提供的鏈接中學習 emacs 的使用方式
+   2. 下載 [[https://github.com/the-little-language-designer/fasm-mode][fasm-mode]] 並用它來編輯 fasm 的源代碼
+   3. 用 [[http://orgmode.org/][org-mode]] 來編輯源代碼
 * 使用 linux 的同學的實驗流程
   * 我想
     使用 linux 的同學自己就明白
@@ -115,3 +145,23 @@
   * 這也是 fasm 的作者
     沒有能提供 fasm 的 mac 版本的主要原因
   * 我推薦你們給自己的電腦安裝 linux & mac 雙系統
+* -----------------------------------
+* 反饋與貢獻
+** github 所提供的 wiki
+   * [[https://github.com/the-little-language-designer/the-little-language-designer.github.io/wiki][the-little-language-designer wiki]]
+   * [[https://github.com/the-little-language-designer/cicada-nymph/wiki][cicada-nymph wiki]]
+** github 所提供的 issue
+   * [[https://github.com/the-little-language-designer/the-little-language-designer.github.io/issues][the-little-language-designer issues]]
+   * [[https://github.com/the-little-language-designer/cicada-nymph/issues][cicada-nymph issues]]
+** google group 所提供的 論壇和郵件列表
+   * [[https://groups.google.com/forum/#!forum/cicada-language][cicada-language forum]]
+** IRC 即時聊天
+   * irc.freenode.net 服務器上的 #cicada-language 頻道
+* -----------------------------------
+* todo 反思與反駁
+** 關於課程的難度
+** 關於實用性
+** 關於 fasm
+** 關於 forth
+** 關於 蟬語
+* ===================================
