@@ -1,6 +1,6 @@
 @font-face
 {
-    font-family: "MS-Song";
+    font-family: "ms-song";
     src: url("{{ site.url }}/assets/font/MS-Song/MS-Song.woff") format("woff");
     font-weight: normal;
     font-style:  normal;
@@ -8,7 +8,7 @@
 
 @font-face
 {
-    font-family: "R-PMingLiU-TW";
+    font-family: "pmingliu-tw";
     src: url("{{ site.url }}/assets/font/臺灣早期印刷字形之細明體/R-PMingLiU-TW.woff") format("woff");
     font-weight: normal;
     font-style:  normal;
@@ -16,7 +16,7 @@
 
 @font-face
 {
-    font-family: "MingLan";
+    font-family: "ming-lan";
     src: url("{{ site.url }}/assets/font/花明蘭黑6.1/H-MingLan-R.woff") format("woff");
     font-weight: normal;
     font-style:  normal;
@@ -32,7 +32,7 @@
 
 @font-face
 {
-    font-family: "Envy-Code-R";
+    font-family: "envy-code";
     src: url("{{ site.url }}/assets/font/Envy-Code-R-PR7/Envy-Code-R.woff") format("woff");
     font-weight: normal;
     font-style:  normal;

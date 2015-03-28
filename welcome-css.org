@@ -73,7 +73,9 @@
       font-size: 22px;
       color: #f8f8f0;
       background-color: #1b1d1e;
-      font-family: "Envy-Code-R", "R-PMingLiU-TW";
+      /* font-family: "envy-code", "ms-song"; */
+      /* font-family: "envy-code", "pmingliu-tw"; */
+      font-family: "envy-code", "ming-lan";
   }
   #+end_src
 * simple box
