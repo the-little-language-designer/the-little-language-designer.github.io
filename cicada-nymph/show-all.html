@@ -43,10 +43,6 @@
         color: #ffff00;
         font-weight: bold;
       }
-      .cicada-nymph-string {
-        /* cicada-nymph-string-face */
-        color: #e6db74;
-      }
       .cicada-nymph-syntax-key-word {
         /* cicada-nymph-syntax-key-word-face */
         color: #f92672;
@@ -198,9 +194,6 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
-<span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** syntax for exception handling in cicada-nymph</span>
-<span class="org-level-2">** function to load file</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> the order of development</span>
 <span class="org-level-2">** 1st-instar</span>
@@ -910,7 +903,18 @@
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* macro for make-jojo</span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-heap*</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_variable <span class="string">"*primitive-string-heap*"</span>, V__primitive_string_heap
+     <span class="type">xx</span> address$primitive_string_heap
+
+   define_variable <span class="string">"*size,primitive-string-heap*"</span>, V__size__primitive_string_heap
+     <span class="type">xx</span> size$primitive_string_heap
+
+   <span class="comment">;; *current-free-address,primitive-string-heap*
+</span>   <span class="comment">;; is at epilog
+</span><span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* macro for make-jojo</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * the same as function
@@ -3579,8 +3583,17 @@
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   address$jo_heap <span class="keyword">labeling</span>
-      <span class="type">preserve</span> <span class="constant">3</span> * <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+</span>   size$jo_heap = <span class="constant">3</span> * <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+
+   define_variable <span class="string">"*jo-heap*"</span>, V__jo_heap
+     <span class="type">xx</span> address$jo_heap
+
+   define_variable <span class="string">"*size,jo-heap*"</span>, V__size__jo_heap
+     <span class="type">xx</span> size$jo_heap
+
+
+   address$jo_heap <span class="keyword">labeling</span>
+      <span class="type">preserve</span> size$jo_heap
 
    define_variable <span class="string">"*current-free-address,jo-heap*"</span>, V__current_free_address__jo_heap
       <span class="type">xx</span> address$jo_heap
@@ -4057,6 +4070,18 @@
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
 <span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*un-initialized-memory*</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_variable <span class="string">"*un-initialized-memory*"</span>, V__un_initialized_memory
+     <span class="type">xx</span> address$un_initialized_memory
+
+   define_variable <span class="string">"*size,un-initialized-memory*"</span>, V__size__un_initialized_memory
+     <span class="type">xx</span> size$un_initialized_memory
+
+   define_variable <span class="string">"*current-free-address,un-initialized-memory*"</span>, V__current_free_address__un_initialized_memory
+     <span class="type">xx</span> current_free_address$un_initialized_memory
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-heap*</span></span>
    * the last_primitive_string_in_assembly
      is just "<span class="bold">*current-free-address,primitive-string-heap*</span>"
@@ -4185,157 +4210,6 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* if &amp; else &amp; then</span>
-  * one predicate can make two branchs
-    three predicates can make four branchs
-    three predicates may only make three branchs
-    but indeed there must be an invisible branch
-<span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
-</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">if</span>
-    <span class="cicada-nymph-comment">&lt;&lt; string[address, length] --
-       address, string[address, length] &gt;&gt;</span>
-    <span class="cicada-nymph-variable">*false?branch*</span> save-into,jo-heap
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xx|swap|x
-    <span class="cicada-nymph-number">0</span> save-into,jo-heap
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
-
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">else</span>
-    <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
-       address, string[address, length] &gt;&gt;</span>
-    <span class="cicada-nymph-variable">*branch*</span> save-into,jo-heap
-    x|swap|xx
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xxx|swap|x
-    <span class="cicada-nymph-number">0</span> save-into,jo-heap
-    <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length], address &gt;&gt;</span>
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
-    over sub <span class="cicada-nymph-variable">*jo-size*</span> div
-    swap save
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
-
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
-       string[address, length] &gt;&gt;</span>
-    x|swap|xx
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
-    over sub <span class="cicada-nymph-variable">*jo-size*</span> div
-    swap save
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
-<span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* </span><span class="org-done">test</span>
-<span class="org-block-begin-line">  #+begin_src cicada-nymph
-</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial</span>
-    <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
-    dup one? <span class="cicada-nymph-syntax-key-word">if</span>
-      <span class="cicada-nymph-end">end</span>
-    <span class="cicada-nymph-syntax-key-word">then</span>
-    dup sub1 factorial
-    mul
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-
-
-  <span class="cicada-nymph-number">1</span> factorial .
-  <span class="cicada-nymph-number">2</span> factorial .
-  <span class="cicada-nymph-number">3</span> factorial .
-  <span class="cicada-nymph-number">4</span> factorial .
-  <span class="cicada-nymph-number">5</span> factorial .
-  <span class="cicada-nymph-number">6</span> factorial .
-  <span class="cicada-nymph-number">7</span> factorial .
-  <span class="cicada-nymph-number">8</span> factorial .
-  <span class="cicada-nymph-number">9</span> factorial .
-  <span class="cicada-nymph-number">10</span> factorial .
-  <span class="cicada-nymph-number">11</span> factorial .
-  <span class="cicada-nymph-number">12</span> factorial .
-  <span class="cicada-nymph-number">13</span> factorial .
-  <span class="cicada-nymph-number">14</span> factorial .
-  <span class="cicada-nymph-number">15</span> factorial .
-  <span class="cicada-nymph-number">16</span> factorial .
-  <span class="cicada-nymph-number">17</span> factorial .
-  <span class="cicada-nymph-number">18</span> factorial .
-  <span class="cicada-nymph-number">19</span> factorial .
-  <span class="cicada-nymph-number">20</span> factorial .
-
-
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">cr</span>
-    <span class="cicada-nymph-number">10</span> write-byte
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-
-
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">.12</span>
-    <span class="cicada-nymph-comment">&lt;&lt; 1 2 -- &gt;&gt;</span>
-    <span class="cicada-nymph-number">2</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-      <span class="cicada-nymph-string">"(^-^)"</span> write-string
-      <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-        <span class="cicada-nymph-string">"\^o^/"</span> write-string
-      <span class="cicada-nymph-syntax-key-word">else</span>
-        <span class="cicada-nymph-string">"     "</span> write-string
-      <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-syntax-key-word">else</span>
-      <span class="cicada-nymph-string">"     "</span> write-string
-      <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-        <span class="cicada-nymph-string">"\^o^/"</span> write-string
-      <span class="cicada-nymph-syntax-key-word">else</span>
-        <span class="cicada-nymph-string">"     "</span> write-string
-      <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-
-  cr
-  <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> .12 cr
-  <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">2</span> .12 cr
-  <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">6</span> .12 cr
-  <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">6</span> .12 cr
-<span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* re-define execute-word &amp; basic-REPL</span>
-  * to protect macro &amp; exception from be called from basic-REPL
-<span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
-</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">execute-word</span>
-    <span class="cicada-nymph-comment">&lt;&lt; word[address, length] -- unknown &gt;&gt;</span>
-    dup2 integer-string? <span class="cicada-nymph-syntax-key-word">if</span>
-      string-&gt;integer
-      <span class="cicada-nymph-end">end</span>
-    <span class="cicada-nymph-syntax-key-word">then</span>
-    dup2
-    find <span class="cicada-nymph-syntax-key-word">if</span>
-      dup macro-jo? <span class="cicada-nymph-syntax-key-word">if</span>
-        drop
-        <span class="cicada-nymph-string">"* (execute-word) CAN NOT EXECUTE MACRO DIRECTLY : "</span> write-string
-        write-string <span class="cicada-nymph-number">10</span> write-byte
-        <span class="cicada-nymph-end">end</span>
-      <span class="cicada-nymph-syntax-key-word">then</span>
-      dup exception-jo? <span class="cicada-nymph-syntax-key-word">if</span>
-        drop
-        <span class="cicada-nymph-string">"* (execute-word) CAN NOT EXECUTE EXCEPTION DIRECTLY : "</span> write-string
-        write-string <span class="cicada-nymph-number">10</span> write-byte
-        <span class="cicada-nymph-end">end</span>
-      <span class="cicada-nymph-syntax-key-word">then</span>
-      <span class="cicada-nymph-comment">&lt;&lt; function &amp; primitive-function &amp; variable &gt;&gt;</span>
-      xx|swap|x drop2
-      execute-jo
-      <span class="cicada-nymph-end">end</span>
-    <span class="cicada-nymph-syntax-key-word">else</span>
-    <span class="cicada-nymph-string">"* (execute-word) MEETS UNDEFINED WORD : "</span> write-string
-    write-string <span class="cicada-nymph-number">10</span> write-byte
-    <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">basic-REPL</span>
-    <span class="cicada-nymph-comment">&lt;&lt; unknown -- unknown &gt;&gt;</span>
-    read-word-for-REPL
-    execute-word
-    <span class="cicada-nymph-end">&lt;&gt;</span> basic-REPL
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-
-  basic-REPL
-<span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* ===================================</span>
 </pre>
   </body>
 </html>

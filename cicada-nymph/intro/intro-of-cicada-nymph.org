@@ -2,6 +2,11 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
+* 源碼
+  * [[https://github.com/the-little-language-designer/cicada-nymph][託管在 github 上的代碼庫]]
+  * 在網頁上瀏覽源代碼
+    1. 匯編代碼 : [[../overview.html][cicada-nymph.org]]
+    2. 小蟬語代碼 : [[../core/overview.html][core.org]]
 * 題解
   * 名爲小蟬語
     是因爲
@@ -97,6 +102,11 @@
    4 3 2 1 mul mul mul .
    #+end_src
 * ===================================
+* source code
+  * [[https://github.com/the-little-language-designer/cicada-nymph][repo on github]]
+  * view the source code on web
+    1. assembly code : [[../overview.html][cicada-nymph.org]]
+    2. cicada-nymph code : [[../core/overview.html][core.org]]
 * to explain the title
   * the name of the language is cicada-nymph
     because it is implemented for teaching purpose at first
