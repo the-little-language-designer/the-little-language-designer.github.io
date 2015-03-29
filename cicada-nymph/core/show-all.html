@@ -114,9 +114,6 @@
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
 <span class="org-level-2">** syntax for exception handling in cicada-nymph</span>
-<span class="org-level-2">** re-factoring read_byte to make it easier to implement eval-string</span>
-<span class="org-level-2">** eval-string</span>
-<span class="org-level-2">** load-file</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* misc</span>
 <span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
@@ -279,29 +276,197 @@
   basic-REPL
 <span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* report</span>
-<span class="org-level-2">** show-dictionary</span>
+<span class="org-level-2">** show-dictionary,primitive-function</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">loop,show-dictionary</span>
-     <span class="cicada-nymph-comment">&lt;&lt; jo -- &gt;&gt;</span>
-     dup last-jo,dictionary? <span class="cicada-nymph-syntax-key-word">if</span>
-       jo-&gt;name
-       write-string cr
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">loop,show-dictionary,primitive-function</span>
+     <span class="cicada-nymph-comment">&lt;&lt; counter, jo -- &gt;&gt;</span>
+     dup zero? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
+     dup primitive-function-jo? false? <span class="cicada-nymph-syntax-key-word">if</span>
+       jo-&gt;pre-jo
+       <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,primitive-function
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     swap
+       <span class="cicada-nymph-string">"  "</span> write-string
+       dup . add1
+     swap
      dup jo-&gt;name
      dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
        drop2
+       <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
      <span class="cicada-nymph-syntax-key-word">else</span>
        write-string cr
      <span class="cicada-nymph-syntax-key-word">then</span>
      jo-&gt;pre-jo
-     <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary
+     <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,primitive-function
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">show-dictionary</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">show-dictionary,primitive-function</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* ALL PRIMITIVE-FUNCTION IN DICTIONARY :"</span> write-string cr
+     <span class="cicada-nymph-number">1</span>
      <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
-     loop,show-dictionary
+     loop,show-dictionary,primitive-function
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** show-dictionary,function</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">loop,show-dictionary,function</span>
+     <span class="cicada-nymph-comment">&lt;&lt; counter, jo -- &gt;&gt;</span>
+     dup zero? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     dup function-jo? false? <span class="cicada-nymph-syntax-key-word">if</span>
+       jo-&gt;pre-jo
+       <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,function
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     swap
+       <span class="cicada-nymph-string">"  "</span> write-string
+       dup . add1
+     swap
+     dup jo-&gt;name
+     dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop2
+       <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       write-string cr
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     jo-&gt;pre-jo
+     <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,function
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">show-dictionary,function</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* ALL FUNCTION IN DICTIONARY :"</span> write-string cr
+     <span class="cicada-nymph-number">1</span>
+     <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
+     loop,show-dictionary,function
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** show-dictionary,macro</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">loop,show-dictionary,macro</span>
+     <span class="cicada-nymph-comment">&lt;&lt; counter, jo -- &gt;&gt;</span>
+     dup zero? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     dup macro-jo? false? <span class="cicada-nymph-syntax-key-word">if</span>
+       jo-&gt;pre-jo
+       <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,macro
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     swap
+       <span class="cicada-nymph-string">"  "</span> write-string
+       dup . add1
+     swap
+     dup jo-&gt;name
+     dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop2
+       <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       write-string cr
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     jo-&gt;pre-jo
+     <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,macro
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">show-dictionary,macro</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* ALL MACRO IN DICTIONARY :"</span> write-string cr
+     <span class="cicada-nymph-number">1</span>
+     <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
+     loop,show-dictionary,macro
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** show-dictionary,exception</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">loop,show-dictionary,exception</span>
+     <span class="cicada-nymph-comment">&lt;&lt; counter, jo -- &gt;&gt;</span>
+     dup zero? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     dup exception-jo? false? <span class="cicada-nymph-syntax-key-word">if</span>
+       jo-&gt;pre-jo
+       <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,exception
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     swap
+       <span class="cicada-nymph-string">"  "</span> write-string
+       dup . add1
+     swap
+     dup jo-&gt;name
+     dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop2
+       <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       write-string cr
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     jo-&gt;pre-jo
+     <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,exception
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">show-dictionary,exception</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* ALL EXCEPTION IN DICTIONARY :"</span> write-string cr
+     <span class="cicada-nymph-number">1</span>
+     <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
+     loop,show-dictionary,exception
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** show-dictionary,variable</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">loop,show-dictionary,variable</span>
+     <span class="cicada-nymph-comment">&lt;&lt; counter, jo -- &gt;&gt;</span>
+     dup zero? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     dup variable-jo? false? <span class="cicada-nymph-syntax-key-word">if</span>
+       jo-&gt;pre-jo
+       <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,variable
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     swap
+       <span class="cicada-nymph-string">"  "</span> write-string
+       dup . add1
+     swap
+     dup jo-&gt;name
+     dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop2
+       <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       write-string cr
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     jo-&gt;pre-jo
+     <span class="cicada-nymph-end">&lt;&gt;</span> loop,show-dictionary,variable
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">show-dictionary,variable</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* ALL VARIABLE IN DICTIONARY :"</span> write-string cr
+     <span class="cicada-nymph-number">1</span>
+     <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
+     loop,show-dictionary,variable
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** show-dictionary</span>
+   * different types of words in dictionary
+     are showed separately
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">show-dictionary</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     show-dictionary,primitive-function
+     show-dictionary,function
+     show-dictionary,macro
+     show-dictionary,exception
+     show-dictionary,variable
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -351,16 +516,16 @@
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* an interface of </span><span class="org-level-1"><span class="bold">*un-initialized-memory*</span></span>
-<span class="org-level-2">** allocate</span>
-<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">allocate</span>
-     <span class="cicada-nymph-comment">&lt;&lt; size -- address &gt;&gt;</span>
-     <span class="cicada-nymph-variable">*un-initialized-memory*</span> tuck
-     add <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*un-initialized-memory*</span> save
-     <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-<span class="org-block-end-line">   #+end_src
+<span class="org-level-1">* allocate</span>
+  * an interface of <span class="bold">*un-initialized-memory*</span>
+<span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
+</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">allocate</span>
+    <span class="cicada-nymph-comment">&lt;&lt; size -- address &gt;&gt;</span>
+    <span class="cicada-nymph-variable">*un-initialized-memory*</span> tuck
+    add <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*un-initialized-memory*</span> save
+    <span class="cicada-nymph-end">end</span>
+  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* ===================================</span>
 </pre>
   </body>

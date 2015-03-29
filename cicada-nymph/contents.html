@@ -117,6 +117,11 @@
         /* org-level-2 */
         color: #fd971f;
       }
+      .org-level-3 {
+        /* org-level-3 */
+        color: #f92672;
+        font-weight: bold;
+      }
       .org-link {
         /* org-link */
         color: #00ffff;
@@ -194,6 +199,13 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
+<span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** load-file</span>...
+<span class="org-level-2">** [maybe] make instruction a type of jo</span>...
+<span class="org-level-2">** fix define in if-block</span>
+<span class="org-level-2">** 32-bits port for linux</span>
+<span class="org-level-2">** 32-bits port for windows</span>
+<span class="org-level-2">** [maybe] re generate instars</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> the order of development</span>
 <span class="org-level-2">** 1st-instar</span>...
@@ -224,6 +236,7 @@
 <span class="org-level-2">** header [windows]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** format header [windows]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** entry [windows]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** calling-convention-windows-64</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* macro in assembly code</span>
@@ -342,17 +355,40 @@
 </span><span class="org-level-2">** equal &amp; greater-than &amp; less-than</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** negative? &amp; positive?</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* memory</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* basic io</span>
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* basic io</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> byte</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> byte</span>...
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** write-byte [linux]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** write-byte [windows]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>...
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> factoring</span>...
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> nested call of eval-string</span>...
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** write-byte [linux]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** read-byte [linux]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** eval_string_stack</span>
+<span class="org-level-3">*** </span><span class="org-todo">note</span>...
+<span class="org-level-3">*** memory allocation</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** pointer</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** push &amp; pop</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** clear</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** empty?</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-line-from-stdin [linux]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-line-from-stdin [windows]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-byte</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** unread-ket-char</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** write-byte [windows]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** read-byte [windows]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* eval-string</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> file io</span>
+<span class="org-level-2">** open-file</span>
+<span class="org-level-2">** close-file</span>
+<span class="org-level-2">** read-file</span>
+<span class="org-level-2">** write-file</span>
+<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> load-file</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>
 <span class="org-level-2">** space-char?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** bar-ket-char?</span>...<span class="org-block-end-line">
@@ -450,7 +486,7 @@
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-heap*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** last_jo_in_assembly</span>...<span class="org-block-end-line">
+<span class="org-level-2">** last_link</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** un_initialized_memory [linux]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>

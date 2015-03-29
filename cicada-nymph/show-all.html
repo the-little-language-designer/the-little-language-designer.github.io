@@ -117,6 +117,11 @@
         /* org-level-2 */
         color: #fd971f;
       }
+      .org-level-3 {
+        /* org-level-3 */
+        color: #f92672;
+        font-weight: bold;
+      }
       .org-link {
         /* org-link */
         color: #00ffff;
@@ -194,6 +199,15 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
+<span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** load-file</span>
+   * get rid of "cat core.cn - | ./cicada-nymph" in cn
+<span class="org-level-2">** [maybe] make instruction a type of jo</span>
+   this is needed when doing report of the dictionary
+<span class="org-level-2">** fix define in if-block</span>
+<span class="org-level-2">** 32-bits port for linux</span>
+<span class="org-level-2">** 32-bits port for windows</span>
+<span class="org-level-2">** [maybe] re generate instars</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> the order of development</span>
 <span class="org-level-2">** 1st-instar</span>
@@ -231,7 +245,7 @@
      2. char
      3. buffer
    * more in epilog
-     1. last_jo_in_assembly
+     1. last_link
    * function about dictionary
      1. find
      2. execute-word
@@ -442,6 +456,36 @@
 
    <span class="keyword">entry</span> begin_to_interpret_threaded_code
    <span class="keyword">section</span> <span class="default">'.text'</span> code <span class="keyword">writeable</span> <span class="keyword">readable</span> <span class="keyword">executable</span>
+
+   <span class="keyword">finish</span> <span class="keyword">if</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** calling-convention-windows-64</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+
+   <span class="comment">;; &#36889;&#35023;&#30340; number_of_arguments &#20854;&#23526;&#20195;&#34920;
+</span>   <span class="comment">;; &#22312;&#23565;&#40778;&#26855;&#20043;&#24460;
+</span>   <span class="comment">;; &#20320;&#36996;&#24819;&#35201;&#23559;&#26855;&#30340;&#25351;&#37341; &#21521;&#19979;&#31227;&#21205;&#22810;&#23569;&#20491;&#21934;&#20301;
+</span>   <span class="comment">;; &#26681;&#25818; windows calling convention
+</span>   <span class="comment">;; &#36889;&#20491;&#25976;&#23383;&#26368;&#23569;&#26159; 4
+</span>
+   <span class="preprocessor">macro</span> <span class="function-name">windows_function</span> number_of_arguments {
+      <span class="builtin">push</span> <span class="variable-name">rbp</span>
+      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
+
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
+      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
+      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
+
+      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
+      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
+   }
+
+   <span class="preprocessor">macro</span> <span class="function-name">end_windows_function</span> {
+      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
+      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
+   }
 
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
@@ -668,24 +712,12 @@
 </span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
 
    __exit_with_TOS:
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
+   windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       pop_argument_stack fun_1_rcx
       <span class="builtin">call</span> [ExitProcess]
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
+   end_windows_function
 
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
@@ -694,24 +726,12 @@
 </span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
 
    __exit_with_zero:
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
+   windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">xor</span> fun_1_rcx, fun_1_rcx
       <span class="builtin">call</span> [ExitProcess]
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
+   end_windows_function
 
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
@@ -720,24 +740,12 @@
 </span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
 
    __exit_with_six:
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
+   windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_1_rcx, <span class="constant">15</span>
+      <span class="builtin">mov</span> fun_1_rcx, <span class="constant">6</span>
       <span class="builtin">call</span> [ExitProcess]
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
+   end_windows_function
 
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
@@ -1079,7 +1087,7 @@
 <span class="org-level-2">** execute-jo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_primitive_function <span class="string">"execute-jo"</span>, execute_jo
-      <span class="comment">;; &lt;&lt; jo -- unknown &gt;&gt;
+      <span class="comment">;; &lt;&lt; jo -- UNKNOWN &gt;&gt;
 </span>      pop_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
 <span class="org-block-end-line">   #+end_src
@@ -1121,11 +1129,15 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** jo-&gt;pre-jo</span>
+   * treat last-jo,dictionary specially
+     i.e. return zero on that case
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"jo-&gt;pre-jo"</span>, jo_to_pre_jo
       <span class="comment">;; &lt;&lt; jo -- pre-jo &gt;&gt;
 </span>      <span class="type">xx</span> jo_to_link
       <span class="type">xx</span> fetch
+      <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
+      <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
       <span class="type">xx</span> addition
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -1298,53 +1310,19 @@
 
       <span class="builtin">cld</span> <span class="comment">;; set DF = 0, then rsi and rdi are incremented
 </span>
-
-      <span class="comment">;;;; for windows
-</span>      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-
+   windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> fun_1_rcx, STD_INPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_input_handle], <span class="variable-name">rax</span>
+   end_windows_function
 
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-
-
-
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
+   windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> fun_1_rcx, STD_OUTPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_output_handle], <span class="variable-name">rax</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-      <span class="comment">;;;;
-</span>
+   end_windows_function
 
       <span class="builtin">mov</span> pointer$argument_stack,  address$argument_stack
       <span class="builtin">mov</span> pointer$return_stack,    address$return_stack
@@ -1356,19 +1334,14 @@
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** first_jojo</span>
+   * you can use the following "xx little_test"
+     to do some little tests
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="function-name">first_jojo</span>:
       <span class="type">xx</span> welcome
-      <span class="type">xx</span> basic_REPL
-
-      <span class="comment">;; you can use comment out "xx basic_REPL"
-</span>      <span class="comment">;; and use the following "xx little_test"
-</span>      <span class="comment">;; to do some little tests
-</span>      <span class="comment">;; by set up the code block beneath
-</span>      <span class="comment">;;    define_function "little_test", little_test
-</span>
       <span class="comment">;; xx little_test
-</span><span class="org-block-end-line">   #+end_src
+</span>      <span class="type">xx</span> basic_REPL
+<span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** welcome</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"welcome"</span>, welcome
@@ -2383,17 +2356,13 @@
      <span class="builtin">sub</span> <span class="type">qword</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
      next
 <span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* basic io</span>
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* basic io</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> byte</span>
-<span class="org-level-2">** memory allocation</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   max_input_length = <span class="constant">1024</span> * <span class="constant">1024</span>
-
-   buffer$read_byte <span class="keyword">labeling</span>
-      <span class="type">preserve</span> max_input_length
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** write-byte [linux]</span>
+   * basic io is about byte
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** write-byte [linux]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
 
@@ -2420,114 +2389,7 @@
 
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** read-byte [linux]</span>
-   * calls the Linux read system call to fill buffer$read_byte
-   * if it detects that stdin has closed
-     it exits the program
-     which is why when you hit C-d the system exits
-   * add the teature to unread one ket-char
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
-
-   <span class="function-name">flag$unreaded_ket_char</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   <span class="function-name">char$unreaded_ket_char</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"have-unreaded-ket-char?"</span>, have_unreaded_ket_char?
-      <span class="comment">;; &lt;&lt; -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, flag$unreaded_ket_char
-      <span class="type">xx</span> fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"unread-ket-char"</span>, unread_ket_char
-      <span class="comment">;; &lt;&lt; char -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, char$unreaded_ket_char, save
-      <span class="type">xx</span> true, <span class="keyword">literal</span>, flag$unreaded_ket_char
-      <span class="type">xx</span> save
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-
-   <span class="comment">;; help__read_byte is the old do function without unread ket-char
-</span>   define_function <span class="string">"read-byte"</span>, read_byte
-      <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
-</span>      <span class="type">xx</span> have_unreaded_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">9</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, char$unreaded_ket_char, fetch_byte
-      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char
-      <span class="type">xx</span>   save
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> help__read_byte
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-
-
-   <span class="function-name">cursor$read_byte</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   <span class="function-name">border$read_byte</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_primitive_function <span class="string">"help,read-byte"</span>, help__read_byte
-      <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
-</span>      <span class="builtin">call</span> help__help__read_byte
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-
-   <span class="function-name">help__help__read_byte</span>:
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [cursor$read_byte]
-      <span class="builtin">cmp</span> <span class="variable-name">rbx</span>, [border$read_byte]
-      <span class="comment">;; [cursor$read_byte] &lt;  [border$read_byte]
-</span>      <span class="builtin">jl</span> .we_still_have_buffered_byte
-      <span class="comment">;; [cursor$read_byte] &gt;= [border$read_byte]
-</span>      <span class="builtin">jmp</span> .do_a_new_buffer
-
-
-   <span class="function-name">.do_a_new_buffer</span>:
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, buffer$read_byte
-      <span class="builtin">mov</span> [cursor$read_byte], <span class="variable-name">rbx</span>
-      <span class="builtin">mov</span> [border$read_byte], <span class="variable-name">rbx</span>
-
-      <span class="comment">;;;; for linux
-</span>      <span class="builtin">mov</span> sys_3_rdx, max_input_length <span class="comment">;; max length to be read
-</span>      <span class="builtin">mov</span> sys_2_rsi, buffer$read_byte <span class="comment">;; buffer address
-</span>      <span class="builtin">xor</span> sys_1_rdi, sys_1_rdi        <span class="comment">;; stdin
-</span>      <span class="builtin">mov</span> sys_n_rax, syscall_read
-      <span class="builtin">syscall</span>
-      <span class="comment">;; the return value of syscall read
-</span>      <span class="comment">;; is a count of the number of bytes transferred
-</span>      <span class="comment">;;;;
-</span>
-      <span class="comment">;; the following will let the interpreter exit
-</span>      <span class="comment">;; when meeting end-of-line or reading error
-</span>      <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">jz</span> .error <span class="comment">;; rax = 0
-</span>      <span class="builtin">js</span> .error <span class="comment">;; rax &lt; 0
-</span>
-      <span class="comment">;; update [border$read_byte]
-</span>      <span class="builtin">add</span> [border$read_byte], <span class="variable-name">rax</span>
-      <span class="builtin">jmp</span> help__help__read_byte
-
-
-   <span class="function-name">.we_still_have_buffered_byte</span>:
-      <span class="comment">;; for the following will just uses the al part of rax
-</span>      <span class="comment">;; it is necessary to clear rax
-</span>      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">al</span>, <span class="type">byte</span> [<span class="variable-name">rbx</span>]
-      <span class="builtin">inc</span> <span class="variable-name">rbx</span>
-      <span class="builtin">mov</span> [cursor$read_byte], <span class="variable-name">rbx</span>
-      <span class="builtin">ret</span>
-
-
-   <span class="function-name">.error</span>:
-      <span class="comment">;; exit with exit code = 0
-</span>      <span class="builtin">call</span> __exit_with_zero
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** write-byte [windows]</span>
+</span><span class="org-level-2">** write-byte [windows]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
 
@@ -2547,20 +2409,7 @@
 </span>      <span class="comment">;; write needs the address of the byte to write
 </span>      <span class="builtin">mov</span> [buffer$write_byte], <span class="variable-name">al</span>
 
-      <span class="comment">;;;; for windows
-</span>      number_of_arguments = <span class="constant">5</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-
+   windows_function <span class="constant">5</span>
       <span class="builtin">push</span> <span class="constant">0</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> fun_4_r9, _counter$write_byte
@@ -2568,21 +2417,220 @@
       <span class="builtin">mov</span> fun_2_rdx, buffer$write_byte
       <span class="builtin">mov</span> fun_1_rcx, [_output_handle]
       <span class="builtin">call</span> [WriteFile]
+   end_windows_function
 
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-      <span class="comment">;;;;
-</span>
       next
 
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** read-byte [windows]</span>
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>
+   * calls the linux read system call to fill buffer$read_byte
+   * do not exit the program
+     when meeting &lt;end-of-file&gt;
+     so
+     when you hit &lt;C-d&gt;
+     some you will not exit the interpreter
+   * add the feature to unread one ket-char
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> factoring</span>
+   * reading from file of stdin is slow
+     thus
+     1. when reading from file
+        a whole file is readed at a time
+        and saved to a buffer
+     2. when reading from stdin
+        a whole line is readed at a time
+     3. not that
+        reading line instead of keyboard-code
+        will limit the design of the user interface
+   * by factoring out the low-level calls
+     that read a line from stdin
+     we are able to implement eval-string easily
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> nested call of eval-string</span>
+   * nested call of eval-string is handled
+     by using a eval_string_stack
+     to remember the old string
+   * but
+     in my view
+     meta-programming should NOT
+     be achieved by editing string
+   * not that
+     this point of view
+     is not conflict with my macro system
+<span class="org-level-2">** memory allocation</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   max_input_length = <span class="constant">1024</span> * <span class="constant">1024</span>
+
+   buffer$read_byte <span class="keyword">labeling</span>
+      <span class="type">preserve</span> max_input_length
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** eval_string_stack</span>
+<span class="org-level-3">*** </span><span class="org-todo">note</span>
+    * for we do not build border-check
+      into the interface of pop and push
+      we allocation some memory below the stacks
+    * the size$eval_string_stack
+      defines the max depth
+      of nested call to eval string
+    * cursor and border of a evaled string
+      can be stored in eval_string_stack
+      so
+      when evaling a string
+      the eval_string_stack will be
+      &lt;&lt; counter, cursor &gt;&gt;
+      when evaling is nested depth is 2
+      &lt;&lt; counter, cursor, counter, cursor &gt;&gt;
+<span class="org-level-3">*** memory allocation</span>
+<span class="org-block-begin-line">    #+begin_src fasm :tangle cicada-nymph.fasm
+</span>    size$eval_string_stack = <span class="constant">1024</span> * jo_size
+
+       <span class="type">preserve</span> <span class="constant">64</span> * jo_size
+    address$eval_string_stack <span class="keyword">labeling</span>
+       <span class="type">preserve</span> size$eval_string_stack
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-3">*** pointer</span>
+<span class="org-block-begin-line">    #+begin_src fasm :tangle cicada-nymph.fasm
+</span>    <span class="function-name">pointer$eval_string_stack</span>:
+       <span class="type">xx</span> address$eval_string_stack
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-3">*** push &amp; pop</span>
+<span class="org-block-begin-line">    #+begin_src fasm :tangle cicada-nymph.fasm
+</span>    define_primitive_function <span class="string">"push-eval-string-stack"</span>, push_eval_string_stack
+       <span class="comment">;; argument-stack -&gt; eval-string-stack
+</span>       pop_argument_stack <span class="variable-name">rax</span>
+       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$eval_string_stack]
+       <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
+       <span class="builtin">add</span> <span class="type">qword</span> [pointer$eval_string_stack], jo_size
+       next
+
+    define_primitive_function <span class="string">"pop-eval-string-stack"</span>, pop_eval_string_stack
+       <span class="comment">;; eval-string-stack -&gt; argument-stack
+</span>       <span class="builtin">sub</span> <span class="type">qword</span> [pointer$eval_string_stack], jo_size
+       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$eval_string_stack]
+       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+       push_argument_stack <span class="variable-name">rax</span>
+       next
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-3">*** clear</span>
+<span class="org-block-begin-line">    #+begin_src fasm :tangle cicada-nymph.fasm
+</span>    define_primitive_function <span class="string">"clear-eval-string-stack"</span>, clear_eval_string_stack
+       <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>       <span class="builtin">mov</span> <span class="type">qword</span> [pointer$eval_string_stack], address$eval_string_stack
+       next
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-3">*** empty?</span>
+<span class="org-block-begin-line">    #+begin_src fasm :tangle cicada-nymph.fasm
+</span>    define_primitive_function <span class="string">"eval-string-stack-empty?"</span>, eval_string_stack_empty?
+       <span class="comment">;; &lt;&lt; -- bool &gt;&gt;
+</span>       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [pointer$eval_string_stack]
+       <span class="builtin">cmp</span> <span class="variable-name">rax</span>, address$eval_string_stack
+       <span class="comment">;; less-than is treated as equal
+</span>       <span class="builtin">setle</span> <span class="variable-name">al</span>
+       <span class="builtin">movzx</span> <span class="variable-name">rax</span>, <span class="variable-name">al</span>
+       push_argument_stack <span class="variable-name">rax</span>
+       next
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-2">** read-line-from-stdin [linux]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+
+   define_primitive_function <span class="string">"read-line-from-stdin"</span>, read_line_from_stdin
+      <span class="comment">;; &lt;&lt; buffer address, max length -- &gt;&gt;
+</span>      pop_argument_stack sys_3_rdx
+      pop_argument_stack sys_2_rsi
+      <span class="builtin">xor</span> sys_1_rdi, sys_1_rdi <span class="comment">;; stdin
+</span>      <span class="builtin">mov</span> sys_n_rax, syscall_read
+      <span class="builtin">syscall</span>
+      <span class="comment">;; the return value
+</span>      <span class="comment">;; is a count of the number of bytes transferred
+</span>      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   <span class="keyword">finish</span> <span class="keyword">if</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** </span><span class="org-done">test</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">""</span>, test__read_line_from_stdin
+      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, max_input_length
+      <span class="type">xx</span> read_line_from_stdin
+      <span class="type">xx</span> pretty_write_integer
+      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>
+      <span class="type">xx</span> write_string
+      <span class="type">xx</span> exit_with_TOS
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** read-line-from-stdin [windows]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
 
-   <span class="function-name">flag$unreaded_ket_char</span>:
+   _counter$read_byte:
+      <span class="type">dq</span> <span class="constant">0</span>
+
+   define_primitive_function <span class="string">"read-line-from-stdin"</span>, read_line_from_stdin
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>
+   windows_function <span class="constant">5</span>
+      <span class="builtin">push</span> <span class="constant">0</span>
+      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
+      <span class="builtin">mov</span> fun_4_r9, _counter$read_byte
+      <span class="builtin">mov</span> fun_3_r8, max_input_length
+      <span class="builtin">mov</span> fun_2_rdx, buffer$read_byte
+      <span class="builtin">mov</span> fun_1_rcx, [_input_handle]
+      <span class="builtin">call</span> [ReadFile]
+   end_windows_function
+
+      <span class="comment">;; the return value
+</span>      <span class="comment">;; is a count of the number of bytes transferred
+</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [_counter$read_byte]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   <span class="keyword">finish</span> <span class="keyword">if</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** read-byte</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"read-byte"</span>, read_byte
+      <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
+</span>      <span class="type">xx</span> have_unreaded_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">9</span>
+      <span class="type">xx</span>   <span class="keyword">literal</span>, char$unreaded_ket_char, fetch_byte
+      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char
+      <span class="type">xx</span>   save
+      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span> read_byte__without_unread
+      <span class="type">xx</span> <span class="keyword">end</span>
+
+   define_function <span class="string">"read-byte,without-unread"</span>, read_byte__without_unread
+      <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
+</span>      <span class="type">xx</span> eval_string_stack_empty?, <span class="keyword">false?branch</span>, (.not_empty-$)/jo_size
+      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$read_byte
+      <span class="type">xx</span>   <span class="keyword">literal</span>, max_input_length
+      <span class="type">xx</span>   read_line_from_stdin
+      <span class="type">xx</span>     <span class="keyword">dup</span>, positive?, false?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="comment">;;     ignore &lt;end-of-file&gt;
+</span>      <span class="comment">;;     ignore reading error
+</span>      <span class="type">xx</span>     drop
+      <span class="type">xx</span>     <span class="keyword">taca</span>, read_byte__without_unread
+      <span class="type">xx</span>   push_eval_string_stack
+      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$read_byte
+      <span class="type">xx</span>   push_eval_string_stack
+      <span class="type">xx</span>   <span class="keyword">taca</span>, read_byte__without_unread
+      <span class="function-name">.not_empty</span>:
+      <span class="type">xx</span> pop_eval_string_stack
+      <span class="type">xx</span> pop_eval_string_stack
+      <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="type">xx</span>   drop2
+      <span class="type">xx</span>   <span class="keyword">taca</span>, read_byte__without_unread
+      <span class="type">xx</span> sub1, push_eval_string_stack
+      <span class="type">xx</span> <span class="keyword">dup</span>
+      <span class="type">xx</span> add1, push_eval_string_stack
+      <span class="type">xx</span> fetch_byte
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** unread-ket-char</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="function-name">flag$unreaded_ket_char</span>:
       <span class="type">xx</span> <span class="constant">0</span>
 
    <span class="function-name">char$unreaded_ket_char</span>:
@@ -2600,114 +2648,30 @@
       <span class="type">xx</span> true, <span class="keyword">literal</span>, flag$unreaded_ket_char
       <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
-
-
-   <span class="comment">;; help__read_byte is the old do function without unread ket-char
-</span>   define_function <span class="string">"read-byte"</span>, read_byte
-      <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
-</span>      <span class="type">xx</span> have_unreaded_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">9</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, char$unreaded_ket_char, fetch_byte
-      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char
-      <span class="type">xx</span>   save
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> help__read_byte
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="comment">;;;; for windows
-</span>   _counter$read_byte:
-      <span class="type">dq</span> <span class="constant">0</span>
-   <span class="comment">;;;;
-</span>
-   <span class="function-name">cursor$read_byte</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   <span class="function-name">border$read_byte</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_primitive_function <span class="string">"help,read-byte"</span>, help__read_byte
-      <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
-</span>      <span class="builtin">call</span> help__help__read_byte
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-
-   <span class="function-name">help__help__read_byte</span>:
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [cursor$read_byte]
-      <span class="builtin">cmp</span> <span class="variable-name">rbx</span>, [border$read_byte]
-      <span class="comment">;; [cursor$read_byte] &lt;  [border$read_byte]
-</span>      <span class="builtin">jl</span> .we_still_have_buffered_byte
-      <span class="comment">;; [cursor$read_byte] &gt;= [border$read_byte]
-</span>      <span class="builtin">jmp</span> .do_a_new_buffer
-
-
-   <span class="function-name">.do_a_new_buffer</span>:
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, buffer$read_byte
-      <span class="builtin">mov</span> [cursor$read_byte], <span class="variable-name">rbx</span>
-      <span class="builtin">mov</span> [border$read_byte], <span class="variable-name">rbx</span>
-
-      <span class="comment">;;;; for windows
-</span>      number_of_arguments = <span class="constant">5</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-      <span class="builtin">push</span> <span class="constant">0</span>
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_4_r9, _counter$read_byte
-      <span class="builtin">mov</span> fun_3_r8, max_input_length
-      <span class="builtin">mov</span> fun_2_rdx, buffer$read_byte
-      <span class="builtin">mov</span> fun_1_rcx, [_input_handle]
-      <span class="builtin">call</span> [ReadFile]
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-      <span class="comment">;;;;
-</span>
-      <span class="comment">;; the return value of syscall read
-</span>      <span class="comment">;; is a count of the number of bytes transferred
-</span>
-      <span class="comment">;;;; for windows
-</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [_counter$read_byte]
-      <span class="comment">;;;;
-</span>
-      <span class="comment">;; the following will let the interpreter exit
-</span>      <span class="comment">;; when meeting end-of-line or reading error
-</span>      <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">jz</span> .error <span class="comment">;; rax = 0
-</span>      <span class="builtin">js</span> .error <span class="comment">;; rax &lt; 0
-</span>
-
-      <span class="comment">;; update [border$read_byte]
-</span>      <span class="builtin">add</span> [border$read_byte], <span class="variable-name">rax</span>
-      <span class="builtin">jmp</span> help__help__read_byte
-
-
-   <span class="function-name">.we_still_have_buffered_byte</span>:
-      <span class="comment">;; for the following will just uses the al part of rax
-</span>      <span class="comment">;; it is necessary to clear rax
-</span>      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">al</span>, <span class="type">byte</span> [<span class="variable-name">rbx</span>]
-      <span class="builtin">inc</span> <span class="variable-name">rbx</span>
-      <span class="builtin">mov</span> [cursor$read_byte], <span class="variable-name">rbx</span>
-      <span class="builtin">ret</span>
-
-
-   <span class="function-name">.error</span>:
-      <span class="comment">;; exit with exit code = 0
-</span>      <span class="builtin">call</span> __exit_with_zero
-
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* eval-string</span>
+<span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
+</span>  define_function <span class="string">"eval-string"</span>, eval_string
+     <span class="comment">;; &lt;&lt; string[address, length] -- UNKNOWN &gt;&gt;
+</span>     <span class="type">xx</span> push_eval_string_stack
+     <span class="type">xx</span> push_eval_string_stack
+     <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">  #+end_src
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> file io</span>
+<span class="org-level-2">** open-file</span>
+<span class="org-level-2">** close-file</span>
+<span class="org-level-2">** read-file</span>
+<span class="org-level-2">** write-file</span>
+<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> load-file</span>
+<span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
+</span>  define_function <span class="string">"load-file"</span>, load_file
+     <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>
+     <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">  #+end_src
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>
 <span class="org-level-2">** space-char?</span>
    * as for space-char
@@ -3301,7 +3265,7 @@
      to inform the function who calls it
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_variable <span class="string">"*first-jo-in-dictionary*"</span>, V__first_jo_in_dictionary
-      <span class="type">xx</span> last_jo_in_assembly
+      <span class="type">xx</span> last_link + jo_size
 
    define_function <span class="string">"find"</span>, find
       <span class="comment">;; found :
@@ -3368,7 +3332,7 @@
 </span><span class="org-level-1">* basic-REPL</span>
 <span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
 </span>  define_function <span class="string">"basic-REPL"</span>, basic_REPL
-     <span class="comment">;; &lt;&lt; unknown -- unknown &gt;&gt;
+     <span class="comment">;; &lt;&lt; UNKNOWN -- UNKNOWN &gt;&gt;
 </span>     <span class="type">xx</span> read_word_for_REPL
      <span class="type">xx</span> execute_word
      <span class="type">xx</span> <span class="keyword">taca</span>, basic_REPL
@@ -4090,12 +4054,10 @@
       <span class="type">xx</span> current_free_address$primitive_string_heap
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** last_jo_in_assembly</span>
+<span class="org-level-2">** last_link</span>
    * this word helps to initialize V__first_jo_in_dictionary
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">""</span>, last_jo_in_assembly
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="constant">0</span>
+</span>   last_link = link
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** un_initialized_memory [linux]</span>
