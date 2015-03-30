@@ -200,74 +200,15 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** load-file</span>
-   * get rid of "cat core.cn - | ./cicada-nymph" in cn
+<span class="org-level-2">** load-file [windows version]</span>
+<span class="org-level-2">** [when needed] nested load-file</span>
+   * a stack of buffer would solve this problem
 <span class="org-level-2">** [maybe] make instruction a type of jo</span>
    this is needed when doing report of the dictionary
-<span class="org-level-2">** fix define in if-block</span>
-<span class="org-level-2">** 32-bits port for linux</span>
-<span class="org-level-2">** 32-bits port for windows</span>
+<span class="org-level-2">** 32bit port for linux</span>
+<span class="org-level-2">** 32bit port for windows</span>
 <span class="org-level-2">** [maybe] re generate instars</span>
 <span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> the order of development</span>
-<span class="org-level-2">** 1st-instar</span>
-   * indirect-threaded-code interpreter
-     1. macro about argument_stack &amp; return_stack
-     2. macro about jo &amp; jojo
-     3. macro about next
-     4. the way to do memory allocation
-     5. begin_to_interpret_threaded_code
-     6. little_test
-<span class="org-level-2">** 2ed-instar</span>
-   * instruction as special primitive function
-     1. literal
-     2. address
-   * and primitive functions about
-     1. argument-stack
-     2. bool
-     3. fixnum
-     4. memory
-   * and taca for explicit tail-call
-<span class="org-level-2">** 3rd-instar</span>
-   * primitive function about io
-     1. write_byte
-     2. read_byte
-   * more instruction as special primitive function
-     1. branch
-     2. false?branch
-<span class="org-level-2">** 4th-instar</span>
-   * more function about io
-     1. about word
-     2. about string
-     3. about number
-   * more function
-     1. jo
-     2. char
-     3. buffer
-   * more in epilog
-     1. last_link
-   * function about dictionary
-     1. find
-     2. execute-word
-   * basic-REPL as postfix-notation function executer
-     1. basic-REPL
-<span class="org-level-2">** 5th-instar [the cicada-nymph]</span>
-   * type of jo
-   * more in epilog
-     1. <span class="bold">*current-free-address,primitive-string-heap*</span>
-   * colon semicolon
-     1. ":" and ";" are used to read a string of words for compiler
-        [looks like bar-ket but special]
-     2. comment is handled here
-        "&lt;&lt; &gt;&gt;" as the only way to do comment
-   * compiler
-     * make-jojo
-       and macro for make-jojo
-       1. macro system
-       2. exception handling system
-     * function about definition
-       which leave data into memory
-<span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
 <span class="org-level-2">** jo &amp; jojo</span>
    * use "jo" to denote bead
@@ -372,15 +313,24 @@
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** choose your platform</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> conditional preprocessing</span>
+   * flower bar-ket can not be nested in fasm's "match"
+     so
+     1. when defining macro conditionally
+        one should use "if eq" &amp; "finish if"
+     2. when doing "define" or "equ"
+        one should use "match { }"
+<span class="org-level-2">** platform configuration</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="comment">;;;; before you compile the code
 </span>   <span class="comment">;;;; do not forget to choose your platform
 </span>   <span class="comment">;;;; in the following code
 </span>
-   linux? <span class="preprocessor">equ</span> yes
-   windows? <span class="preprocessor">equ</span> no
-<span class="org-block-end-line">   #+end_src
+   <span class="preprocessor">include</span> <span class="string">"platform-configuration.inc"</span>
+
+   <span class="comment">;; define platform linux or windows
+</span>   <span class="comment">;; define machine  64bit or 32bit
+</span><span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** misc</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="comment">;; in fasm, "dup" is a reserved word
@@ -391,77 +341,106 @@
    <span class="keyword">end</span> <span class="preprocessor">equ</span> exit
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** header [linux]</span>
+<span class="org-level-2">** header [linux64]</span>
+   * note that
+     the following code is not in a if-block
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
-   <span class="preprocessor">define</span> sys_6_r8  <span class="variable-name">r8</span>
-   <span class="preprocessor">define</span> sys_5_r9  <span class="variable-name">r9</span>
-   <span class="preprocessor">define</span> sys_4_r10 <span class="variable-name">r10</span>
-   <span class="preprocessor">define</span> sys_3_rdx <span class="variable-name">rdx</span>
-   <span class="preprocessor">define</span> sys_2_rsi <span class="variable-name">rsi</span>
-   <span class="preprocessor">define</span> sys_1_rdi <span class="variable-name">rdi</span>
-   <span class="preprocessor">define</span> sys_n_rax <span class="variable-name">rax</span>
 
-   <span class="comment">;; the only three linux syscall we will use
-</span>   <span class="preprocessor">define</span> syscall_read  <span class="constant">0</span>
-   <span class="preprocessor">define</span> syscall_write <span class="constant">1</span>
-   <span class="preprocessor">define</span> syscall_exit  <span class="constant">60</span>
+   <span class="preprocessor">define</span> linux64_sys_6_r8  <span class="variable-name">r8</span>
+   <span class="preprocessor">define</span> linux64_sys_5_r9  <span class="variable-name">r9</span>
+   <span class="preprocessor">define</span> linux64_sys_4_r10 <span class="variable-name">r10</span>
+   <span class="preprocessor">define</span> linux64_sys_3_rdx <span class="variable-name">rdx</span>
+   <span class="preprocessor">define</span> linux64_sys_2_rsi <span class="variable-name">rsi</span>
+   <span class="preprocessor">define</span> linux64_sys_1_rdi <span class="variable-name">rdi</span>
+   <span class="preprocessor">define</span> linux64_sys_n_rax <span class="variable-name">rax</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   <span class="preprocessor">define</span> linux64_syscall_read  <span class="constant">0</span>
+   <span class="preprocessor">define</span> linux64_syscall_write <span class="constant">1</span>
+   <span class="preprocessor">define</span> linux64_syscall_open  <span class="constant">2</span>
+   <span class="preprocessor">define</span> linux64_syscall_close <span class="constant">3</span>
+   <span class="preprocessor">define</span> linux64_syscall_exit  <span class="constant">60</span>
+
+
+   <span class="comment">;; about open &amp; read &amp; write
+</span>
+   open_read         = <span class="constant">0</span>
+   open_write        = <span class="constant">1</span>
+   open_readAndWrite = <span class="constant">2</span>
+
+   open_creat      = 0100o
+   open_rewrite    = 1000o <span class="comment">;; rewrite if file exist
+</span>   open_append     = 2000o
+
+   open_excl       = 0200o <span class="comment">;; ensure that THIS call creates the file
+</span>   open_noctty     = 0400o
+   open_nonblock   = 4000o
+   open_nondelay   = open_nonblock
+   open_sync       = 10000o
+   open_async      = 20000o
+   open_direct     = 40000o
+       <span class="comment">;; to minimize cache effects of the I/O to and from this file.
+</span>
+   open_largefile  = 100000o
+   open_directory  = 200000o
+   open_nofollow   = 400000o <span class="comment">;; If pathname is a symbolic link, then the open fails.
+</span>
+
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** format header [linux]</span>
+</span><span class="org-level-2">** format header [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    <span class="keyword">format</span> elf64 <span class="keyword">executable</span> <span class="constant">3</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** entry [linux]</span>
+</span><span class="org-level-2">** entry [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    <span class="keyword">entry</span> begin_to_interpret_threaded_code
    <span class="keyword">segment</span> <span class="keyword">readable</span> <span class="keyword">executable</span> <span class="keyword">writeable</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** header [windows]</span>
+<span class="org-level-2">** header [windows64]</span>
+   * note that
+     the following code is not in a if-block
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
-
-   <span class="preprocessor">define</span> fun_4_r9  <span class="variable-name">r9</span>
-   <span class="preprocessor">define</span> fun_3_r8  <span class="variable-name">r8</span>
-   <span class="preprocessor">define</span> fun_2_rdx <span class="variable-name">rdx</span>
-   <span class="preprocessor">define</span> fun_1_rcx <span class="variable-name">rcx</span>
+</span>   <span class="preprocessor">define</span> windows64_fun_4_r9  <span class="variable-name">r9</span>
+   <span class="preprocessor">define</span> windows64_fun_3_r8  <span class="variable-name">r8</span>
+   <span class="preprocessor">define</span> windows64_fun_2_rdx <span class="variable-name">rdx</span>
+   <span class="preprocessor">define</span> windows64_fun_1_rcx <span class="variable-name">rcx</span>
 
    <span class="preprocessor">define</span> STD_INPUT_HANDLE  -<span class="constant">10</span>
    <span class="preprocessor">define</span> STD_OUTPUT_HANDLE -<span class="constant">11</span>
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** format header [windows]</span>
+</span><span class="org-level-2">** format header [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
 
    <span class="keyword">format</span> PE64 <span class="keyword">console</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** entry [windows]</span>
+</span><span class="org-level-2">** entry [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
 
    <span class="keyword">entry</span> begin_to_interpret_threaded_code
    <span class="keyword">section</span> <span class="default">'.text'</span> code <span class="keyword">writeable</span> <span class="keyword">readable</span> <span class="keyword">executable</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** calling-convention-windows-64</span>
+</span><span class="org-level-2">** macro about calling-convention [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="keyword">if</span> platform <span class="keyword">eq</span> windows
+   <span class="keyword">if</span> machine <span class="keyword">eq</span> 64bit
+
 
    <span class="comment">;; &#36889;&#35023;&#30340; number_of_arguments &#20854;&#23526;&#20195;&#34920;
 </span>   <span class="comment">;; &#22312;&#23565;&#40778;&#26855;&#20043;&#24460;
@@ -487,19 +466,31 @@
       <span class="builtin">pop</span> <span class="variable-name">rbp</span>
    }
 
+
+   <span class="keyword">finish</span> <span class="keyword">if</span>
    <span class="keyword">finish</span> <span class="keyword">if</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* macro in assembly code</span>
-<span class="org-level-2">** jo_size</span>
-   * 64-bits
-   * note that how "xx" is used as "dq" in a 64-bits version implementation
-     when one wishs to port the implementation to 32-bits machine
-     just use "xx equ dd"
+<span class="org-level-2">** jo_size [32bit]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   jo_size = <span class="constant">8</span> <span class="comment">;; (byte)
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+
+   jo_size = <span class="constant">4</span> <span class="comment">;; (byte)
+</span>   <span class="type">xx</span> <span class="preprocessor">equ</span> <span class="type">dd</span>
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** jo_size [64bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   jo_size = <span class="constant">8</span> <span class="comment">;; (byte)
 </span>   <span class="type">xx</span> <span class="preprocessor">equ</span> <span class="type">dq</span>
+
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** argument_stack &amp; return_stack</span>
    * when doing "push"
@@ -646,38 +637,38 @@
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* helper function in assembly code</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __exit_with_TOS [linux]</span>
+<span class="org-level-2">** __exit_with_TOS [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    __exit_with_TOS:
-      pop_argument_stack sys_1_rdi
-      <span class="builtin">mov</span> sys_n_rax, syscall_exit
+      pop_argument_stack linux64_sys_1_rdi
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_exit
       <span class="builtin">syscall</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+      }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_zero [linux]</span>
+</span><span class="org-level-2">** __exit_with_zero [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    __exit_with_zero:
-      <span class="builtin">xor</span> sys_1_rdi, sys_1_rdi
-      <span class="builtin">mov</span> sys_n_rax, syscall_exit
+      <span class="builtin">xor</span> linux64_sys_1_rdi, linux64_sys_1_rdi
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_exit
       <span class="builtin">syscall</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+      }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_six [linux]</span>
+</span><span class="org-level-2">** __exit_with_six [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    __exit_with_six:
-      <span class="builtin">mov</span> sys_1_rdi, <span class="constant">6</span>
-      <span class="builtin">mov</span> sys_n_rax, syscall_exit
+      <span class="builtin">mov</span> linux64_sys_1_rdi, <span class="constant">6</span>
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_exit
       <span class="builtin">syscall</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+      }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> windows calling convention for x86-64</span>
@@ -707,47 +698,47 @@
      to handle windows calling convention
      is de-macro-lized and un-optimized
      this is for teaching purpose only
-<span class="org-level-2">** __exit_with_TOS [windows]</span>
+<span class="org-level-2">** __exit_with_TOS [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
 
    __exit_with_TOS:
 
    windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      pop_argument_stack fun_1_rcx
+      pop_argument_stack windows64_fun_1_rcx
       <span class="builtin">call</span> [ExitProcess]
    end_windows_function
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_zero [windows]</span>
+</span><span class="org-level-2">** __exit_with_zero [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
 
    __exit_with_zero:
 
    windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">xor</span> fun_1_rcx, fun_1_rcx
+      <span class="builtin">xor</span> windows64_fun_1_rcx, windows64_fun_1_rcx
       <span class="builtin">call</span> [ExitProcess]
    end_windows_function
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_six [windows]</span>
+</span><span class="org-level-2">** __exit_with_six [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
 
    __exit_with_six:
 
    windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_1_rcx, <span class="constant">6</span>
+      <span class="builtin">mov</span> windows64_fun_1_rcx, <span class="constant">6</span>
       <span class="builtin">call</span> [ExitProcess]
    end_windows_function
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
@@ -1278,9 +1269,9 @@
       is actually a loop now
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the story begin*</span></span>
-<span class="org-level-2">** begin_to_interpret_threaded_code [linux]</span>
+<span class="org-level-2">** begin_to_interpret_threaded_code [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    <span class="function-name">begin_to_interpret_threaded_code</span>:
 
@@ -1293,11 +1284,11 @@
       push_return_stack <span class="variable-name">rax</span>
       next
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+      }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** begin_to_interpret_threaded_code [windows]</span>
+</span><span class="org-level-2">** begin_to_interpret_threaded_code [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
 
    <span class="comment">;;;; for windows
 </span>   _output_handle:
@@ -1312,14 +1303,14 @@
 </span>
    windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_1_rcx, STD_INPUT_HANDLE
+      <span class="builtin">mov</span> windows64_fun_1_rcx, STD_INPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_input_handle], <span class="variable-name">rax</span>
    end_windows_function
 
    windows_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_1_rcx, STD_OUTPUT_HANDLE
+      <span class="builtin">mov</span> windows64_fun_1_rcx, STD_OUTPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_output_handle], <span class="variable-name">rax</span>
    end_windows_function
@@ -1331,7 +1322,7 @@
       push_return_stack <span class="variable-name">rax</span>
       next
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** first_jojo</span>
    * you can use the following "xx little_test"
@@ -1340,7 +1331,8 @@
 </span>   <span class="function-name">first_jojo</span>:
       <span class="type">xx</span> welcome
       <span class="comment">;; xx little_test
-</span>      <span class="type">xx</span> basic_REPL
+</span>      <span class="type">xx</span> load_init_file
+      <span class="type">xx</span> basic_REPL
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** welcome</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -2362,9 +2354,10 @@
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> byte</span>
    * basic io is about byte
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** write-byte [linux]</span>
+<span class="org-level-2">** write-byte [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
 
    <span class="function-name">buffer$write_byte</span>:
       <span class="type">db</span> <span class="constant">0</span>
@@ -2378,20 +2371,22 @@
 </span>      <span class="builtin">mov</span> [buffer$write_byte], <span class="variable-name">al</span>
 
       <span class="comment">;;;; for linux
-</span>      <span class="builtin">mov</span> sys_3_rdx, <span class="constant">1</span>                 <span class="comment">;; max length to be write
-</span>      <span class="builtin">mov</span> sys_2_rsi, buffer$write_byte <span class="comment">;; address
-</span>      <span class="builtin">mov</span> sys_1_rdi, <span class="constant">1</span>                 <span class="comment">;; stdout
-</span>      <span class="builtin">mov</span> sys_n_rax, syscall_write
+</span>      <span class="builtin">mov</span> linux64_sys_3_rdx, <span class="constant">1</span>                 <span class="comment">;; max length to be write
+</span>      <span class="builtin">mov</span> linux64_sys_2_rsi, buffer$write_byte <span class="comment">;; address
+</span>      <span class="builtin">mov</span> linux64_sys_1_rdi, <span class="constant">1</span>                 <span class="comment">;; stdout
+</span>      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_write
       <span class="comment">;;;;
 </span>
       <span class="builtin">syscall</span>
       next
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+
+      }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** write-byte [windows]</span>
+</span><span class="org-level-2">** write-byte [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
+
 
    <span class="function-name">buffer$write_byte</span>:
       <span class="type">db</span> <span class="constant">0</span>
@@ -2412,16 +2407,17 @@
    windows_function <span class="constant">5</span>
       <span class="builtin">push</span> <span class="constant">0</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_4_r9, _counter$write_byte
-      <span class="builtin">mov</span> fun_3_r8, <span class="constant">1</span>
-      <span class="builtin">mov</span> fun_2_rdx, buffer$write_byte
-      <span class="builtin">mov</span> fun_1_rcx, [_output_handle]
+      <span class="builtin">mov</span> windows64_fun_4_r9, _counter$write_byte
+      <span class="builtin">mov</span> windows64_fun_3_r8, <span class="constant">1</span>
+      <span class="builtin">mov</span> windows64_fun_2_rdx, buffer$write_byte
+      <span class="builtin">mov</span> windows64_fun_1_rcx, [_output_handle]
       <span class="builtin">call</span> [WriteFile]
    end_windows_function
 
       next
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
@@ -2530,23 +2526,23 @@
        push_argument_stack <span class="variable-name">rax</span>
        next
 <span class="org-block-end-line">    #+end_src
-</span><span class="org-level-2">** read-line-from-stdin [linux]</span>
+</span><span class="org-level-2">** read-line-from-stdin [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    define_primitive_function <span class="string">"read-line-from-stdin"</span>, read_line_from_stdin
       <span class="comment">;; &lt;&lt; buffer address, max length -- &gt;&gt;
-</span>      pop_argument_stack sys_3_rdx
-      pop_argument_stack sys_2_rsi
-      <span class="builtin">xor</span> sys_1_rdi, sys_1_rdi <span class="comment">;; stdin
-</span>      <span class="builtin">mov</span> sys_n_rax, syscall_read
+</span>      pop_argument_stack linux64_sys_3_rdx
+      pop_argument_stack linux64_sys_2_rsi
+      <span class="builtin">xor</span> linux64_sys_1_rdi, linux64_sys_1_rdi <span class="comment">;; stdin
+</span>      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_read
       <span class="builtin">syscall</span>
       <span class="comment">;; the return value
 </span>      <span class="comment">;; is a count of the number of bytes transferred
 </span>      push_argument_stack <span class="variable-name">rax</span>
       next
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+      }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -2561,9 +2557,10 @@
       <span class="type">xx</span> exit_with_TOS
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** read-line-from-stdin [windows]</span>
+</span><span class="org-level-2">** read-line-from-stdin [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
+
 
    _counter$read_byte:
       <span class="type">dq</span> <span class="constant">0</span>
@@ -2574,10 +2571,10 @@
    windows_function <span class="constant">5</span>
       <span class="builtin">push</span> <span class="constant">0</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_4_r9, _counter$read_byte
-      <span class="builtin">mov</span> fun_3_r8, max_input_length
-      <span class="builtin">mov</span> fun_2_rdx, buffer$read_byte
-      <span class="builtin">mov</span> fun_1_rcx, [_input_handle]
+      <span class="builtin">mov</span> windows64_fun_4_r9, _counter$read_byte
+      <span class="builtin">mov</span> windows64_fun_3_r8, max_input_length
+      <span class="builtin">mov</span> windows64_fun_2_rdx, buffer$read_byte
+      <span class="builtin">mov</span> windows64_fun_1_rcx, [_input_handle]
       <span class="builtin">call</span> [ReadFile]
    end_windows_function
 
@@ -2587,7 +2584,8 @@
       push_argument_stack <span class="variable-name">rax</span>
       next
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+
+      }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-byte</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -2659,16 +2657,164 @@
      <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> file io</span>
-<span class="org-level-2">** open-file</span>
-<span class="org-level-2">** close-file</span>
-<span class="org-level-2">** read-file</span>
-<span class="org-level-2">** write-file</span>
-<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> load-file</span>
+<span class="org-level-1">* file io</span>
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** open-file,to-read [linux64]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
+   name_buffer$open_file__to_read <span class="keyword">labeling</span>
+      <span class="type">preserve</span> <span class="constant">512</span>
+
+   define_primitive_function <span class="string">"open-file,to-read"</span>, open_file__to_read
+      <span class="comment">;; &lt;&lt; file-name-string[address, length] --
+</span>      <span class="comment">;;    [file handle] or [negate number on error] &gt;&gt;
+</span>      pop_argument_stack <span class="variable-name">rcx</span>
+      pop_argument_stack <span class="variable-name">rsi</span>
+      <span class="comment">;; copy file-name as a null-terminal string
+</span>      <span class="builtin">mov</span> <span class="variable-name">rdi</span>, name_buffer$open_file__to_read
+      <span class="builtin">rep</span> <span class="builtin">movsb</span>
+      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdi</span>], <span class="variable-name">al</span>
+      <span class="builtin">mov</span> linux64_sys_2_rsi, open_read <span class="comment">;; read onlya
+</span>      <span class="builtin">mov</span> linux64_sys_1_rdi, name_buffer$open_file__to_read
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_open
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+      }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** open-file,to-write [linux64]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
+   name_buffer$open_file__to_write <span class="keyword">labeling</span>
+      <span class="type">preserve</span> <span class="constant">512</span>
+
+   define_primitive_function <span class="string">"open-file,to-write"</span>, open_file__to_write
+      <span class="comment">;; &lt;&lt; file-name-string[address, length] --
+</span>      <span class="comment">;;    [file handle] or [negate number on error] &gt;&gt;
+</span>      pop_argument_stack <span class="variable-name">rcx</span>
+      pop_argument_stack <span class="variable-name">rsi</span>
+      <span class="comment">;; copy file-name as a null-terminal string
+</span>      <span class="builtin">mov</span> <span class="variable-name">rdi</span>, name_buffer$open_file__to_write
+      <span class="builtin">rep</span> <span class="builtin">movsb</span>
+      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdi</span>], <span class="variable-name">al</span>
+      <span class="builtin">mov</span> linux64_sys_3_rdx, <span class="constant">110100100b</span>
+      <span class="builtin">mov</span> linux64_sys_2_rsi, open_readAndWrite <span class="builtin">or</span> open_creat <span class="builtin">or</span> open_rewrite
+      <span class="builtin">mov</span> linux64_sys_1_rdi, name_buffer$open_file__to_write
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_open
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+      }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** close-file [linux64]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
+   define_primitive_function <span class="string">"close-file"</span>, close_file
+      <span class="comment">;; &lt;&lt; file-handle -- &gt;&gt;
+</span>      pop_argument_stack linux64_sys_1_rdi
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_close
+      <span class="builtin">syscall</span>
+      next
+
+      }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** read-file [linux64]</span>
+   * from disk to memory
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
+   define_primitive_function <span class="string">"read-file"</span>, read_file
+      <span class="comment">;; &lt;&lt; [file handle], buffer[address, length] --
+</span>      <span class="comment">;;    [number of char] or [negate number on error] &gt;&gt;
+</span>      pop_argument_stack linux64_sys_3_rdx
+      pop_argument_stack linux64_sys_2_rsi
+      pop_argument_stack linux64_sys_1_rdi
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_read
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+      }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** write-file [linux64]</span>
+   * from memory to disk
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
+   define_primitive_function <span class="string">"write-file"</span>, write_file
+      <span class="comment">;; &lt;&lt; [file handle], buffer[address, length] --
+</span>      <span class="comment">;;    [number of char] or [negate number on error] &gt;&gt;
+</span>      pop_argument_stack linux64_sys_3_rdx
+      pop_argument_stack linux64_sys_2_rsi
+      pop_argument_stack linux64_sys_1_rdi
+      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_write
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+      }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span>
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* load-file</span>
+  * load-file can not be nested for now
+    a stack of buffer would solve this problem
 <span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
-</span>  define_function <span class="string">"load-file"</span>, load_file
+</span>  buffer$load_file <span class="keyword">labeling</span>
+    <span class="type">preserve</span> <span class="constant">1024</span> * <span class="constant">1024</span>
+
+  define_function <span class="string">"load-file"</span>, load_file
+     <span class="comment">;; &lt;&lt; name-string[address, length] -- UNKNOWN &gt;&gt;
+</span>     <span class="type">xx</span> open_file__to_read
+     <span class="type">xx</span> <span class="keyword">dup</span>
+     <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$load_file <span class="comment">;; buffer
+</span>     <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">1024</span> * <span class="constant">1024</span>      <span class="comment">;; length
+</span>     <span class="type">xx</span>   read_file
+     <span class="type">xx</span> swap, close_file
+     <span class="type">xx</span> <span class="keyword">dup</span>, positive?, <span class="keyword">false?branch</span>, (.error-$)/jo_size
+     <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$load_file
+     <span class="type">xx</span>   swap
+     <span class="type">xx</span>   push_eval_string_stack
+     <span class="type">xx</span>   push_eval_string_stack
+     <span class="type">xx</span>   <span class="keyword">end</span>
+     <span class="function-name">.error</span>:
+     <span class="type">xx</span> error_report__load_file
+     <span class="type">xx</span> write_integer
+     <span class="type">xx</span> <span class="keyword">end</span>
+
+  define_function <span class="string">"error-report,load-file"</span>, error_report__load_file
      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>
+</span>     <span class="type">xx</span> <span class="keyword">literal</span>, string$error_report__load_file
+     <span class="type">xx</span> <span class="keyword">literal</span>, length$error_report__load_file
+     <span class="type">xx</span> write_string
+     <span class="type">xx</span> <span class="keyword">end</span>
+
+  <span class="function-name">string$error_report__load_file</span>:
+     <span class="type">db</span> <span class="string">"* (load-file) MEETS ERROR : "</span>
+  <span class="function-name">.end</span>:
+  length$error_report__load_file = (.end - string$error_report__load_file)
+<span class="org-block-end-line">  #+end_src
+</span><span class="org-level-1">* load-init-file</span>
+<span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
+</span>  <span class="function-name">string$name_of_init_file</span>:
+     <span class="type">db</span> <span class="string">"core.cn"</span>
+  <span class="function-name">.end</span>:
+  length$name_of_init_file = (.end - string$name_of_init_file)
+
+
+  define_function <span class="string">"load-init-file"</span>, load_init_file
+     <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>     <span class="type">xx</span> <span class="keyword">literal</span>, string$name_of_init_file
+     <span class="type">xx</span> <span class="keyword">literal</span>, length$name_of_init_file
+     <span class="type">xx</span> load_file
      <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
@@ -3385,7 +3531,7 @@
       <span class="type">db</span> <span class="string">"&lt;&lt;"</span>
 
    define_function <span class="string">"comment-begin-string?"</span>, comment_begin_string?
-      <span class="comment">;; (* string[address, length] -- bool *)
+      <span class="comment">;; &lt;&lt; string[address, length] -- bool &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$comment_begin
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
       <span class="type">xx</span> string_equal?
@@ -3396,7 +3542,7 @@
       <span class="type">db</span> <span class="string">"&gt;&gt;"</span>
 
    define_function <span class="string">"comment-end-string?"</span>, comment_end_string?
-      <span class="comment">;; (* -- *)
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$comment_end
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
       <span class="type">xx</span> string_equal?
@@ -4060,9 +4206,10 @@
 </span>   last_link = link
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** un_initialized_memory [linux]</span>
+<span class="org-level-2">** un_initialized_memory [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
 
    size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
 </span>
@@ -4070,12 +4217,14 @@
    <span class="function-name">address$un_initialized_memory</span>:
       <span class="type">rb</span> size$un_initialized_memory
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+
+      }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** un_initialized_memory [windows]</span>
+<span class="org-level-2">** un_initialized_memory [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
+
 
    size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
 </span>
@@ -4083,11 +4232,13 @@
    <span class="function-name">address$un_initialized_memory</span>:
       <span class="type">rb</span> size$un_initialized_memory
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+
+      }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** import [windows]</span>
+</span><span class="org-level-2">** macro about import [windows64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="keyword">if</span> platform <span class="keyword">eq</span> windows
+   <span class="keyword">if</span> machine <span class="keyword">eq</span> 64bit
 
 
    <span class="comment">;; Macroinstructions for making import section (64-bit)
@@ -4157,6 +4308,14 @@
        <span class="keyword">finish</span> <span class="keyword">if</span> }
 
 
+   <span class="keyword">finish</span> <span class="keyword">if</span>
+   <span class="keyword">finish</span> <span class="keyword">if</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** section about import [windows64]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
+
+
    <span class="keyword">section</span> <span class="default">'.idata'</span> <span class="keyword">import</span> <span class="keyword">data</span> <span class="keyword">readable</span> <span class="keyword">writeable</span>
 
    library kernel32,<span class="default">'KERNEL32.DLL'</span>
@@ -4168,7 +4327,7 @@
           GetStdHandle,<span class="default">'GetStdHandle'</span>
 
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+       }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* ===================================</span>
