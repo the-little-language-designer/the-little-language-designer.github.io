@@ -140,6 +140,14 @@
         /* font-lock-preprocessor-face */
         color: #a6e22e;
       }
+      .rainbow-delimiters-depth-1 {
+        /* rainbow-delimiters-depth-1-face */
+        color: #8c8c8c;
+      }
+      .rainbow-delimiters-depth-2 {
+        /* rainbow-delimiters-depth-2-face */
+        color: #93a8c6;
+      }
       .return-stack-bar-ket {
         /* return-stack-bar-ket-face */
         color: #dc322f;
@@ -195,16 +203,15 @@
   <body>
     {% include before-pre.html %}
 <pre>
-<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">cicada-nymph
+<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#35486; / cicada-nymph
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** load-file [windows version]</span>
-<span class="org-level-2">** [when needed] nested load-file</span>...
+<span class="org-level-2">** [really needed] little tester</span>
+<span class="org-level-2">** error handling of load-file</span>...
+<span class="org-level-2">** nested load-file</span>...
 <span class="org-level-2">** [maybe] make instruction a type of jo</span>...
-<span class="org-level-2">** 32bit port for linux</span>
-<span class="org-level-2">** 32bit port for windows</span>
 <span class="org-level-2">** [maybe] re generate instars</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
@@ -214,8 +221,7 @@
 <span class="org-level-2">** convention in cicada-nymph code</span>...
 <span class="org-level-2">** syntax of cicada-nymph</span>...
 <span class="org-level-2">** unique id</span>...
-<span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> different from the re-designed cicada-language</span>...
+<span class="org-level-2">** different from the re-designed cicada-language</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -223,40 +229,82 @@
 <span class="org-level-2">** platform configuration</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** misc</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** header [linux64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** format header [linux64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** entry [linux64]</span>...<span class="org-block-end-line">
+<span class="org-level-2">** jo_size [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** jo_size [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** header [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** format [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** entry  [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** header [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** format [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** entry  [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> calling convention</span>...
 <span class="org-level-2">** header [windows64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** format header [windows64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** entry [windows64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** macro about calling-convention [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** format [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** entry  [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** macro  [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> calling convention</span>...
+<span class="org-level-2">** header [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** format [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** entry  [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** macro  [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** memory allocation in un_initialized_memory</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* macro in assembly code</span>
-<span class="org-level-2">** jo_size [32bit]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** jo_size [64bit]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** argument_stack &amp; return_stack</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** memory allocation in un_initialized_memory</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** next</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> play with jo &amp; jojo</span>...
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> stack</span>...
+<span class="org-level-1">* argument_stack</span>
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** push &amp; pop [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** push &amp; pop [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* return_stack</span>
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** push &amp; pop [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** push &amp; pop [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* next</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>...
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* helper function in assembly code</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __exit_with_TOS [linux64]</span>...<span class="org-block-end-line">
+<span class="org-level-2">** __exit_with_TOS  [linux64]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** __exit_with_zero [linux64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** __exit_with_six [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** __exit_with_six  [linux64]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> windows calling convention for x86-64</span>...
-<span class="org-level-2">** __exit_with_TOS [windows64]</span>...<span class="org-block-end-line">
+<span class="org-level-2">** __exit_with_TOS  [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** __exit_with_zero [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** __exit_with_six  [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** __exit_with_TOS  [windows64]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** __exit_with_zero [windows64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** __exit_with_six [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** __exit_with_six  [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** __exit_with_TOS  [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** __exit_with_zero [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** __exit_with_six  [windows32]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* macro for jo &amp; explainer</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** link</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** primitive_string_heap</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> primitive_string_heap</span>
+<span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** make_primitive_string</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
@@ -281,7 +329,8 @@
 <span class="org-level-2">** define_exception</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> return-stack in action</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> the plan</span>...
-<span class="org-level-2">** explain$exception</span>...<span class="org-block-end-line">
+<span class="org-level-2">** explain$exception [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** explain$exception [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* execute-jo &amp; structure of jo</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -308,22 +357,26 @@
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the story begin*</span></span>
 <span class="org-level-2">** begin_to_interpret_threaded_code [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** begin_to_interpret_threaded_code [linux32]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** begin_to_interpret_threaded_code [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** begin_to_interpret_threaded_code [windows32]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** first_jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** welcome</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** exit_with_TOS a.k.a. bye</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** little_test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* argument_stack</span>
-<span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** drop</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** dup</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** over</span>...<span class="org-block-end-line">
+<span class="org-level-1">* the stack</span>
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** drop</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** dup  [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** dup  [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** over [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** over [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** tuck</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** swap</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* return_stack</span>
-<span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* instruction</span>
+</span><span class="org-level-2">** swap [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** swap [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* instruction</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> side-effect</span>...
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> naming</span>...
@@ -335,28 +388,46 @@
 </span><span class="org-level-2">** false?branch</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> return-stack in action</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** prepare_for</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** prepare_for [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** prepare_for [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** end_of_prepare</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** exception_head</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* bool</span>
 <span class="org-level-2">** false &amp; true</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** false? &amp; true?</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** bitwise operations</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** bitwise operations [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** bitwise operations [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* fixnum</span>
+<span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** zero &amp; one</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** zero? &amp; one?</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** add &amp; sub &amp; mul &amp; div &amp; mod &amp; negate &amp; power</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** equal &amp; greater-than &amp; less-than</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** add &amp; sub [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** add &amp; sub [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** mul</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** negate</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** power</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** div &amp; mod</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** equal? &amp; greater-than? &amp; less-than?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** negative? &amp; positive?</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* memory</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* memory</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>...
+<span class="org-level-2">** save  [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** fetch [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** save  [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** fetch [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* basic io</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> byte</span>...
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** write-byte [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** write-byte [linux32]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** write-byte [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** write-byte [windows32]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> factoring</span>...
@@ -366,12 +437,16 @@
 <span class="org-level-3">*** </span><span class="org-todo">note</span>...
 <span class="org-level-3">*** memory allocation</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** pointer</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** push &amp; pop</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** clear</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** push &amp; pop [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** push &amp; pop [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** clear [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** clear [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** empty?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-line-from-stdin [linux64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-line-from-stdin [linux32]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-line-from-stdin [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-line-from-stdin [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> read-line-from-stdin</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-byte</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** unread-ket-char</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -379,14 +454,32 @@
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* file io</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** open-file,to-read [linux64]</span>...<span class="org-block-end-line">
+<span class="org-level-2">** open-file,to-read  [linux64]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** open-file,to-write [linux64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** close-file [linux64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** read-file [linux64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** write-file [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** close-file         [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-file          [linux64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** write-file         [linux64]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span>
-<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** open-file,to-read  [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** open-file,to-write [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** close-file         [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-file          [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** write-file         [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** header             [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** open-file,to-read  [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** open-file,to-write [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** close-file         [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-file          [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** write-file         [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** header             [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** open-file,to-read  [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** open-file,to-write [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** close-file         [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** read-file          [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** write-file         [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* load-file</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* load-init-file</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
@@ -408,7 +501,8 @@
 <span class="org-level-2">** string-equal?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-[head|tail],char</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-&gt;buffer!</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** string-reverse!</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** string-reverse! [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** string-reverse! [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** digital-string?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** char-string?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** zero-string?</span>...<span class="org-block-end-line">
@@ -491,9 +585,15 @@
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** un_initialized_memory [linux64]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** un_initialized_memory [linux32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** un_initialized_memory [windows64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** macro about import [windows64]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** section about import [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** macro about import    [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** section about import  [windows64]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** un_initialized_memory [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** macro about import    [windows32]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** section about import  [windows32]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* ===================================</span>
 </pre>

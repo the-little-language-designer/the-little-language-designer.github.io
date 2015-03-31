@@ -60,6 +60,9 @@
    * 首先
      不要盲目崇拜 linux
      這個操作系統的設計有很多不良之處
+   * calling convention & syscall 
+     * 64bit        
+     * 32bit
    * [[http://distrowatch.com/][各種發佈版本的比較]]
    * archlinux
      * [[https://www.archlinux.org/][主頁]]
@@ -72,7 +75,7 @@
      * [[http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows][鏡像燒錄指南 (windows)]]
      * [[http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx][鏡像燒錄指南 (mac)]]
 ** [操作系統] windows
-   * [[http://en.wikibooks.org/wiki/Windows_Programming/Windows_System_Architecture][Windows System Architecture]]
+   * [[http://en.wikibooks.org/wiki/Windows_Programming/Windows_System_Architecture][Windows System Architecture (wikibook)]]
 ** [版本控制] git & github
    * [[https://help.github.com/][github 的幫助頁面]]
    * [[http://git-scm.com/][git 主頁]]
