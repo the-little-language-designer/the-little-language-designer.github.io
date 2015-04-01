@@ -44,7 +44,7 @@
    .button-1-3 {
        display: inline-block;
        cursor: pointer;
-       width: 31%;
+       width: 28%;
        border-radius: 0.2em;
 
        text-align: center;
@@ -67,7 +67,7 @@
    }
 
    .button-1-3[href="contents.html"] {
-       color: #afeeee; 
+       color: #afeeee;
        background-color: #fd971f;
    }
    .button-1-3[href="contents.html"]:hover {
@@ -80,6 +80,34 @@
    }
    .button-1-3[href="show-all.html"]:hover {
        background-color: #ffc0cb;
+   }
+   #+end_src
+* button-home
+** shape and default color
+   #+begin_src css :tangle assets/css/org.css
+   .button-home {
+       display: inline-block;
+       cursor: pointer;
+       width: 9%;
+       border-radius: 0.2em;
+
+       text-align: center;
+       font-weight: bold;
+       text-decoration: none;
+   }
+
+   .button-home:hover {
+       text-decoration: none;
+     }
+   #+end_src
+** fake <S-lefttab>
+   #+begin_src css :tangle assets/css/org.css
+   .button-home {
+       color: #a60309;
+       background-color: #afeeee;
+   }
+   .button-home:hover {
+       background-color: #ffeeee;
    }
    #+end_src
 * ><
