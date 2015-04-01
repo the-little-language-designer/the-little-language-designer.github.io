@@ -215,7 +215,7 @@
    * a stack of buffer would solve this problem
 <span class="org-level-2">** [maybe] make instruction a type of jo</span>
    this is needed when doing report of the dictionary
-<span class="org-level-2">** [maybe] re generate instars</span>
+<span class="org-level-2">** re-generate instars</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
 <span class="org-level-2">** jo &amp; jojo</span>
@@ -558,7 +558,7 @@
 </span>   <span class="comment">;; &#26681;&#25818; windows calling convention
 </span>   <span class="comment">;; &#36889;&#20491;&#25976;&#23383;&#26368;&#23569;&#26159; 4
 </span>
-   <span class="preprocessor">macro</span> <span class="function-name">windows_function</span> number_of_arguments \{
+   <span class="preprocessor">macro</span> <span class="function-name">windows64_function</span> number_of_arguments \{
       <span class="builtin">push</span> <span class="variable-name">rbp</span>
       <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
 
@@ -571,7 +571,7 @@
       <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
    \}
 
-   <span class="preprocessor">macro</span> <span class="function-name">end_windows_function</span> \{
+   <span class="preprocessor">macro</span> <span class="function-name">end_windows64_function</span> \{
       <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
       <span class="builtin">pop</span> <span class="variable-name">rbp</span>
    \}
@@ -607,39 +607,6 @@
 
    <span class="keyword">entry</span> begin_to_interpret_threaded_code
    <span class="keyword">section</span> <span class="default">'.text'</span> code <span class="keyword">writeable</span> <span class="keyword">readable</span> <span class="keyword">executable</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** macro  [windows32]</span>
-   * macro about windows32 calling-convention
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
-
-
-   <span class="comment">;; &#36889;&#35023;&#30340; number_of_arguments &#20854;&#23526;&#20195;&#34920;
-</span>   <span class="comment">;; &#22312;&#23565;&#40778;&#26855;&#20043;&#24460;
-</span>   <span class="comment">;; &#20320;&#36996;&#24819;&#35201;&#23559;&#26855;&#30340;&#25351;&#37341; &#21521;&#19979;&#31227;&#21205;&#22810;&#23569;&#20491;&#21934;&#20301;
-</span>   <span class="comment">;; &#26681;&#25818; windows calling convention
-</span>   <span class="comment">;; &#36889;&#20491;&#25976;&#23383;&#26368;&#23569;&#26159; 4
-</span>
-   <span class="preprocessor">macro</span> <span class="function-name">windows_function</span> number_of_arguments \{
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-   \}
-
-   <span class="preprocessor">macro</span> <span class="function-name">end_windows_function</span> \{
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-   \}
-
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -861,11 +828,11 @@
   <span class="preprocessor">match</span> =32bit, machine {
 
   <span class="preprocessor">macro</span> <span class="function-name">next</span> \{
-     pop_return_stack <span class="variable-name">ebx</span>
-       <span class="builtin">mov</span> <span class="variable-name">eax</span>, [<span class="variable-name">ebx</span>]
-     <span class="builtin">add</span> <span class="variable-name">ebx</span>, jo_size
-     push_return_stack <span class="variable-name">ebx</span>
-       <span class="builtin">jmp</span> <span class="type">dword</span> [<span class="variable-name">eax</span>]
+     pop_return_stack <span class="variable-name">rbx</span>
+       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+     <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
+     push_return_stack <span class="variable-name">rbx</span>
+       <span class="builtin">jmp</span> <span class="type">dword</span> [<span class="variable-name">rax</span>]
   \}
 
   }
@@ -1033,11 +1000,11 @@
 
    __exit_with_TOS:
 
-   windows_function <span class="constant">4</span>
+   windows64_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       pop_argument_stack windows64_fun_1_rcx
       <span class="builtin">call</span> [ExitProcess]
-   end_windows_function
+   end_windows64_function
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -1047,11 +1014,11 @@
 
    __exit_with_zero:
 
-   windows_function <span class="constant">4</span>
+   windows64_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">xor</span> windows64_fun_1_rcx, windows64_fun_1_rcx
       <span class="builtin">call</span> [ExitProcess]
-   end_windows_function
+   end_windows64_function
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -1061,11 +1028,11 @@
 
    __exit_with_six:
 
-   windows_function <span class="constant">4</span>
+   windows64_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> windows64_fun_1_rcx, <span class="constant">6</span>
       <span class="builtin">call</span> [ExitProcess]
-   end_windows_function
+   end_windows64_function
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -1279,7 +1246,8 @@
    <span class="comment">;; *current-free-address,primitive-string-heap*
 </span>   <span class="comment">;; is at epilog
 </span><span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* macro for make-jojo</span>
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* macro for make-jojo</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * the same as function
@@ -1575,7 +1543,7 @@
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>
 
       <span class="type">xx</span> <span class="keyword">dup</span>, fetch
-      <span class="type">xx</span> swap, subtraction, <span class="keyword">literal</span>, jo_to_type, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="type">xx</span> swap, subtraction, <span class="keyword">literal</span>, jo_size, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop, zero
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -1757,19 +1725,19 @@
 
       <span class="builtin">cld</span> <span class="comment">;; set DF = 0, then rsi and rdi are incremented
 </span>
-   windows_function <span class="constant">4</span>
+   windows64_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> windows64_fun_1_rcx, STD_INPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_input_handle], <span class="variable-name">rax</span>
-   end_windows_function
+   end_windows64_function
 
-   windows_function <span class="constant">4</span>
+   windows64_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> windows64_fun_1_rcx, STD_OUTPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_output_handle], <span class="variable-name">rax</span>
-   end_windows_function
+   end_windows64_function
 
       <span class="builtin">mov</span> pointer$argument_stack,  address$argument_stack
       <span class="builtin">mov</span> pointer$return_stack,    address$return_stack
@@ -1850,26 +1818,26 @@
       <span class="comment">;;;; variable
 </span>      <span class="comment">;; xx V__little_test_number
 </span>      <span class="comment">;; xx exit_with_TOS
-</span>      <span class="comment">;;;; 3
+</span>      <span class="comment">;;;; exit ocde : 3
 </span>
       <span class="comment">;;;; literal
 </span>      <span class="comment">;; xx literal, 4
 </span>      <span class="comment">;; xx exit_with_TOS
-</span>      <span class="comment">;;;; 4
+</span>      <span class="comment">;;;; exit ocde : 4
 </span>
       <span class="comment">;;;; address
-</span>      <span class="comment">;; xx address, V__little_test_number, fetch_two_bytes, add2
+</span>      <span class="comment">;; xx address, V__little_test_number, fetch, add2
 </span>      <span class="comment">;; xx address, V__little_test_number, save
 </span>      <span class="comment">;; xx V__little_test_number
 </span>      <span class="comment">;; xx exit_with_TOS
-</span>      <span class="comment">;;;; 5
+</span>      <span class="comment">;;;; exit ocde : 5
 </span>
       <span class="comment">;;;; taca
 </span>      <span class="comment">;; xx literal, 2
 </span>      <span class="comment">;; xx literal, 4
 </span>      <span class="comment">;; xx power
 </span>      <span class="comment">;; xx exit_with_TOS
-</span>      <span class="comment">;;;; 16
+</span>      <span class="comment">;;;; exit ocde : 16
 </span>
       <span class="comment">;;;; write_byte
 </span>      <span class="comment">;; xx literal, 64, write_byte
@@ -3542,7 +3510,7 @@
 </span>      <span class="comment">;; write needs the address of the byte to write
 </span>      <span class="builtin">mov</span> [buffer$write_byte], <span class="variable-name">al</span>
 
-   windows_function <span class="constant">5</span>
+   windows64_function <span class="constant">5</span>
       <span class="builtin">push</span> <span class="constant">0</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> windows64_fun_4_r9, __counter$write_byte
@@ -3550,7 +3518,7 @@
       <span class="builtin">mov</span> windows64_fun_2_rdx, buffer$write_byte
       <span class="builtin">mov</span> windows64_fun_1_rcx, [_output_handle]
       <span class="builtin">call</span> [WriteFile]
-   end_windows_function
+   end_windows64_function
 
       next
 
@@ -3780,7 +3748,7 @@
 
    define_primitive_function <span class="string">"read-line-from-stdin"</span>, read_line_from_stdin
       <span class="comment">;; &lt;&lt; buffer address, max length -- &gt;&gt;
-</span>   windows_function <span class="constant">5</span>
+</span>   windows64_function <span class="constant">5</span>
       <span class="builtin">push</span> <span class="constant">0</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> windows64_fun_4_r9, __counter$read_line_from_stdin
@@ -3792,7 +3760,7 @@
 </span>      <span class="comment">;; is a count of the number of bytes transferred
 </span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [__counter$read_line_from_stdin]
       push_argument_stack <span class="variable-name">rax</span>
-   end_windows_function
+   end_windows64_function
       next
 
    }
@@ -4191,7 +4159,7 @@
       <span class="builtin">rep</span> <span class="builtin">movsb</span>
       <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
       <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdi</span>], <span class="variable-name">al</span>
-   windows_function <span class="constant">7</span>
+   windows64_function <span class="constant">7</span>
       <span class="builtin">push</span> <span class="constant">0</span> <span class="comment">;; null
 </span>      <span class="builtin">push</span> FILE_ATTRIBUTE_NORMAL
       <span class="builtin">push</span> OPEN_EXISTING
@@ -4202,7 +4170,7 @@
       <span class="builtin">mov</span> windows64_fun_1_rcx, name_buffer$open_file__to_read
       <span class="builtin">call</span> [CreateFileA]
       push_argument_stack <span class="variable-name">rax</span>
-   end_windows_function
+   end_windows64_function
       next
 
    }
@@ -4224,7 +4192,7 @@
       <span class="builtin">rep</span> <span class="builtin">movsb</span>
       <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
       <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdi</span>], <span class="variable-name">al</span>
-   windows_function <span class="constant">7</span>
+   windows64_function <span class="constant">7</span>
       <span class="builtin">push</span> <span class="constant">0</span> <span class="comment">;; null
 </span>      <span class="builtin">push</span> FILE_ATTRIBUTE_NORMAL
       <span class="builtin">push</span> CREATE_ALWAYS
@@ -4235,7 +4203,7 @@
       <span class="builtin">mov</span> windows64_fun_1_rcx, name_buffer$open_file__to_write
       <span class="builtin">call</span> [CreateFileA]
       push_argument_stack <span class="variable-name">rax</span>
-   end_windows_function
+   end_windows64_function
       next
 
    }
@@ -4246,11 +4214,11 @@
 
    define_primitive_function <span class="string">"close-file"</span>, close_file
       <span class="comment">;; &lt;&lt; file-handle -- &gt;&gt;
-</span>   windows_function <span class="constant">4</span>
+</span>   windows64_function <span class="constant">4</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       pop_argument_stack windows64_fun_1_rcx
       <span class="builtin">call</span> [CloseHandle]
-   end_windows_function
+   end_windows64_function
       next
 
    }
@@ -4265,7 +4233,7 @@
    define_primitive_function <span class="string">"read-file"</span>, read_file
       <span class="comment">;; &lt;&lt; [file handle], buffer[address, length] --
 </span>      <span class="comment">;;    [number of char] or [error code] &gt;&gt;
-</span>   windows_function <span class="constant">5</span>
+</span>   windows64_function <span class="constant">5</span>
       <span class="builtin">push</span> <span class="constant">0</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> windows64_fun_4_r9, __counter$read_file
@@ -4273,7 +4241,7 @@
       pop_argument_stack windows64_fun_2_rdx
       pop_argument_stack windows64_fun_1_rcx
       <span class="builtin">call</span> [ReadFile]
-   end_windows_function
+   end_windows64_function
 
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [__counter$read_file]
       push_argument_stack <span class="variable-name">rax</span>
@@ -4292,7 +4260,7 @@
    define_primitive_function <span class="string">"write-file"</span>, write_file
       <span class="comment">;; &lt;&lt; [file handle], buffer[address, length] --
 </span>      <span class="comment">;;    [number of char] or [error code] &gt;&gt;
-</span>   windows_function <span class="constant">5</span>
+</span>   windows64_function <span class="constant">5</span>
       <span class="builtin">push</span> <span class="constant">0</span>
       <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
       <span class="builtin">mov</span> windows64_fun_4_r9, __counter$write_file
@@ -4302,7 +4270,7 @@
       <span class="builtin">call</span> [WriteFile]
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [__counter$write_file]
       push_argument_stack <span class="variable-name">rax</span>
-   end_windows_function
+   end_windows64_function
 
       next
 
@@ -4395,7 +4363,7 @@
       <span class="builtin">push</span> name_buffer$open_file__to_read
       <span class="builtin">call</span> [CreateFileA]
       push_argument_stack <span class="variable-name">rax</span>
-   end_windows_function
+
       next
 
    <span class="rainbow-delimiters-depth-1">}</span>
@@ -4427,7 +4395,7 @@
       <span class="builtin">push</span> name_buffer$open_file__to_write
       <span class="builtin">call</span> [CreateFileA]
       push_argument_stack <span class="variable-name">rax</span>
-   end_windows_function
+
       next
 
    <span class="rainbow-delimiters-depth-1">}</span>

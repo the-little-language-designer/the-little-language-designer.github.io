@@ -75,10 +75,6 @@
         color: #00ffff;
         text-decoration: underline;
       }
-      .org-table {
-        /* org-table */
-        color: #87cefa;
-      }
       .org-todo {
         /* org-todo */
         color: #ffc0cb;
@@ -148,41 +144,21 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> the order of development</span>
-<span class="org-level-2">** 1st-instar</span>
-   * indirect-threaded-code interpreter
-     1. macro about argument_stack &amp; return_stack
-     2. macro about jo &amp; jojo
-     3. macro about next
-     4. the way to do memory allocation
-     5. begin_to_interpret_threaded_code
-     6. little_test
-<span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
-<span class="org-level-2">** jo &amp; jojo</span>
-   * use "jo" to denote bead
-     and use "jojo" to denote a thread of beads
-     [which reads like "&#29664;&#29664;" in Chinese]
-<span class="org-level-2">** convention in assembly code</span>
-   * using underline to compose big word from small words
-   * using "$" as prefix and postfix separator
-   * indentation level = 3
-   * naming convention of jo
-     <span class="org-table">| convention   | jo type  |</span>
-     <span class="org-table">|--------------+----------|</span>
-     <span class="org-table">| prefix "V__" | variable |</span>
-     <span class="org-table">| prefix "M__" | macro    |</span>
+  * indirect-threaded-code interpreter
+    1. macro about argument_stack &amp; return_stack
+    2. macro about jo &amp; jojo
+    3. macro about next
+    4. the way to do memory allocation
+    5. begin_to_interpret_threaded_code
+    6. little_test
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** choose your platform</span>
+<span class="org-level-2">** platform configuration</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="comment">;;;; before you compile the code
-</span>   <span class="comment">;;;; do not forget to choose your platform
-</span>   <span class="comment">;;;; in the following code
-</span>
-   linux? <span class="preprocessor">equ</span> yes
-   windows? <span class="preprocessor">equ</span> no
+</span>   <span class="preprocessor">define</span> platform windows
+   <span class="preprocessor">define</span> machine  32bit
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** misc</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -194,125 +170,59 @@
    <span class="keyword">end</span> <span class="preprocessor">equ</span> exit
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** header [linux]</span>
+<span class="org-level-2">** jo_size [32bit]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =32bit, machine {
 
-   <span class="preprocessor">define</span> sys_6_r8  <span class="variable-name">r8</span>
-   <span class="preprocessor">define</span> sys_5_r9  <span class="variable-name">r9</span>
-   <span class="preprocessor">define</span> sys_4_r10 <span class="variable-name">r10</span>
-   <span class="preprocessor">define</span> sys_3_rdx <span class="variable-name">rdx</span>
-   <span class="preprocessor">define</span> sys_2_rsi <span class="variable-name">rsi</span>
-   <span class="preprocessor">define</span> sys_1_rdi <span class="variable-name">rdi</span>
-   <span class="preprocessor">define</span> sys_n_rax <span class="variable-name">rax</span>
+   jo_size = <span class="constant">4</span> <span class="comment">;; (byte)
+</span>   <span class="type">xx</span> <span class="preprocessor">equ</span> <span class="type">dd</span>
 
-   <span class="comment">;; the only three linux syscall we will use
-</span>   <span class="preprocessor">define</span> syscall_read    <span class="constant">0</span>
-   <span class="preprocessor">define</span> syscall_write   <span class="constant">1</span>
-   <span class="preprocessor">define</span> syscall_exit    <span class="constant">60</span>
+   <span class="variable-name">rax</span> <span class="preprocessor">equ</span> <span class="variable-name">eax</span>
+   <span class="variable-name">rbx</span> <span class="preprocessor">equ</span> <span class="variable-name">ebx</span>
+   <span class="variable-name">rcx</span> <span class="preprocessor">equ</span> <span class="variable-name">ecx</span>
+   <span class="variable-name">rdx</span> <span class="preprocessor">equ</span> <span class="variable-name">edx</span>
+   <span class="variable-name">rsp</span> <span class="preprocessor">equ</span> <span class="variable-name">esp</span>
+   <span class="variable-name">rbp</span> <span class="preprocessor">equ</span> <span class="variable-name">ebp</span>
+   <span class="variable-name">rsi</span> <span class="preprocessor">equ</span> <span class="variable-name">esi</span>
+   <span class="variable-name">rdi</span> <span class="preprocessor">equ</span> <span class="variable-name">edi</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** format header [linux]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+   <span class="builtin">syscall</span> <span class="preprocessor">equ</span> <span class="builtin">int</span> <span class="constant">80h</span>
 
-   <span class="keyword">format</span> elf64 <span class="keyword">executable</span> <span class="constant">3</span>
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** entry [linux]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
-
-   <span class="keyword">entry</span> begin_to_interpret_threaded_code
-   <span class="keyword">segment</span> <span class="keyword">readable</span> <span class="keyword">executable</span> <span class="keyword">writeable</span>
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** header [windows]</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> calling convention</span>
+   * <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/k2b2ssfy.aspx">Calling Conventions</a></span>
+   * <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/a5s9345t.aspx">Calling Example: Function Prototype and Call</a></span>
+     <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/25687bhx.aspx">Results of Calling Example</a></span>
+<span class="org-level-2">** header [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
-   STD_INPUT_HANDLE     = -<span class="constant">10</span>
-   STD_OUTPUT_HANDLE    = -<span class="constant">11</span>
+   <span class="preprocessor">define</span> STD_INPUT_HANDLE  -<span class="constant">10</span>
+   <span class="preprocessor">define</span> STD_OUTPUT_HANDLE -<span class="constant">11</span>
 
-   <span class="preprocessor">define</span> fun_4_r9   <span class="variable-name">r9</span>
-   <span class="preprocessor">define</span> fun_3_r8   <span class="variable-name">r8</span>
-   <span class="preprocessor">define</span> fun_2_rdx  <span class="variable-name">rdx</span>
-   <span class="preprocessor">define</span> fun_1_rcx  <span class="variable-name">rcx</span>
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** format header [windows]</span>
+</span><span class="org-level-2">** format [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
-   <span class="keyword">format</span> PE64 <span class="keyword">console</span>
+   <span class="keyword">format</span> PE <span class="keyword">console</span> <span class="keyword">as</span> <span class="string">"cicada-nymph-32.exe"</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** entry [windows]</span>
+</span><span class="org-level-2">** entry  [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
    <span class="keyword">entry</span> begin_to_interpret_threaded_code
    <span class="keyword">section</span> <span class="default">'.text'</span> code <span class="keyword">writeable</span> <span class="keyword">readable</span> <span class="keyword">executable</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* macro in assembly code</span>
-<span class="org-level-2">** jo_size</span>
-   * 64-bits
-   * note that how "xx" is used as "dq" in a 64-bits version implementation
-     when one wishs to port the implementation to 32-bits machine
-     just use "xx equ dd"
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   jo_size = <span class="constant">8</span> <span class="comment">;; (byte)
-</span>   <span class="type">xx</span> <span class="preprocessor">equ</span> <span class="type">dq</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** argument_stack &amp; return_stack</span>
-   * when doing "push"
-     a stack-pointer moves to lower address
-   * note that another style is that
-     when doing "push"
-     a stack-pointer moves to higher address
-   * the stack-pointer
-     always stores the address of current-free-address of the stack
-   * note that another style is that
-     under the stack-pointer
-     there always stores the value of the-top-of-the-stack
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="comment">;; if you want to extend cicada in assembly
-</span>   <span class="comment">;; the following registers must NOT be used
-</span>
-   <span class="comment">;; =================================
-</span>   <span class="preprocessor">define</span> pointer$argument_stack   <span class="variable-name">r15</span>
-   <span class="preprocessor">define</span> pointer$return_stack     <span class="variable-name">r14</span>
-   <span class="comment">;; =================================
-</span>
-   <span class="preprocessor">macro</span> <span class="function-name">push_argument_stack</span> register {
-      <span class="builtin">mov</span> [pointer$argument_stack], register
-      <span class="builtin">add</span> pointer$argument_stack, jo_size
-      }
-   <span class="preprocessor">macro</span> <span class="function-name">pop_argument_stack</span> register {
-      <span class="builtin">sub</span> pointer$argument_stack, jo_size
-      <span class="builtin">mov</span> register, [pointer$argument_stack]
-      }
-
-   <span class="preprocessor">macro</span> <span class="function-name">push_return_stack</span> register {
-      <span class="builtin">mov</span> [pointer$return_stack], register
-      <span class="builtin">add</span> pointer$return_stack, jo_size
-      }
-   <span class="preprocessor">macro</span> <span class="function-name">pop_return_stack</span> register {
-      <span class="builtin">sub</span> pointer$return_stack, jo_size
-      <span class="builtin">mov</span> register, [pointer$return_stack]
-      }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** memory allocation in un_initialized_memory</span>
+<span class="org-level-2">** memory allocation in un_initialized_memory</span>
    * implemented as a memory map
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   current_free_address$un_initialized_memory = address$un_initialized_memory
@@ -320,243 +230,346 @@
    <span class="keyword">labeling</span>  <span class="preprocessor">equ</span> = current_free_address$un_initialized_memory
    <span class="type">preserve</span>  <span class="preprocessor">equ</span> current_free_address$un_initialized_memory = current_free_address$un_initialized_memory +
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** next</span>
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> stack</span>
+  * when doing "push"
+    a stack-pointer moves to lower address
+  * note that another style is that
+    when doing "push"
+    a stack-pointer moves to higher address
+  * the stack-pointer
+    always stores the address of current-free-address of the stack
+  * note that another style is that
+    under the stack-pointer
+    there always stores the value of the-top-of-the-stack
+<span class="org-level-1">* argument_stack</span>
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** memory allocation</span>
+   * for we do not build border-check
+     into the interface of pop and push
+     we allocation some memory below the stacks
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">macro</span> <span class="function-name">next</span> {
-      pop_return_stack <span class="variable-name">rbx</span>
-        <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">qword</span> [<span class="variable-name">rbx</span>]
-      <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
-      push_return_stack <span class="variable-name">rbx</span>
-        <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
+</span>      <span class="type">preserve</span> <span class="constant">64</span> * jo_size
+   address$argument_stack <span class="keyword">labeling</span>
+      <span class="type">preserve</span> <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [64bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   <span class="comment">;; if you want to extend cicada in assembly
+</span>   <span class="comment">;; the following registers must NOT be used
+</span>
+   <span class="preprocessor">define</span> pointer$argument_stack <span class="variable-name">r15</span>
+
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> play with jo &amp; jojo</span>
-   1. at the beginning
-      * argument-stack
-        &lt;&lt; 2 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-jo">(square)</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   2. next
-      * argument-stack
-        &lt;&lt; 2 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(multiple)</span>
-                           <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   3. next
-      * argument-stack
-        &lt;&lt; 2, 2 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>          <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   4. next
-      * argument-stack &lt;&lt; 4 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>                           <span class="return-stack-jo">(dup)</span>
-            <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(multiple)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
-            <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   5. next
-      * argument-stack &lt;&lt; 4 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>
-            <span class="return-stack-jo">(square)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-                        <span class="return-stack-jo">(multiple)</span>
-                        <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   6. next
-      * argument-stack
-        &lt;&lt; 4, 4 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>
-            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
-                        <span class="return-stack-end">(end)</span>
-<span class="org-block-end-line">        #+end_src
-</span>   7. next
-      * argument-stack
-        &lt;&lt; 16 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
-            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(multiple)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
-<span class="org-block-end-line">        #+end_src
-</span>   8. next
-      * argument-stack
-        &lt;&lt; 16 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>            <span class="return-stack-jo">(square)</span>
-            <span class="return-stack-jo">(square)</span>
-        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
-<span class="org-block-end-line">        #+end_src
-</span>   9. next
-      * argument-stack
-        &lt;&lt; 16 &gt;&gt;
-      * return-stack
-<span class="org-block-begin-line">        #+begin_src return-stack
-</span>        <span class="return-stack-line">-</span> [  ]
-<span class="org-block-end-line">        #+end_src
-</span>   10. it is really simple
-       ^-^
-       is it not ?
+</span><span class="org-level-2">** push &amp; pop [64bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   <span class="preprocessor">macro</span> <span class="function-name">push_argument_stack</span> register \{
+      <span class="builtin">mov</span> [pointer$argument_stack], register
+      <span class="builtin">add</span> pointer$argument_stack, jo_size
+   \}
+
+   <span class="preprocessor">macro</span> <span class="function-name">pop_argument_stack</span> register \{
+      <span class="builtin">sub</span> pointer$argument_stack, jo_size
+      <span class="builtin">mov</span> register, [pointer$argument_stack]
+   \}
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [32bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   <span class="function-name">pointer$argument_stack</span>:
+      <span class="type">xx</span> address$argument_stack
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** push &amp; pop [32bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   <span class="preprocessor">macro</span> <span class="function-name">push_argument_stack</span> register \{
+      <span class="keyword">if</span> register <span class="builtin">in</span> &lt;eax&gt;
+      <span class="builtin">push</span> <span class="variable-name">ebx</span>
+      <span class="builtin">mov</span> <span class="variable-name">ebx</span>, [pointer$argument_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">ebx</span>], register
+      <span class="builtin">add</span> <span class="variable-name">ebx</span>, jo_size
+      <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">ebx</span>
+      <span class="builtin">pop</span> <span class="variable-name">ebx</span>
+      <span class="keyword">else</span>
+      <span class="builtin">push</span> <span class="variable-name">eax</span>
+      <span class="builtin">mov</span> <span class="variable-name">eax</span>, [pointer$argument_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">eax</span>], register
+      <span class="builtin">add</span> <span class="variable-name">eax</span>, jo_size
+      <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">eax</span>
+      <span class="builtin">pop</span> <span class="variable-name">eax</span>
+      <span class="keyword">finish</span> <span class="keyword">if</span>
+   \}
+
+   <span class="preprocessor">macro</span> <span class="function-name">pop_argument_stack</span> register \{
+      <span class="keyword">if</span> register <span class="builtin">in</span> &lt;eax&gt;
+      <span class="builtin">push</span> <span class="variable-name">ebx</span>
+      <span class="builtin">mov</span> <span class="variable-name">ebx</span>, [pointer$argument_stack]
+      <span class="builtin">sub</span> <span class="variable-name">ebx</span>, jo_size
+      <span class="builtin">mov</span> register, [<span class="variable-name">ebx</span>]
+      <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">ebx</span>
+      <span class="builtin">pop</span> <span class="variable-name">ebx</span>
+      <span class="keyword">else</span>
+      <span class="builtin">push</span> <span class="variable-name">eax</span>
+      <span class="builtin">mov</span> <span class="variable-name">eax</span>, [pointer$argument_stack]
+      <span class="builtin">sub</span> <span class="variable-name">eax</span>, jo_size
+      <span class="builtin">mov</span> register, [<span class="variable-name">eax</span>]
+      <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">eax</span>
+      <span class="builtin">pop</span> <span class="variable-name">eax</span>
+      <span class="keyword">finish</span> <span class="keyword">if</span>
+   \}
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* return_stack</span>
+<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** memory allocation</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>      <span class="type">preserve</span> <span class="constant">64</span> * jo_size
+   address$return_stack <span class="keyword">labeling</span>
+      <span class="type">preserve</span> <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [64bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   <span class="comment">;; if you want to extend cicada in assembly
+</span>   <span class="comment">;; the following registers must NOT be used
+</span>
+   <span class="preprocessor">define</span> pointer$return_stack <span class="variable-name">r14</span>
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** push &amp; pop [64bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   <span class="preprocessor">macro</span> <span class="function-name">push_return_stack</span> register \{
+      <span class="builtin">mov</span> [pointer$return_stack], register
+      <span class="builtin">add</span> pointer$return_stack, jo_size
+   \}
+
+   <span class="preprocessor">macro</span> <span class="function-name">pop_return_stack</span> register \{
+      <span class="builtin">sub</span> pointer$return_stack, jo_size
+      <span class="builtin">mov</span> register, [pointer$return_stack]
+   \}
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** pointer    [32bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   <span class="function-name">pointer$return_stack</span>:
+      <span class="type">xx</span> address$return_stack
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** push &amp; pop [32bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   <span class="preprocessor">macro</span> <span class="function-name">push_return_stack</span> register \{
+      <span class="keyword">if</span> register <span class="builtin">in</span> &lt;eax&gt;
+      <span class="builtin">push</span> <span class="variable-name">ebx</span>
+      <span class="builtin">mov</span> <span class="variable-name">ebx</span>, [pointer$return_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">ebx</span>], register
+      <span class="builtin">add</span> <span class="variable-name">ebx</span>, jo_size
+      <span class="builtin">mov</span> [pointer$return_stack], <span class="variable-name">ebx</span>
+      <span class="builtin">pop</span> <span class="variable-name">ebx</span>
+      <span class="keyword">else</span>
+      <span class="builtin">push</span> <span class="variable-name">eax</span>
+      <span class="builtin">mov</span> <span class="variable-name">eax</span>, [pointer$return_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">eax</span>], register
+      <span class="builtin">add</span> <span class="variable-name">eax</span>, jo_size
+      <span class="builtin">mov</span> [pointer$return_stack], <span class="variable-name">eax</span>
+      <span class="builtin">pop</span> <span class="variable-name">eax</span>
+      <span class="keyword">finish</span> <span class="keyword">if</span>
+   \}
+
+   <span class="preprocessor">macro</span> <span class="function-name">pop_return_stack</span> register \{
+      <span class="keyword">if</span> register <span class="builtin">in</span> &lt;eax&gt;
+      <span class="builtin">mov</span> <span class="variable-name">ebx</span>, [pointer$return_stack]
+      <span class="builtin">sub</span> <span class="variable-name">ebx</span>, jo_size
+      <span class="builtin">mov</span> register, [<span class="variable-name">ebx</span>]
+      <span class="builtin">mov</span> [pointer$return_stack], <span class="variable-name">ebx</span>
+      <span class="keyword">else</span>
+      <span class="builtin">mov</span> <span class="variable-name">eax</span>, [pointer$return_stack]
+      <span class="builtin">sub</span> <span class="variable-name">eax</span>, jo_size
+      <span class="builtin">mov</span> register, [<span class="variable-name">eax</span>]
+      <span class="builtin">mov</span> [pointer$return_stack], <span class="variable-name">eax</span>
+      <span class="keyword">finish</span> <span class="keyword">if</span>
+   \}
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* next</span>
+<span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
+</span>  <span class="preprocessor">match</span> =64bit, machine {
+
+  <span class="preprocessor">macro</span> <span class="function-name">next</span> \{
+     pop_return_stack <span class="variable-name">rbx</span>
+       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+     <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
+     push_return_stack <span class="variable-name">rbx</span>
+       <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
+  \}
+
+  }
+
+
+  <span class="preprocessor">match</span> =32bit, machine {
+
+  <span class="preprocessor">macro</span> <span class="function-name">next</span> \{
+     pop_return_stack <span class="variable-name">rbx</span>
+       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+     <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
+     push_return_stack <span class="variable-name">rbx</span>
+       <span class="builtin">jmp</span> <span class="type">dword</span> [<span class="variable-name">rax</span>]
+  \}
+
+  }
+<span class="org-block-end-line">  #+end_src
+</span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>
+  1. at the beginning
+     * argument-stack
+       &lt;&lt; 2 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+           <span class="return-stack-jo">(square)</span>
+           <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">       #+end_src
+</span>  2. next
+     * argument-stack
+       &lt;&lt; 2 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>           <span class="return-stack-jo">(square)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+           <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(multiple)</span>
+                          <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">       #+end_src
+</span>  3. next
+     * argument-stack
+       &lt;&lt; 2, 2 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>           <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+           <span class="return-stack-end">(end)</span>          <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">       #+end_src
+</span>  4. next
+     * argument-stack &lt;&lt; 4 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>                          <span class="return-stack-jo">(dup)</span>
+           <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(multiple)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+           <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">       #+end_src
+</span>  5. next
+     * argument-stack &lt;&lt; 4 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>           <span class="return-stack-jo">(square)</span>
+           <span class="return-stack-jo">(square)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+                       <span class="return-stack-jo">(multiple)</span>
+                       <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">       #+end_src
+</span>  6. next
+     * argument-stack
+       &lt;&lt; 4, 4 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>           <span class="return-stack-jo">(square)</span>
+           <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+                       <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">       #+end_src
+</span>  7. next
+     * argument-stack
+       &lt;&lt; 16 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>           <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
+           <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(multiple)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+<span class="org-block-end-line">       #+end_src
+</span>  8. next
+     * argument-stack
+       &lt;&lt; 16 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>           <span class="return-stack-jo">(square)</span>
+           <span class="return-stack-jo">(square)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+<span class="org-block-end-line">       #+end_src
+</span>  9. next
+     * argument-stack
+       &lt;&lt; 16 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>       <span class="return-stack-line">-</span> [  ]
+<span class="org-block-end-line">       #+end_src
+</span>  10. it is really simple
+      ^-^
+      is it not ?
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* helper function in assembly code</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __exit_with_TOS [linux]</span>
+<span class="org-level-2">** __exit_with_TOS  [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
    __exit_with_TOS:
-      pop_argument_stack sys_1_rdi
-      <span class="builtin">mov</span> sys_n_rax, syscall_exit
-      <span class="builtin">syscall</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+      pop_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">push</span> <span class="variable-name">rax</span>
+      <span class="builtin">call</span> [ExitProcess]
+
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_zero [linux]</span>
+</span><span class="org-level-2">** __exit_with_zero [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
    __exit_with_zero:
-      <span class="builtin">xor</span> sys_1_rdi, sys_1_rdi
-      <span class="builtin">mov</span> sys_n_rax, syscall_exit
-      <span class="builtin">syscall</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+      <span class="builtin">push</span> <span class="constant">0</span>
+      <span class="builtin">call</span> [ExitProcess]
+
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_six [linux]</span>
+</span><span class="org-level-2">** __exit_with_six  [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
    __exit_with_six:
-      <span class="builtin">mov</span> sys_1_rdi, <span class="constant">6</span>
-      <span class="builtin">mov</span> sys_n_rax, syscall_exit
-      <span class="builtin">syscall</span>
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> windows calling convention for x86-64</span>
-   * <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/ew5tede7%28v=vs.90%29.aspx">microsoft's web</a></span>
-   * if you respect the calling convention
-     1. your functions will be able to call other functions
-        which respect the calling convention
-     2. your functions will be call-able by other functions
-        which respect the calling convention
-   * in our program
-     1. we do NOT need to respect the calling convention
-        to let our functions be call-able by other function
-        which respect the calling convention
-     2. we ONLY need to respect the calling convention
-        to let our functions be able to call other functions
-        which respect the calling convention
-   * before a call to function in kernel
-     you have to 16-byte aligne the stack
-   * pass first 4 arguments by rcx rdx r8 r9
-     pass other arguments by stack
-   * you have to reserve 4 place for the first 4 arguments
-     although you do not need to push them into stack
-   * you have to reserve 4 place for the first 4 arguments
-     even if the function you are calling
-     only uses less then 4 arguments
-   * the code I am using
-     to handle windows calling convention
-     is de-macro-lized and un-optimized
-     this is for teaching purpose only
-<span class="org-level-2">** __exit_with_TOS [windows]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
-
-   __exit_with_TOS:
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      pop_argument_stack fun_1_rcx
+      <span class="builtin">push</span> <span class="constant">6</span>
       <span class="builtin">call</span> [ExitProcess]
 
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_zero [windows]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
-
-   __exit_with_zero:
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">xor</span> fun_1_rcx, fun_1_rcx
-      <span class="builtin">call</span> [ExitProcess]
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_six [windows]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
-
-   __exit_with_six:
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_1_rcx, <span class="constant">15</span>
-      <span class="builtin">call</span> [ExitProcess]
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
@@ -567,7 +580,9 @@
 </span>   <span class="comment">;; initial link to point to 0 (as null)
 </span>   link = <span class="constant">0</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** primitive_string_heap</span>
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> primitive_string_heap</span>
+<span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   size$primitive_string_heap = <span class="constant">100</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
 </span>
@@ -636,7 +651,7 @@
 
       <span class="comment">;; here follows a jojo as function-body
 </span>
-      }
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** explain$function</span>
    * find a jojo from a function-jo
@@ -678,7 +693,7 @@
       <span class="comment">;; here follows assembly code
 </span>      <span class="comment">;; as primitive function body
 </span>
-      }
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
@@ -709,7 +724,7 @@
       <span class="comment">;; here follows a value of jo_size
 </span>      <span class="comment">;; only one value is allowed
 </span>
-      }
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** explain$variable</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -730,96 +745,36 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the story begin*</span></span>
-<span class="org-level-2">** begin_to_interpret_threaded_code [linux]</span>
+<span class="org-level-2">** begin_to_interpret_threaded_code [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
-   <span class="function-name">begin_to_interpret_threaded_code</span>:
-
-      <span class="builtin">cld</span> <span class="comment">;; set DF = 0, then rsi and rdi are incremented
-</span>
-      <span class="builtin">mov</span> pointer$argument_stack,  address$argument_stack
-      <span class="builtin">mov</span> pointer$return_stack,    address$return_stack
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, first_jojo
-      push_return_stack <span class="variable-name">rax</span>
-      next
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** begin_to_interpret_threaded_code [windows]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
-
-   <span class="comment">;;;; for windows
-</span>   _output_handle:
-      <span class="type">dq</span> <span class="constant">0</span>
+   _output_handle:
+      <span class="type">xx</span> <span class="constant">0</span>
    _input_handle:
-      <span class="type">dq</span> <span class="constant">0</span>
-   <span class="comment">;;;;
-</span>
+      <span class="type">xx</span> <span class="constant">0</span>
+
    <span class="function-name">begin_to_interpret_threaded_code</span>:
 
       <span class="builtin">cld</span> <span class="comment">;; set DF = 0, then rsi and rdi are incremented
 </span>
-
-      <span class="comment">;;;; for windows
-</span>      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_1_rcx, STD_INPUT_HANDLE
+      <span class="builtin">push</span> STD_INPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_input_handle], <span class="variable-name">rax</span>
 
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-
-
-
-      number_of_arguments = <span class="constant">4</span>
-      <span class="builtin">push</span> <span class="variable-name">rbp</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbp</span>, <span class="variable-name">rsp</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="variable-name">rsp</span>
-      <span class="builtin">add</span> <span class="variable-name">rax</span>, <span class="constant">8</span>*number_of_arguments
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="constant">1111b</span>
-      <span class="builtin">and</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">16</span>
-      <span class="builtin">add</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbx</span>
-
-      <span class="builtin">sub</span> <span class="variable-name">rsp</span>, <span class="constant">8</span>*<span class="constant">4</span>
-      <span class="builtin">mov</span> fun_1_rcx, STD_OUTPUT_HANDLE
+      <span class="builtin">push</span> STD_OUTPUT_HANDLE
       <span class="builtin">call</span> [GetStdHandle]
       <span class="builtin">mov</span> [_output_handle], <span class="variable-name">rax</span>
-
-      <span class="builtin">mov</span> <span class="variable-name">rsp</span>, <span class="variable-name">rbp</span>
-      <span class="builtin">pop</span> <span class="variable-name">rbp</span>
-      <span class="comment">;;;;
-</span>
-
-      <span class="builtin">mov</span> pointer$argument_stack,  address$argument_stack
-      <span class="builtin">mov</span> pointer$return_stack,    address$return_stack
 
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, first_jojo
       push_return_stack <span class="variable-name">rax</span>
       next
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** first_jojo</span>
+   * you can use the following "xx little_test"
+     to do some little tests
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="function-name">first_jojo</span>:
       <span class="type">xx</span> little_test
@@ -843,42 +798,23 @@
       <span class="comment">;;;; 3
 </span><span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* argument_stack</span>
-<span class="org-level-2">** memory allocation</span>
-   * for we do not build border-check
-     into the interface of pop and push
-     we allocation some memory below the stacks
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>      <span class="type">preserve</span> <span class="constant">64</span> * jo_size
-   address$argument_stack <span class="keyword">labeling</span>
-      <span class="type">preserve</span> <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* return_stack</span>
-<span class="org-level-2">** memory allocation</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>      <span class="type">preserve</span> <span class="constant">64</span> * jo_size
-   address$return_stack <span class="keyword">labeling</span>
-      <span class="type">preserve</span> <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** un_initialized_memory [linux]</span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*un-initialized-memory*</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> linux? <span class="keyword">eq</span> yes
+</span>   define_variable <span class="string">"*un-initialized-memory*"</span>, V__un_initialized_memory
+     <span class="type">xx</span> address$un_initialized_memory
 
-   size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
-</span>
-   <span class="keyword">segment</span> <span class="keyword">readable</span> <span class="keyword">writeable</span>
-   <span class="function-name">address$un_initialized_memory</span>:
-      <span class="type">rb</span> size$un_initialized_memory
+   define_variable <span class="string">"*size,un-initialized-memory*"</span>, V__size__un_initialized_memory
+     <span class="type">xx</span> size$un_initialized_memory
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   define_variable <span class="string">"*current-free-address,un-initialized-memory*"</span>, V__current_free_address__un_initialized_memory
+     <span class="type">xx</span> current_free_address$un_initialized_memory
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** un_initialized_memory [windows]</span>
+<span class="org-level-2">** un_initialized_memory [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
    size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
 </span>
@@ -886,17 +822,17 @@
    <span class="function-name">address$un_initialized_memory</span>:
       <span class="type">rb</span> size$un_initialized_memory
 
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** import [windows]</span>
+</span><span class="org-level-2">** macro about import    [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="keyword">if</span> windows? <span class="keyword">eq</span> yes
+</span>   <span class="keyword">if</span> platform <span class="keyword">eq</span> windows
+   <span class="keyword">if</span> machine <span class="keyword">eq</span> 32bit
 
-
-   <span class="comment">;; Macroinstructions for making import section (64-bit)
+   <span class="comment">; Macroinstructions for making import section
 </span>
-   <span class="preprocessor">macro</span> <span class="function-name">library</span> [name,string]
-    { <span class="preprocessor">common</span>
+   <span class="preprocessor">macro</span> <span class="function-name">library</span> [name,string] {
+      <span class="preprocessor">common</span>
        <span class="function-name">import.data</span>:
       <span class="preprocessor">forward</span>
        <span class="preprocessor">local</span> _label
@@ -914,26 +850,27 @@
          _label <span class="type">db</span> string,<span class="constant">0</span>
                 <span class="type">rb</span> <span class="keyword">RVA</span> $ <span class="builtin">and</span> <span class="constant">1</span>
         <span class="keyword">finish</span> <span class="keyword">if</span>
-       <span class="keyword">finish</span> <span class="keyword">if</span> }
+       <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 
    <span class="preprocessor">macro</span> <span class="keyword">import</span> name,[<span class="keyword">label</span>,string]
     { <span class="preprocessor">common</span>
-       <span class="type">rb</span> (- <span class="keyword">rva</span> $) <span class="builtin">and</span> <span class="constant">7</span>
+       <span class="type">rb</span> (- <span class="keyword">rva</span> $) <span class="builtin">and</span> <span class="constant">3</span>
        <span class="keyword">if</span> <span class="keyword">defined</span> name#.referred
         name#.lookup:
       <span class="preprocessor">forward</span>
         <span class="keyword">if</span> <span class="keyword">used</span> <span class="keyword">label</span>
          <span class="keyword">if</span> string <span class="keyword">eqtype</span> <span class="default">''</span>
           <span class="preprocessor">local</span> _label
-          <span class="type">dq</span> <span class="keyword">RVA</span> _label
+          <span class="type">dd</span> <span class="keyword">RVA</span> _label
          <span class="keyword">else</span>
-          <span class="type">dq</span> <span class="constant">8000000000000000h</span> + string
+          <span class="type">dd</span> <span class="constant">80000000h</span> + string
          <span class="keyword">finish</span> <span class="keyword">if</span>
         <span class="keyword">finish</span> <span class="keyword">if</span>
       <span class="preprocessor">common</span>
         <span class="keyword">if</span> $ &gt; name#.lookup
          name#.redundant = <span class="constant">0</span>
-         <span class="type">dq</span> <span class="constant">0</span>
+         <span class="type">dd</span> <span class="constant">0</span>
         <span class="keyword">else</span>
          name#.redundant = <span class="constant">1</span>
         <span class="keyword">finish</span> <span class="keyword">if</span>
@@ -941,14 +878,14 @@
       <span class="preprocessor">forward</span>
         <span class="keyword">if</span> <span class="keyword">used</span> <span class="keyword">label</span>
          <span class="keyword">if</span> string <span class="keyword">eqtype</span> <span class="default">''</span>
-          <span class="keyword">label</span> <span class="type">dq</span> <span class="keyword">RVA</span> _label
+          <span class="keyword">label</span> <span class="type">dd</span> <span class="keyword">RVA</span> _label
          <span class="keyword">else</span>
-          <span class="keyword">label</span> <span class="type">dq</span> <span class="constant">8000000000000000h</span> + string
+          <span class="keyword">label</span> <span class="type">dd</span> <span class="constant">80000000h</span> + string
          <span class="keyword">finish</span> <span class="keyword">if</span>
         <span class="keyword">finish</span> <span class="keyword">if</span>
       <span class="preprocessor">common</span>
         <span class="keyword">if</span> ~ name#.redundant
-         <span class="type">dq</span> <span class="constant">0</span>
+         <span class="type">dd</span> <span class="constant">0</span>
         <span class="keyword">finish</span> <span class="keyword">if</span>
       <span class="preprocessor">forward</span>
         <span class="keyword">if</span> <span class="keyword">used</span> <span class="keyword">label</span> &amp; string <span class="keyword">eqtype</span> <span class="default">''</span>
@@ -957,8 +894,15 @@
                <span class="type">rb</span> <span class="keyword">RVA</span> $ <span class="builtin">and</span> <span class="constant">1</span>
         <span class="keyword">finish</span> <span class="keyword">if</span>
       <span class="preprocessor">common</span>
-       <span class="keyword">finish</span> <span class="keyword">if</span> }
+       <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 
+   <span class="keyword">finish</span> <span class="keyword">if</span>
+   <span class="keyword">finish</span> <span class="keyword">if</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** section about import  [windows32]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
    <span class="keyword">section</span> <span class="default">'.idata'</span> <span class="keyword">import</span> <span class="keyword">data</span> <span class="keyword">readable</span> <span class="keyword">writeable</span>
 
@@ -968,10 +912,11 @@
           ExitProcess,<span class="default">'ExitProcess'</span>,\
           ReadFile,<span class="default">'ReadFile'</span>,\
           WriteFile,<span class="default">'WriteFile'</span>,\
-          GetStdHandle,<span class="default">'GetStdHandle'</span>
+          GetStdHandle,<span class="default">'GetStdHandle'</span>,\
+          CloseHandle, <span class="default">'CloseHandle'</span>,\
+          CreateFileA, <span class="default">'CreateFileA'</span>
 
-
-   <span class="keyword">finish</span> <span class="keyword">if</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* ===================================</span>

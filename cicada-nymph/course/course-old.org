@@ -1,0 +1,159 @@
+#+TITLE:  課程 / course
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+* ===================================
+* 題解
+** 小小語言設計家
+   * 用匯編語言來實現一個簡單的程序語言的解釋器
+     我期望
+     相比 用匯編語言做一些平凡的練習程序
+     在這門課上你能學到更多的東西
+* 綱要
+  * [[architecture/overview.html][構架]]
+    計算機的基本構架
+  * 匯編
+    匯編語言的基本知識
+    與匯編器額使用方式
+  * [[../1st-instar/overview.html][齡一]]
+    基本的線串碼解釋器
+  * [[../2nd-instar/overview.html][齡二]]
+    線串碼中的基本指令
+  * [[../3rd-instar/overview.html][齡三]]
+    基本輸入輸出
+    轉跳指令
+  * [[../4th-instar/overview.html][齡四]]
+    基本 REPL
+  * [[../5th-instar/overview.html][齡五]]
+    加上 編譯器
+    就得到完整的 小蟬語
+  * [[../overview.html][進行中的小蟬語]]
+    對性狀的一些豐富與補充
+    使得 小蟬語 在教學目的之外
+    也能勝於其他任務
+* 資料
+** [語言] forth
+   * [[http://en.wikipedia.org/wiki/Forth_%28programming_language%29][forth 的 wikipedia 頁面]]
+   * [[http://www.bradrodriguez.com/papers/moving1.htm][forth 各種實現技術的比較]]
+   * [[http://www.forth.org/][forth 興趣小組]]
+   * [[http://www.figuk.plus.com/][英國 forth 興趣小組]]
+   * [[http://jeforth.com/][另外一個與 forth 有關的中文項目]]
+   * [[http://www.forth.com/starting-forth/sf0/sf0.html][forth 的經典入門教程]]
+   * [[http://www.complang.tuwien.ac.at/forth/][其他一些東西]]
+   * [[https://github.com/xieyuheng/jonesforth][我爲 jonesforth 作的備份]]
+** [匯編器] fasm
+   * [[http://flatassembler.net][主頁]]
+   * [[http://board.flatassembler.net/][論壇]]
+   * [[http://en.wikipedia.org/wiki/FASM][維基百科頁面]]
+   * [[https://github.com/the-little-language-designer/fasm][我在 github 上爲 fasm 所做的鏡像]]
+   * fasm 是一個波蘭人在大學時候寫的
+     我很欣賞其設計
+     關於其設計決策有作者的兩篇文章 :
+     1. [[http://flatassembler.net/docs.php?article=ufasm][Understanding the flat assembler]]
+     2. [[http://flatassembler.net/docs.php?article=design][Design Principles]]
+** [匯編器] nasm
+   * [[http://www.nasm.us/][主頁]]
+   * [[http://en.wikipedia.org/wiki/Netwide_Assembler][維基百科頁面]]
+** [匯編器] gas
+   * [[http://en.wikipedia.org/wiki/GNU_Assembler][維基百科頁面]]
+** [操作系統] linux
+   * 首先
+     不要盲目崇拜 linux
+     這個操作系統的設計有很多不良之處
+   * calling convention & syscall 
+     * 64bit        
+     * 32bit
+   * [[http://distrowatch.com/][各種發佈版本的比較]]
+   * archlinux
+     * [[https://www.archlinux.org/][主頁]]
+     * [[https://wiki.archlinux.org/index.php/Main_page_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][中文 wiki]]
+     * [[https://wiki.archlinux.org/index.php/The_Arch_Way_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][arch 之道]]
+     * [[https://wiki.archlinux.org/index.php/Beginners%27_guide_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][新手安裝指南]]
+     * [[https://wiki.archlinux.org/index.php/Installation_guide_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29][簡明安裝指南]]
+   * ubuntu
+     * [[http://www.ubuntu.com/download/desktop][下載]]
+     * [[http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows][鏡像燒錄指南 (windows)]]
+     * [[http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx][鏡像燒錄指南 (mac)]]
+** [操作系統] windows
+   * [[http://en.wikibooks.org/wiki/Windows_Programming/Windows_System_Architecture][Windows System Architecture (wikibook)]]
+** [版本控制] git & github
+   * [[https://help.github.com/][github 的幫助頁面]]
+   * [[http://git-scm.com/][git 主頁]]
+   * 開放源代碼運動
+     * [[https://en.wikipedia.org/wiki/Free_software_movement][free software movement]]
+     * [[https://en.wikipedia.org/wiki/Open-source_movement][open source movement]]
+   * [[https://github.com/xieyuheng][我的 github 頁面]]
+   * [[https://github.com/the-little-language-designer][小小語言設計家的 github 頁面]]
+   * [[https://pages.github.com/][github 所提供的構建靜態網站的服務 -- github page]]
+   * [[http://the-little-language-designer.github.io/][小小語言設計家利用 guthub page 所製作的主頁]]
+     頁面內容的生成
+     還利用到了 [[http://jekyllrb.com/][jekyll]] 和 eamcs
+** [文本編輯器] emacs
+   * 首先
+     不要盲目崇拜 emacs
+     這個文本編輯器的設計有很多不良之處
+   * [[https://www.gnu.org/software/emacs/][主頁]]
+   * [[http://ftpmirror.gnu.org/emacs/][下載]]
+     windows 用戶請點擊最上面的 "windows/"
+     以下載 windows 版本
+   * [[http://orgmode.org/][emacs org-mode]] 可以提供的 [[http://orgmode.org/worg/org-contrib/babel/intro.html][文學編程]] 支持
+     [[http://en.wikipedia.org/wiki/Literate_programming][文學編程的維基百科頁面]]
+** [代理] goagent
+   * [[https://github.com/goagent/goagent][主頁]]
+** hackerspace & makerspace
+   * [[http://www.szdiy.org/][深圳 SZDIY]]
+   * [[http://www.chaihuo.org/][深圳 柴火]]
+* -----------------------------------
+* 關於實驗流程
+  * 並不限於我下面將要介紹的方法
+    你可以用你所希望的任何方式來使用我所提供的代碼
+* 使用 windows 的同學的實驗流程
+** 主要程序的下載
+   * [[https://codeload.github.com/the-little-language-designer/fasm/zip/master][fasm 匯編器]]
+   * [[https://codeload.github.com/the-little-language-designer/cicada-nymph/zip/master][小蟬語的代碼]]
+** 利用 fasm 所提供的集成開發環境
+   難度較低
+   但是所獲得的開發環境
+   在我看來並不良好
+   使用 包含在 fasm 的 windows 版本中的 fasmw.exe
+   來編輯和編譯代碼
+** 利用 github 與 git 所提供的 git shell
+   難度適中
+   用 git shell 所提供的命令行用戶接口來運行程序
+   你可以使用任何文本編輯器來編輯代碼
+   你可以去 [[https://github.com/showcases/text-editors][guthub 的展示頁面]] 挑選一個你喜歡的
+   1. 下載 [[https://windows.github.com/][github 的 windows 應用]]
+      其中帶有 git shell
+      其使用方式
+      類似與 linux 中對命令行用戶界面的使用方式
+** 利用 emacs
+   難度較大
+   使用 emacs 來編輯代碼
+   以 [[http://wikemacs.org/wiki/Eshell][eshell]] 所提供的命令行用戶接口來運行程序
+   或者使用 [[https://github.com/the-little-language-designer/cicada-nymph-mode][cicada-nymph-mode]]
+   所提供的 inferior-cicada-nymph-mode
+   來運行 cicada-nymph 的解釋器
+   1. 下載 [[http://ftpmirror.gnu.org/emacs/][emacs]]
+      並在歡迎界面所提供的鏈接中學習 emacs 的使用方式
+   2. 下載 [[https://github.com/the-little-language-designer/fasm-mode][fasm-mode]] 並用它來編輯 fasm 的源代碼
+   3. 用 [[http://orgmode.org/][org-mode]] 來編輯源代碼
+* -----------------------------------
+* 反饋與貢獻
+** github 所提供的 wiki
+   * [[https://github.com/the-little-language-designer/the-little-language-designer.github.io/wiki][the-little-language-designer wiki]]
+   * [[https://github.com/the-little-language-designer/cicada-nymph/wiki][cicada-nymph wiki]]
+** github 所提供的 issue
+   * [[https://github.com/the-little-language-designer/the-little-language-designer.github.io/issues][the-little-language-designer issues]]
+   * [[https://github.com/the-little-language-designer/cicada-nymph/issues][cicada-nymph issues]]
+** google group 所提供的 論壇和郵件列表
+   * [[https://groups.google.com/forum/#!forum/cicada-language][cicada-language forum]]
+** IRC 即時聊天
+   * irc.freenode.net 服務器上的 #cicada-language 頻道
+* -----------------------------------
+* todo 反思與反駁
+** 關於課程的難度
+** 關於實用性
+** 關於 fasm
+** 關於 forth
+** 關於 蟬語
+* ===================================
