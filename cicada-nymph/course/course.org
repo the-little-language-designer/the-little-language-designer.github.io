@@ -12,8 +12,8 @@
 * -----------------------------------
 * 流程
 ** 下載
-   * [[https://codeload.github.com/the-little-language-designer/fasm/zip/master][fasm 匯編器]]
-   * [[https://codeload.github.com/the-little-language-designer/cicada-nymph/zip/master][小蟬語的代碼]]
+   * [[https://github.com/the-little-language-designer/fasm][fasm 匯編器]]
+   * [[https://github.com/the-little-language-designer/cicada-nymph][小蟬語的代碼]]
 ** 使用匯編器
    * 嘗試用 fasm 編譯一些簡單的例子程序
      以瞭解其使用方式
