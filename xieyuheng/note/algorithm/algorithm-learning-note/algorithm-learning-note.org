@@ -1,0 +1,166 @@
+#+TITLE:  算法學記 / algorithm learning note
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+
+* ===================================
+* note
+  * 教程 : ita.pdf
+  * 學習目的 :
+    ``develop algorithms on your own
+    that they give the correct answer
+    and understand their efficiency''
+* part-1--基礎
+** chapter-1
+   - 什麼是算法
+     只要 `輸入' `輸出' 的類型良好
+     那麼算法就可以被看成是函數外加
+
+   - well-specified computational problem
+     就是可以用算法描述其解的那些問題
+     算法又可以被定義爲用來解決well-specified computational problem的工具
+     這樣就循環了
+     也許應該把well-specified computational problem定義爲如下的問題:
+     問題的提法是闡明: 期望輸入什麼 和 需要輸出什麼
+     + 常見的問題是在某些條件下
+       在一個解集中找到可行解(或者最優解)
+
+   - Which algorithm is best for a given application
+     depends on (among other factors)
+     1. the number of items to be sorted
+     2. the extent to which the items are already somewhat sorted
+     3. possible restrictions on the item values
+     4. the architecture of the computer
+     5. and the kind of storage devices
+        to be used: main memory, disks, or even tapes
+
+   - ``A data structure is a way to store
+     and organize data in order to
+     facilitate access and modifications''
+     這顯然是非函數式編程的思路
+     因爲對於函數變成來說
+     ``數據結構'' 幾乎就等同於 ``數學結構''
+     + 比如用範疇論中的概念來精確地定義這兩個術語
+     也許這種非函數編程的思路纔是理解``數據結構''的正確方式
+     + 但是輸入與輸出這種解決問題的方式在函數式編程就被更大程度地強調
+       原料,用原料製造新的東西,然後在可能的時候拋棄舊的原料
+
+** lecture-1
+*** note
+    1. 算法分析的目的是要更好的利用計算機的計算資源
+    2. 算法分析當然也是一種普遍性極強的語言(僞碼)
+    3. 對程序設計來說有很多方面比效率更重要
+       比如: 特性 模塊性 健壯性 可維護性
+       但是效率就像金融世界的``通貨''
+       對程序設計來說時最基本的
+*** insertion sort
+    - 教授使用的僞碼來記錄算法
+      僞碼用縮進的方式來形成結構化的文本
+      教授說: ``考慮到代碼可能翻頁
+      所以縮進並不是好的 記錄結構化文本的方式''
+      但是這種觀點只在人們使用紙質的書的時候纔是正確的
+      而真正的代碼是不必記錄在紙質的書上的
+    - 儘管教授使用僞碼來記錄算法
+      但是顯然教授在使用C來思考問題
+
+    - insertion sort
+      (an incremental approach)
+      (用數組來實現)
+      在於把新收到的元素插入到已經排好的行中
+      因此從第二個位置開始循環
+      然後就像打撲克或者打麻將的時候整理牌那樣來排序
+    - 將輸入的規模參數化
+      然後就可以用漸進公式分析算法啦
+      因爲時間被相像成這個參數的函數
+    - 分析有多種多樣
+      1. 一種是最壞分析
+         也就是分析就所有可能的輸入而言運行時間的上界
+      2. 一種是平均分析
+         就是在假設輸入符合某種概率分佈的條件下
+         去求時間的期望
+      3. 一種是最好分析 which is bogus
+         用來學術作假用的
+         因爲``壞算法''可能在某些``好輸入''下運行的很快
+    - 爲了使對算法的分析不依賴於硬件
+      還要假設一個``虛擬機''
+      也就是說 要去分析算法的相對速度
+      而不是絕對速度
+* asymptotic notation
+** asymptotic analysis
+   - 忽略依賴於機器的常數
+   - 不是看運行時間
+     而是看運行時間作爲輸入規模的函數的增長
+     這是常識性的
+
+* part-6--圖算法
+** 圖的表示
+*** note
+    |        | 不應用矩陣的代數運算 | 應用矩陣的代數運算 |
+    |--------+----------------------+--------------------|
+    | 點主導 | 刺兒球列表           | 點點相鄰關係矩陣   |
+    | 邊主導 | 點對兒列表           | 點邊相鄰關係矩陣   |
+
+*** adjacency list (刺兒球列表)
+    當圖稀疏時(#E << #V^2)
+    適合用這種表示
+
+    方便點的添加和刪除
+
+*** adjacency matrix (點點相鄰關係矩陣)
+    利用離散的笛卡爾積來形成對點點關係的詳細描述
+    點點關係的語義就是邊
+
+    形成矩陣就能用矩陣的代數運算來處理
+    這些代數運算的語義很有趣
+    有時能給出圖的某些謂詞的快速算法
+
+    很容易從刺兒球列表得到點點相鄰關係矩陣
+
+    1. 當圖稠密時
+    2. 或者當需要快速的判斷是否有一條邊鏈接某兩點時
+    適合用這種表示
+
+    >< 如果要用scheme來實現這些
+    就需要在scheme中實現矩陣的表示
+    簡單地用列表表示列的行或者行的列就行了
+    並且列表中不一定要儲存數字而是可以儲存更豐富的邊的信息
+
+*** vertex pair list (點對兒列表)
+    每個邊對應alist中的一個元素
+
+    方便邊的添加和刪除
+
+*** incidence matrix (點邊相鄰關係矩陣)
+    利用離散的笛卡爾積來形成對點邊關係的詳細描述
+    點邊關係的語義是從點的角度來看邊的類型 比如出和入邊
+
+    形成矩陣就能用矩陣的代數運算來處理
+    這些代數運算的語義很有趣
+    有時能給出圖的某些謂詞的快速算法
+
+    很容易從點對兒列表得到點邊相鄰關係矩陣
+
+** 圖的搜索與遍歷
+   好像圖的每個節點中買藏着寶藏一樣
+   我們需要到達某些埋藏寶藏的位置
+
+   1. >< 詳細地命名圖的邊和點能夠幫助我們進行圖的遍歷
+   2. >< 使用一種實現
+      使得我們既有可能順着有向邊前進
+      又有可能逆着有向邊前進
+      這也能幫助我們進行圖的遍歷與搜索
+
+*** Breadth-first search
+
+*** Depth-first search
+
+** >< Minimum Spanning Trees (最小支撐樹)
+* ===================================
+* note
+  * 教程 : ita-aca.pdf
+  * the only way to learn how to create something is to try to create it
+  * 這本書的作者類比算法的設計與數學歸納法
+    而在我看來它們本來就是相同的東西
+    因爲 可計算性 == 可構造性 == 歸納定義
+    因此作者想要教的可能就是如何寫遞歸函數
+* ===================================
