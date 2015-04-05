@@ -5,51 +5,19 @@
 * 題解
   * 蟬語 這個名字
     來源與曹植的 [[../../poem/chan-fu/show-all.html][蟬賦]]
-* 目的
-  蟬語的目的是
-  爲每個人靈魂中渴望創造的精靈
-  提供程序語言和數學上的支持
-  以使其能夠爲身邊的可編程設備編程
-  1. "可編程設備" 這個詞意在泛化所指
-     你知道 設備最好是可編程的 這樣纔有趣
-     而且在我看來
-     有越多的有創造精神的聰明的人給它們編程
-     這個世界就越美好
-     蟬語 很適合這個泛化的目的
-     因爲我很容易把它快速地向各種 處理器 移植
-     而且 蟬語 的開發環境將是 簡單而功能強大的文本編輯器
-     它將在不同的平臺和硬件上保持統一的視覺和操作感受
-  2. "渴望創造的精靈" 這在於 蟬語 能夠很容易地被 有足夠好奇心的人 透徹地掌握
-     並且蟬語的中文語法可以讓習漢語者無障礙地使用
-  3. "數學支持" 則在於 嵌入在蟬語中的有向圖處理語言
-     這個語言將被用來探索一種新的計算模型
-     而這種新的計算模型將被用來探索某些基本的數學概念
+* 筆記
+  * 語言本身還在設計中
+    目前只有一些 [[../note/contents.html][設計筆記]]
+* 代碼
+  * [[https://github.com/the-little-language-designer/cicada][蟬語之主要文庫]]
 * ===================================
 * to explain the title
-  * the name cicada-language comes from 
-    the [[../../poem/chan-fu/show-all.html][cicada rhapsody]] of 
-    the ancient Chinese prince [[http://en.wikipedia.org/wiki/Cao_Zhi][CAO Zhi]] 
+  * the name cicada-language comes from
+    the [[../../poem/chan-fu/show-all.html][cicada rhapsody]] of
+    the ancient Chinese prince [[http://en.wikipedia.org/wiki/Cao_Zhi][CAO Zhi]]
     (no English translation of the poem currently)
-* purpose
-  the purpose of the cicada language project
-  is to provide support about programming language and math
-  to programmable devices
-  for the creative spirit in everyone's mind
-  1. by "programmable devices",
-     I intend to capture the most general concept.
-     devices better be programmable,
-     for they are stupid and can do less if we do not program them,
-     and in my point of view,
-     the more creative smart people program them,
-     the better the world will be.
-     cicada suits this generalized purpose,
-     for it is very easy to port cicada to any CPU,
-     and the IDE of cicada will be a simple yet powerful text-editor,
-     which will be used as an uniform programming platform across different hardwares.
-  2. by "the creative spirit",
-     I mean that cicada is very easy to be
-     entirely understanded by anyone who has that curiosity.
-  3. by "math",
-     I mean the directed graph processing language which embedded in cicada language.
-     this language will be used to explore a new computing model.
-     this computing model will be used to explore some basic math concepts.
+* design note
+  * I am designing the language now
+    you can find a little [[../note/contents.html][design note]]
+* source code
+  * [[https://github.com/the-little-language-designer/cicada][main repo of cicada language]]
