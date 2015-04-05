@@ -1,0 +1,7 @@
+#+TITLE:  note about programming-language
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
+
+* 語言
+* 語法與語義
+* 實現方式
