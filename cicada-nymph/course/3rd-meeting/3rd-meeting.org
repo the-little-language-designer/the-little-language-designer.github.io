@@ -15,7 +15,7 @@
      意思是 "穿針" 的 "穿"
      而 "threaded code" 就是 "被線穿起來的一串代碼" 的意思
      ><><>< [圖片]
-   * 我用 珠[jo] 來 比如 "線串碼" 中的 "碼"
+   * 我用 珠[jo] 來 比喻 "線串碼" 中的 "碼"
      "一串碼" 就是 一串珠子[珠珠][jojo]
 * -----------------------------------
 * *抽象的理論*
@@ -31,10 +31,10 @@
      #+end_src
      它所記錄的三個操作
      能夠用來計算一個數的平方
-   * 函數的複合就是把兩個函數相機作用
+   * 函數的複合就是把兩個函數相繼作用
      所以 穿珠子的過程就像是製作複合函數的過程
      所以 一串珠子就代表一個函數[複合函數]的函數體
-** 有一串珠子 那麼可以製作一個新珠子 來代表這一串珠子
+** 有一串珠子 那麼可以製作一個新珠子 來對應於這一串珠子　
    * 給以 函數的複合所形成的 函數體[一串珠子] 一個名字
      就是用舊的函數定義新函數[一個新珠子]的過程
    * 一顆珠子代表一個函數
@@ -58,6 +58,22 @@
           (multiple)
           (end)
      對應於對這個詞條的解釋
+     #+end_src
+** *代碼預覽*
+   * 具體的用來實現這些的匯編代碼將是
+     #+begin_src fasm
+     define_function "square", square
+        xx dup
+        xx multiple
+        xx end
+     #+end_src
+   * 或者在解釋器中輸入
+     #+begin_src cicada-nymph
+     : square
+       dup
+       mul
+       end
+     ; define-function
      #+end_src
 ** 珠子的詞典
    * 在一本詞典中
@@ -102,6 +118,29 @@
      而 (end) 只是用來標記一串珠子的結束而已
      並不算是分解出來的成分
      #+end_src
+** *代碼預覽*
+   * dup 作爲 素函數珠 在匯編代碼中的定義
+     #+begin_src fasm
+     define_primitive_function "dup", dup
+        ;; << a -- a, a >>
+        pop_argument_stack rax
+        push_argument_stack rax
+        push_argument_stack rax
+        next
+     #+end_src
+   * multiple 作爲 素函數珠 在匯編代碼中的定義
+     #+begin_src fasm
+     define_primitive_function "mul", multiple
+        ;; << a, b -- a*b >>
+        pop_argument_stack  rbx ;; 2ed arg
+        pop_argument_stack  rax ;; 1st arg
+        imul rbx, rax
+        ;; imul will ignore overflow
+        ;; when there are two registers as arg
+        ;; imul will save the result into the first register
+        push_argument_stack rbx
+        next
+     #+end_src
 * 棧
 ** 一摞東西
    * 啥東西都行
@@ -110,6 +149,48 @@
      必須等放在上面[或後面]東西
      都被拿走之後
      才能被拿走
+** 對棧有兩個基本的操作
+   * 入棧 [push]
+   * 出棧 [pop]
+** *代碼預覽*
+   * 兩個主要的棧在匯編代碼中的實現方式
+     [以 64bit 的代碼爲例]
+     #+begin_src fasm
+     ;; 分配內存
+        preserve 64 * jo_size
+     address$argument_stack labeling
+        preserve 1024 * 1024 * jo_size
+
+
+     ;; 用一個寄存器當作指針
+     define pointer$argument_stack r15
+
+
+     ;; 把兩個基本操作定義成 macro
+     macro push_argument_stack register {
+        mov [pointer$argument_stack], register
+        add pointer$argument_stack, jo_size
+     }
+
+     macro pop_argument_stack register {
+        sub pointer$argument_stack, jo_size
+        mov register, [pointer$argument_stack]
+     }
+
+
+     ;; 在匯編代碼中使用這兩個基本操作的例子
+     define_primitive_function "dup", dup
+        ;; << a -- a a >>
+        pop_argument_stack rax
+        push_argument_stack rax
+        push_argument_stack rax
+        next
+
+     define_primitive_function "drop", drop
+        ;; << a -- >>
+        pop_argument_stack rax
+        next
+     #+end_src
 * 利用兩個棧來形成函數語義
 ** 參數棧與返回棧
    * 參數棧 [argument-stack]
@@ -134,27 +215,103 @@
      可以被作爲 另一個 小精靈 的參數
 ** 函數的 嵌套定義 與 嵌套調用
    * 利用 返回棧
-   * 珠子的串 是一個 可以嵌套的數據結構
-     因爲一串珠子中的每個 函數珠 本身又對應 一串珠子
-   * 而處理 嵌套的數據結構 需要用 遞歸函數
-     而實現 遞歸函數 需要用棧
-   * 詮釋者 展開遞歸函數
-     線串碼解釋器的 "next" 指令用來 收斂遞歸函數
+     只要把一串珠子放到返回棧裏
+     然後啓動 線串碼解釋器 就行了
+   * 比如下面的例子所展示的
+*** at the beginning
+    * argument-stack
+      << 2 >>
+    * return-stack
+      #+begin_src return-stack
+      - [ (square) ]
+          (square)
+          (end)
+      #+end_src
+*** next (1)
+    * argument-stack
+      << 2 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+      - [ (square) ] - [ (dup) ]
+          (end)          (multiple)
+                         (end)
+      #+end_src
+*** next (2)
+    * argument-stack
+      << 2, 2 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)       (dup)
+      - [ (square) ] - [ (multiple) ]
+          (end)          (end)
+      #+end_src
+*** next (3)
+    * argument-stack << 4 >>
+    * return-stack
+      #+begin_src return-stack
+                         (dup)
+          (square)       (multiple)
+      - [ (square) ] - [ (end) ]
+          (end)
+      #+end_src
+*** next (4)
+    * argument-stack << 4 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+          (square)
+      - [ (end) ] - [ (dup) ]
+                      (multiple)
+                      (end)
+      #+end_src
+*** next (5)
+    * argument-stack
+      << 4, 4 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+          (square)    (dup)
+      - [ (end) ] - [ (multiple) ]
+                      (end)
+      #+end_src
+*** next (6)
+    * argument-stack
+      << 16 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)    (dup)
+          (square)    (multiple)
+      - [ (end) ] - [ (end) ]
+      #+end_src
+*** next (7)
+    * argument-stack
+      << 16 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+          (square)
+      - [ (end) ]
+      #+end_src
+*** next (8)
+    * argument-stack
+      << 16 >>
+    * return-stack
+      #+begin_src return-stack
+      - [  ]
+      #+end_src
+    * it is really simple
+      ^-^
+      is it not ?
 * -----------------------------------
-* *具體的實現*
-  * 具體在匯編語言中
-    來實現上面所描述的 抽象的 線串碼解釋器
-* 具體的構架
+* 具體計算機構架 之 x86 篇
 ** 回憶費恩曼的比喻
-   |----------------------+--------------------|
    | 能比                 | 所比               |
    |----------------------+--------------------|
    | 檔案館               | 一級存儲器 (內存)  |
    | 黑板                 | 中央處理器的寄存器 |
    | 檔案館員工一名       | 中央處理器 (CPU)   |
    | 檔案館員工的基本素養 | 處理器的指令集     |
-   |----------------------+--------------------|
-* 具體計算機構架 之 x86 篇
 ** 32bit 與 64bit
    * CPU 的寄存器的大小
      [基本數學運算所能處理的數字的大小]
@@ -163,11 +320,9 @@
      [地址總線的寬度]
 ** 利慾薰心者引發的災難
    * 三個模式
-     |-------+--------------|
      | 16bit | real-mode    |
      | 32bit | protect-mode |
      | 64bit | long-mode    |
-     |-------+--------------|
    * 當設 CPU 從 16bit 升級到 32bit
      CPU 必須保持能夠運行 16bit 的老程序的能力
      這種設計被成爲 "向後兼容"
@@ -188,37 +343,46 @@
    * 三個模式的產生
      只是這種災難的一方面而已
 ** 檔案館
-   * 32bit
-
-   -------------------------
-   * 64bit
-** 黑板
-   * 32bit
-
-   -------------------------
-   * 64bit
-
-** 檔案館員工一名
-   * 先考慮給單個 CPU 編程
-** 檔案館員工的基本素養
-* 說明代碼結構
-  * 首先是前言
-    1. 對匯編器原本的語法做一些調整
-    2. 跟構架相關的全局變量
-    3. 操作系統相關
-       1) 系統調用的參數順序
-          系統調用相關的全局變量
-       2) 可執行文件格式的指定
-       3) 程序執行點的指定
-  * 參數棧與返回棧
-  * next 是對返回棧的操作
-    它形成了函數調用語義
-  * 最後是尾聲
-    1.
-    2.
-    3.
+   * 以 32bit 爲例
+     32 根地址总线作爲二進制數
+     能夠編碼 2 的 32 次方 個數字
+     範圍是  0  到  2 的 32 次方 減 1
+     |              | 簡記 | 實際               | 約           |
+     |--------------+------+--------------------+--------------|
+     | 2 的 10 次方 | 1K   | 1024               | 1000         |
+     | 2 的 20 次方 | 1M   | 1024 * 1024        | 1000 000     |
+     | 2 的 30 次方 | 1G   | 1024 * 1024 * 1024 | 1000 000 000 |
+   * 所以 2 的 32 次方
+     也就是 4G 那麼多個抽屜
+     所以如果你使用 32bit 的操作系統
+     你的超過 4G 的內存就報廢了
+   * 每個抽屜裏都可以放一個 byte
+     也就是 8 bits 的數據
+   * 比如下面三個抽屜
+     | 抽屜 | 存放的數據 |
+     |------+------------|
+     | 1024 |   10010011 |
+     | 1025 |   00000001 |
+     | 1026 |   00001000 |
+** >< 黑板
+*** 32bit
+*** 64bit
+** >< 檔案館員工一名
+*** 記
+    * 先考慮給單個 CPU 編程
+*** 32bit
+*** 64bit
+** >< 檔案館員工的基本素養
+*** 32bit
+*** 64bit
+** >< 中断
+* -----------------------------------
+* *具體的實現*
+  * 具體在匯編語言中
+    來實現上面所描述的 抽象的 線串碼解釋器
 * 匯編語言中製作棧
 * 珠珠之數據結構
+* 函數語義的形成
 * -----------------------------------
 * 資料
 ** OSdev [社區]

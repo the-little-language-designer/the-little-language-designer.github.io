@@ -56,7 +56,12 @@
    在 windows 上 使用 emacs 中的 eshell
    失敗極了 orz
 ** 第三次
-   [[3rd-meeting/overview.html][準備筆記]]
+   * 筆記
+     [[3rd-meeting/overview.html][第三次見面]]
+   * 閱讀
+     [[an-apology-of-command-line-interface/overview.html][一個命令行用戶接口的辯白]]
+     [[an-apology-of-text-editor/overview.html][一個文本編輯器的辯白]]
+     [[programming-language/overview.html][程序語言淺說]]
 * -----------------------------------
 * 資料
 ** [構架] 費恩曼的比喻

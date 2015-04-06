@@ -15,6 +15,47 @@
         /* bold */
         font-weight: bold;
       }
+      .builtin {
+        /* font-lock-builtin-face */
+        color: #a6e22e;
+      }
+      .cicada-nymph-end {
+        /* cicada-nymph-end-face */
+        color: #00ffff;
+        font-weight: bold;
+      }
+      .cicada-nymph-lexicographer {
+        /* cicada-nymph-lexicographer-face */
+        color: #ae81ff;
+        font-weight: bold;
+      }
+      .cicada-nymph-sentence-reader {
+        /* cicada-nymph-sentence-reader-face */
+        color: #ffff00;
+        font-weight: bold;
+      }
+      .cicada-nymph-word-to-define {
+        /* cicada-nymph-word-to-define-face */
+        color: #ef5939;
+        font-weight: bold;
+      }
+      .comment {
+        /* font-lock-comment-face */
+        color: #FF8888;
+      }
+      .constant {
+        /* font-lock-constant-face */
+        color: #ae81ff;
+      }
+      .function-name {
+        /* font-lock-function-name-face */
+        color: #a6e22e;
+      }
+      .keyword {
+        /* font-lock-keyword-face */
+        color: #f92672;
+        font-weight: bold;
+      }
       .org-block-begin-line {
         /* org-block-begin-line */
         color: #FF8888;
@@ -63,6 +104,20 @@
         /* org-table */
         color: #87cefa;
       }
+      .org-todo {
+        /* org-todo */
+        color: #ffc0cb;
+        font-weight: bold;
+      }
+      .preprocessor {
+        /* font-lock-preprocessor-face */
+        color: #a6e22e;
+      }
+      .return-stack-bar-ket {
+        /* return-stack-bar-ket-face */
+        color: #dc322f;
+        font-weight: bold;
+      }
       .return-stack-end {
         /* return-stack-end-face */
         color: #00ffff;
@@ -72,6 +127,29 @@
         /* return-stack-jo-face */
         color: #ef5939;
         font-weight: bold;
+      }
+      .return-stack-line {
+        /* return-stack-line-face */
+        color: #ae81ff;
+        font-weight: bold;
+      }
+      .return-stack-the-jo {
+        /* return-stack-the-jo-face */
+        color: #fd971f;
+        font-weight: bold;
+      }
+      .string {
+        /* font-lock-string-face */
+        color: #e6db74;
+      }
+      .type {
+        /* font-lock-type-face */
+        color: #66d9ef;
+        font-weight: bold;
+      }
+      .variable-name {
+        /* font-lock-variable-name-face */
+        color: #fd971f;
       }
 
       a {
@@ -107,7 +185,7 @@
      &#24847;&#24605;&#26159; "&#31359;&#37341;" &#30340; "&#31359;"
      &#32780; "threaded code" &#23601;&#26159; "&#34987;&#32218;&#31359;&#36215;&#20358;&#30340;&#19968;&#20018;&#20195;&#30908;" &#30340;&#24847;&#24605;
      &gt;&lt;&gt;&lt;&gt;&lt; [&#22294;&#29255;]
-   * &#25105;&#29992; &#29664;[jo] &#20358; &#27604;&#22914; "&#32218;&#20018;&#30908;" &#20013;&#30340; "&#30908;"
+   * &#25105;&#29992; &#29664;[jo] &#20358; &#27604;&#21947; "&#32218;&#20018;&#30908;" &#20013;&#30340; "&#30908;"
      "&#19968;&#20018;&#30908;" &#23601;&#26159; &#19968;&#20018;&#29664;&#23376;[&#29664;&#29664;][jojo]
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*&#25277;&#35937;&#30340;&#29702;&#35542;*</span></span>
@@ -123,10 +201,10 @@
 <span class="org-block-end-line">     #+end_src
 </span>     &#23427;&#25152;&#35352;&#37636;&#30340;&#19977;&#20491;&#25805;&#20316;
      &#33021;&#22816;&#29992;&#20358;&#35336;&#31639;&#19968;&#20491;&#25976;&#30340;&#24179;&#26041;
-   * &#20989;&#25976;&#30340;&#35079;&#21512;&#23601;&#26159;&#25226;&#20841;&#20491;&#20989;&#25976;&#30456;&#27231;&#20316;&#29992;
+   * &#20989;&#25976;&#30340;&#35079;&#21512;&#23601;&#26159;&#25226;&#20841;&#20491;&#20989;&#25976;&#30456;&#32380;&#20316;&#29992;
      &#25152;&#20197; &#31359;&#29664;&#23376;&#30340;&#36942;&#31243;&#23601;&#20687;&#26159;&#35069;&#20316;&#35079;&#21512;&#20989;&#25976;&#30340;&#36942;&#31243;
      &#25152;&#20197; &#19968;&#20018;&#29664;&#23376;&#23601;&#20195;&#34920;&#19968;&#20491;&#20989;&#25976;[&#35079;&#21512;&#20989;&#25976;]&#30340;&#20989;&#25976;&#39636;
-<span class="org-level-2">** &#26377;&#19968;&#20018;&#29664;&#23376; &#37027;&#40636;&#21487;&#20197;&#35069;&#20316;&#19968;&#20491;&#26032;&#29664;&#23376; &#20358;&#20195;&#34920;&#36889;&#19968;&#20018;&#29664;&#23376;</span>
+<span class="org-level-2">** &#26377;&#19968;&#20018;&#29664;&#23376; &#37027;&#40636;&#21487;&#20197;&#35069;&#20316;&#19968;&#20491;&#26032;&#29664;&#23376; &#20358;&#23565;&#25033;&#26044;&#36889;&#19968;&#20018;&#29664;&#23376;&#12288;</span>
    * &#32102;&#20197; &#20989;&#25976;&#30340;&#35079;&#21512;&#25152;&#24418;&#25104;&#30340; &#20989;&#25976;&#39636;[&#19968;&#20018;&#29664;&#23376;] &#19968;&#20491;&#21517;&#23383;
      &#23601;&#26159;&#29992;&#33290;&#30340;&#20989;&#25976;&#23450;&#32681;&#26032;&#20989;&#25976;[&#19968;&#20491;&#26032;&#29664;&#23376;]&#30340;&#36942;&#31243;
    * &#19968;&#38982;&#29664;&#23376;&#20195;&#34920;&#19968;&#20491;&#20989;&#25976;
@@ -150,6 +228,22 @@
           <span class="return-stack-jo">(multiple)</span>
           <span class="return-stack-end">(end)</span>
      &#23565;&#25033;&#26044;&#23565;&#36889;&#20491;&#35422;&#26781;&#30340;&#35299;&#37323;
+<span class="org-block-end-line">     #+end_src
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*&#20195;&#30908;&#38928;&#35261;*</span></span>
+   * &#20855;&#39636;&#30340;&#29992;&#20358;&#23526;&#29694;&#36889;&#20123;&#30340;&#21295;&#32232;&#20195;&#30908;&#23559;&#26159;
+<span class="org-block-begin-line">     #+begin_src fasm
+</span>     define_function <span class="string">"square"</span>, square
+        <span class="type">xx</span> <span class="keyword">dup</span>
+        <span class="type">xx</span> multiple
+        <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">     #+end_src
+</span>   * &#25110;&#32773;&#22312;&#35299;&#37323;&#22120;&#20013;&#36664;&#20837;
+<span class="org-block-begin-line">     #+begin_src cicada-nymph
+</span>     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">square</span>
+       dup
+       mul
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">     #+end_src
 </span><span class="org-level-2">** &#29664;&#23376;&#30340;&#35422;&#20856;</span>
    * &#22312;&#19968;&#26412;&#35422;&#20856;&#20013;
@@ -194,6 +288,29 @@
      &#32780; <span class="return-stack-end">(end)</span> &#21482;&#26159;&#29992;&#20358;&#27161;&#35352;&#19968;&#20018;&#29664;&#23376;&#30340;&#32080;&#26463;&#32780;&#24050;
      &#20006;&#19981;&#31639;&#26159;&#20998;&#35299;&#20986;&#20358;&#30340;&#25104;&#20998;
 <span class="org-block-end-line">     #+end_src
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*&#20195;&#30908;&#38928;&#35261;*</span></span>
+   * dup &#20316;&#29234; &#32032;&#20989;&#25976;&#29664; &#22312;&#21295;&#32232;&#20195;&#30908;&#20013;&#30340;&#23450;&#32681;
+<span class="org-block-begin-line">     #+begin_src fasm
+</span>     define_primitive_function <span class="string">"dup"</span>, <span class="keyword">dup</span>
+        <span class="comment">;; &lt;&lt; a -- a, a &gt;&gt;
+</span>        pop_argument_stack <span class="variable-name">rax</span>
+        push_argument_stack <span class="variable-name">rax</span>
+        push_argument_stack <span class="variable-name">rax</span>
+        next
+<span class="org-block-end-line">     #+end_src
+</span>   * multiple &#20316;&#29234; &#32032;&#20989;&#25976;&#29664; &#22312;&#21295;&#32232;&#20195;&#30908;&#20013;&#30340;&#23450;&#32681;
+<span class="org-block-begin-line">     #+begin_src fasm
+</span>     define_primitive_function <span class="string">"mul"</span>, multiple
+        <span class="comment">;; &lt;&lt; a, b -- a*b &gt;&gt;
+</span>        pop_argument_stack  <span class="variable-name">rbx</span> <span class="comment">;; 2ed arg
+</span>        pop_argument_stack  <span class="variable-name">rax</span> <span class="comment">;; 1st arg
+</span>        <span class="builtin">imul</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
+        <span class="comment">;; imul will ignore overflow
+</span>        <span class="comment">;; when there are two registers as arg
+</span>        <span class="comment">;; imul will save the result into the first register
+</span>        push_argument_stack <span class="variable-name">rbx</span>
+        next
+<span class="org-block-end-line">     #+end_src
 </span><span class="org-level-1">* &#26855;</span>
 <span class="org-level-2">** &#19968;&#25694;&#26481;&#35199;</span>
    * &#21861;&#26481;&#35199;&#37117;&#34892;
@@ -202,7 +319,49 @@
      &#24517;&#38920;&#31561;&#25918;&#22312;&#19978;&#38754;[&#25110;&#24460;&#38754;]&#26481;&#35199;
      &#37117;&#34987;&#25343;&#36208;&#20043;&#24460;
      &#25165;&#33021;&#34987;&#25343;&#36208;
-<span class="org-level-1">* &#21033;&#29992;&#20841;&#20491;&#26855;&#20358;&#24418;&#25104;&#20989;&#25976;&#35486;&#32681;</span>
+<span class="org-level-2">** &#23565;&#26855;&#26377;&#20841;&#20491;&#22522;&#26412;&#30340;&#25805;&#20316;</span>
+   * &#20837;&#26855; [push]
+   * &#20986;&#26855; [pop]
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*&#20195;&#30908;&#38928;&#35261;*</span></span>
+   * &#20841;&#20491;&#20027;&#35201;&#30340;&#26855;&#22312;&#21295;&#32232;&#20195;&#30908;&#20013;&#30340;&#23526;&#29694;&#26041;&#24335;
+     [&#20197; 64bit &#30340;&#20195;&#30908;&#29234;&#20363;]
+<span class="org-block-begin-line">     #+begin_src fasm
+</span>     <span class="comment">;; &#20998;&#37197;&#20839;&#23384;
+</span>        <span class="type">preserve</span> <span class="constant">64</span> * jo_size
+     address$argument_stack <span class="keyword">labeling</span>
+        <span class="type">preserve</span> <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+
+
+     <span class="comment">;; &#29992;&#19968;&#20491;&#23492;&#23384;&#22120;&#30070;&#20316;&#25351;&#37341;
+</span>     <span class="preprocessor">define</span> pointer$argument_stack <span class="variable-name">r15</span>
+
+
+     <span class="comment">;; &#25226;&#20841;&#20491;&#22522;&#26412;&#25805;&#20316;&#23450;&#32681;&#25104; macro
+</span>     <span class="preprocessor">macro</span> <span class="function-name">push_argument_stack</span> register {
+        <span class="builtin">mov</span> [pointer$argument_stack], register
+        <span class="builtin">add</span> pointer$argument_stack, jo_size
+     }
+
+     <span class="preprocessor">macro</span> <span class="function-name">pop_argument_stack</span> register {
+        <span class="builtin">sub</span> pointer$argument_stack, jo_size
+        <span class="builtin">mov</span> register, [pointer$argument_stack]
+     }
+
+
+     <span class="comment">;; &#22312;&#21295;&#32232;&#20195;&#30908;&#20013;&#20351;&#29992;&#36889;&#20841;&#20491;&#22522;&#26412;&#25805;&#20316;&#30340;&#20363;&#23376;
+</span>     define_primitive_function <span class="string">"dup"</span>, <span class="keyword">dup</span>
+        <span class="comment">;; &lt;&lt; a -- a a &gt;&gt;
+</span>        pop_argument_stack <span class="variable-name">rax</span>
+        push_argument_stack <span class="variable-name">rax</span>
+        push_argument_stack <span class="variable-name">rax</span>
+        next
+
+     define_primitive_function <span class="string">"drop"</span>, drop
+        <span class="comment">;; &lt;&lt; a -- &gt;&gt;
+</span>        pop_argument_stack <span class="variable-name">rax</span>
+        next
+<span class="org-block-end-line">     #+end_src
+</span><span class="org-level-1">* &#21033;&#29992;&#20841;&#20491;&#26855;&#20358;&#24418;&#25104;&#20989;&#25976;&#35486;&#32681;</span>
 <span class="org-level-2">** &#21443;&#25976;&#26855;&#33287;&#36820;&#22238;&#26855;</span>
    * &#21443;&#25976;&#26855; [argument-stack]
    * &#36820;&#22238;&#26855; [return-stack]
@@ -226,27 +385,103 @@
      &#21487;&#20197;&#34987;&#20316;&#29234; &#21478;&#19968;&#20491; &#23567;&#31934;&#38728; &#30340;&#21443;&#25976;
 <span class="org-level-2">** &#20989;&#25976;&#30340; &#23884;&#22871;&#23450;&#32681; &#33287; &#23884;&#22871;&#35519;&#29992;</span>
    * &#21033;&#29992; &#36820;&#22238;&#26855;
-   * &#29664;&#23376;&#30340;&#20018; &#26159;&#19968;&#20491; &#21487;&#20197;&#23884;&#22871;&#30340;&#25976;&#25818;&#32080;&#27083;
-     &#22240;&#29234;&#19968;&#20018;&#29664;&#23376;&#20013;&#30340;&#27599;&#20491; &#20989;&#25976;&#29664; &#26412;&#36523;&#21448;&#23565;&#25033; &#19968;&#20018;&#29664;&#23376;
-   * &#32780;&#34389;&#29702; &#23884;&#22871;&#30340;&#25976;&#25818;&#32080;&#27083; &#38656;&#35201;&#29992; &#36958;&#27512;&#20989;&#25976;
-     &#32780;&#23526;&#29694; &#36958;&#27512;&#20989;&#25976; &#38656;&#35201;&#29992;&#26855;
-   * &#35438;&#37323;&#32773; &#23637;&#38283;&#36958;&#27512;&#20989;&#25976;
-     &#32218;&#20018;&#30908;&#35299;&#37323;&#22120;&#30340; "next" &#25351;&#20196;&#29992;&#20358; &#25910;&#25986;&#36958;&#27512;&#20989;&#25976;
+     &#21482;&#35201;&#25226;&#19968;&#20018;&#29664;&#23376;&#25918;&#21040;&#36820;&#22238;&#26855;&#35023;
+     &#28982;&#24460;&#21843;&#21205; &#32218;&#20018;&#30908;&#35299;&#37323;&#22120; &#23601;&#34892;&#20102;
+   * &#27604;&#22914;&#19979;&#38754;&#30340;&#20363;&#23376;&#25152;&#23637;&#31034;&#30340;
+<span class="org-level-3">*** at the beginning</span>
+    * argument-stack
+      &lt;&lt; 2 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+          <span class="return-stack-jo">(square)</span>
+          <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (1)</span>
+    * argument-stack
+      &lt;&lt; 2 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>          <span class="return-stack-jo">(square)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+          <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(multiple)</span>
+                         <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (2)</span>
+    * argument-stack
+      &lt;&lt; 2, 2 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>          <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+          <span class="return-stack-end">(end)</span>          <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (3)</span>
+    * argument-stack &lt;&lt; 4 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>                         <span class="return-stack-jo">(dup)</span>
+          <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(multiple)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+          <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (4)</span>
+    * argument-stack &lt;&lt; 4 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>          <span class="return-stack-jo">(square)</span>
+          <span class="return-stack-jo">(square)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
+                      <span class="return-stack-jo">(multiple)</span>
+                      <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (5)</span>
+    * argument-stack
+      &lt;&lt; 4, 4 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>          <span class="return-stack-jo">(square)</span>
+          <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+                      <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (6)</span>
+    * argument-stack
+      &lt;&lt; 16 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>          <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
+          <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(multiple)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (7)</span>
+    * argument-stack
+      &lt;&lt; 16 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>          <span class="return-stack-jo">(square)</span>
+          <span class="return-stack-jo">(square)</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
+<span class="org-block-end-line">      #+end_src
+</span><span class="org-level-3">*** next (8)</span>
+    * argument-stack
+      &lt;&lt; 16 &gt;&gt;
+    * return-stack
+<span class="org-block-begin-line">      #+begin_src return-stack
+</span>      <span class="return-stack-line">-</span> [  ]
+<span class="org-block-end-line">      #+end_src
+</span>    * it is really simple
+      ^-^
+      is it not ?
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*&#20855;&#39636;&#30340;&#23526;&#29694;*</span></span>
-  * &#20855;&#39636;&#22312;&#21295;&#32232;&#35486;&#35328;&#20013;
-    &#20358;&#23526;&#29694;&#19978;&#38754;&#25152;&#25551;&#36848;&#30340; &#25277;&#35937;&#30340; &#32218;&#20018;&#30908;&#35299;&#37323;&#22120;
-<span class="org-level-1">* &#20855;&#39636;&#30340;&#27083;&#26550;</span>
+<span class="org-level-1">* &#20855;&#39636;&#35336;&#31639;&#27231;&#27083;&#26550; &#20043; x86 &#31687;</span>
 <span class="org-level-2">** &#22238;&#25014;&#36027;&#24681;&#26364;&#30340;&#27604;&#21947;</span>
-   <span class="org-table">|----------------------+--------------------|</span>
    <span class="org-table">| &#33021;&#27604;                 | &#25152;&#27604;               |</span>
    <span class="org-table">|----------------------+--------------------|</span>
    <span class="org-table">| &#27284;&#26696;&#39208;               | &#19968;&#32026;&#23384;&#20786;&#22120; (&#20839;&#23384;)  |</span>
    <span class="org-table">| &#40657;&#26495;                 | &#20013;&#22830;&#34389;&#29702;&#22120;&#30340;&#23492;&#23384;&#22120; |</span>
    <span class="org-table">| &#27284;&#26696;&#39208;&#21729;&#24037;&#19968;&#21517;       | &#20013;&#22830;&#34389;&#29702;&#22120; (CPU)   |</span>
    <span class="org-table">| &#27284;&#26696;&#39208;&#21729;&#24037;&#30340;&#22522;&#26412;&#32032;&#39178; | &#34389;&#29702;&#22120;&#30340;&#25351;&#20196;&#38598;     |</span>
-   <span class="org-table">|----------------------+--------------------|</span>
-<span class="org-level-1">* &#20855;&#39636;&#35336;&#31639;&#27231;&#27083;&#26550; &#20043; x86 &#31687;</span>
 <span class="org-level-2">** 32bit &#33287; 64bit</span>
    * CPU &#30340;&#23492;&#23384;&#22120;&#30340;&#22823;&#23567;
      [&#22522;&#26412;&#25976;&#23416;&#36939;&#31639;&#25152;&#33021;&#34389;&#29702;&#30340;&#25976;&#23383;&#30340;&#22823;&#23567;]
@@ -255,11 +490,9 @@
      [&#22320;&#22336;&#32317;&#32218;&#30340;&#23532;&#24230;]
 <span class="org-level-2">** &#21033;&#24958;&#34224;&#24515;&#32773;&#24341;&#30332;&#30340;&#28797;&#38627;</span>
    * &#19977;&#20491;&#27169;&#24335;
-     <span class="org-table">|-------+--------------|</span>
      <span class="org-table">| 16bit | real-mode    |</span>
      <span class="org-table">| 32bit | protect-mode |</span>
      <span class="org-table">| 64bit | long-mode    |</span>
-     <span class="org-table">|-------+--------------|</span>
    * &#30070;&#35373; CPU &#24478; 16bit &#21319;&#32026;&#21040; 32bit
      CPU &#24517;&#38920;&#20445;&#25345;&#33021;&#22816;&#36939;&#34892; 16bit &#30340;&#32769;&#31243;&#24207;&#30340;&#33021;&#21147;
      &#36889;&#31278;&#35373;&#35336;&#34987;&#25104;&#29234; "&#21521;&#24460;&#20860;&#23481;"
@@ -280,37 +513,46 @@
    * &#19977;&#20491;&#27169;&#24335;&#30340;&#29986;&#29983;
      &#21482;&#26159;&#36889;&#31278;&#28797;&#38627;&#30340;&#19968;&#26041;&#38754;&#32780;&#24050;
 <span class="org-level-2">** &#27284;&#26696;&#39208;</span>
-   * 32bit
-
-   -------------------------
-   * 64bit
-<span class="org-level-2">** &#40657;&#26495;</span>
-   * 32bit
-
-   -------------------------
-   * 64bit
-
-<span class="org-level-2">** &#27284;&#26696;&#39208;&#21729;&#24037;&#19968;&#21517;</span>
-   * &#20808;&#32771;&#24942;&#32102;&#21934;&#20491; CPU &#32232;&#31243;
-<span class="org-level-2">** &#27284;&#26696;&#39208;&#21729;&#24037;&#30340;&#22522;&#26412;&#32032;&#39178;</span>
-<span class="org-level-1">* &#35498;&#26126;&#20195;&#30908;&#32080;&#27083;</span>
-  * &#39318;&#20808;&#26159;&#21069;&#35328;
-    1. &#23565;&#21295;&#32232;&#22120;&#21407;&#26412;&#30340;&#35486;&#27861;&#20570;&#19968;&#20123;&#35519;&#25972;
-    2. &#36319;&#27083;&#26550;&#30456;&#38364;&#30340;&#20840;&#23616;&#35722;&#37327;
-    3. &#25805;&#20316;&#31995;&#32113;&#30456;&#38364;
-       1) &#31995;&#32113;&#35519;&#29992;&#30340;&#21443;&#25976;&#38918;&#24207;
-          &#31995;&#32113;&#35519;&#29992;&#30456;&#38364;&#30340;&#20840;&#23616;&#35722;&#37327;
-       2) &#21487;&#22519;&#34892;&#25991;&#20214;&#26684;&#24335;&#30340;&#25351;&#23450;
-       3) &#31243;&#24207;&#22519;&#34892;&#40670;&#30340;&#25351;&#23450;
-  * &#21443;&#25976;&#26855;&#33287;&#36820;&#22238;&#26855;
-  * next &#26159;&#23565;&#36820;&#22238;&#26855;&#30340;&#25805;&#20316;
-    &#23427;&#24418;&#25104;&#20102;&#20989;&#25976;&#35519;&#29992;&#35486;&#32681;
-  * &#26368;&#24460;&#26159;&#23614;&#32882;
-    1.
-    2.
-    3.
+   * &#20197; 32bit &#29234;&#20363;
+     32 &#26681;&#22320;&#22336;&#24635;&#32447;&#20316;&#29234;&#20108;&#36914;&#21046;&#25976;
+     &#33021;&#22816;&#32232;&#30908; 2 &#30340; 32 &#27425;&#26041; &#20491;&#25976;&#23383;
+     &#31684;&#22285;&#26159;  0  &#21040;  2 &#30340; 32 &#27425;&#26041; &#28187; 1
+     <span class="org-table">|              | &#31777;&#35352; | &#23526;&#38555;               | &#32004;           |</span>
+     <span class="org-table">|--------------+------+--------------------+--------------|</span>
+     <span class="org-table">| 2 &#30340; 10 &#27425;&#26041; | 1K   | 1024               | 1000         |</span>
+     <span class="org-table">| 2 &#30340; 20 &#27425;&#26041; | 1M   | 1024 * 1024        | 1000 000     |</span>
+     <span class="org-table">| 2 &#30340; 30 &#27425;&#26041; | 1G   | 1024 * 1024 * 1024 | 1000 000 000 |</span>
+   * &#25152;&#20197; 2 &#30340; 32 &#27425;&#26041;
+     &#20063;&#23601;&#26159; 4G &#37027;&#40636;&#22810;&#20491;&#25277;&#23644;
+     &#25152;&#20197;&#22914;&#26524;&#20320;&#20351;&#29992; 32bit &#30340;&#25805;&#20316;&#31995;&#32113;
+     &#20320;&#30340;&#36229;&#36942; 4G &#30340;&#20839;&#23384;&#23601;&#22577;&#24290;&#20102;
+   * &#27599;&#20491;&#25277;&#23644;&#35023;&#37117;&#21487;&#20197;&#25918;&#19968;&#20491; byte
+     &#20063;&#23601;&#26159; 8 bits &#30340;&#25976;&#25818;
+   * &#27604;&#22914;&#19979;&#38754;&#19977;&#20491;&#25277;&#23644;
+     <span class="org-table">| &#25277;&#23644; | &#23384;&#25918;&#30340;&#25976;&#25818; |</span>
+     <span class="org-table">|------+------------|</span>
+     <span class="org-table">| 1024 |   10010011 |</span>
+     <span class="org-table">| 1025 |   00000001 |</span>
+     <span class="org-table">| 1026 |   00001000 |</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#40657;&#26495;</span>
+<span class="org-level-3">*** 32bit</span>
+<span class="org-level-3">*** 64bit</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#27284;&#26696;&#39208;&#21729;&#24037;&#19968;&#21517;</span>
+<span class="org-level-3">*** </span><span class="org-todo">&#35352;</span>
+    * &#20808;&#32771;&#24942;&#32102;&#21934;&#20491; CPU &#32232;&#31243;
+<span class="org-level-3">*** 32bit</span>
+<span class="org-level-3">*** 64bit</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#27284;&#26696;&#39208;&#21729;&#24037;&#30340;&#22522;&#26412;&#32032;&#39178;</span>
+<span class="org-level-3">*** 32bit</span>
+<span class="org-level-3">*** 64bit</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#20013;&#26029;</span>
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*&#20855;&#39636;&#30340;&#23526;&#29694;*</span></span>
+  * &#20855;&#39636;&#22312;&#21295;&#32232;&#35486;&#35328;&#20013;
+    &#20358;&#23526;&#29694;&#19978;&#38754;&#25152;&#25551;&#36848;&#30340; &#25277;&#35937;&#30340; &#32218;&#20018;&#30908;&#35299;&#37323;&#22120;
 <span class="org-level-1">* &#21295;&#32232;&#35486;&#35328;&#20013;&#35069;&#20316;&#26855;</span>
 <span class="org-level-1">* &#29664;&#29664;&#20043;&#25976;&#25818;&#32080;&#27083;</span>
+<span class="org-level-1">* &#20989;&#25976;&#35486;&#32681;&#30340;&#24418;&#25104;</span>
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* &#36039;&#26009;</span>
 <span class="org-level-2">** OSdev [&#31038;&#21312;]</span>

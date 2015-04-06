@@ -70,7 +70,7 @@
   {% include font.css %}
 
   body {
-      font-size: 22px;
+      font-size: 24px;
       color: #f8f8f0;
       background-color: #1b1d1e;
       /* font-family: "envy-code", "ms-song"; */
@@ -185,7 +185,7 @@
       text-align: center;
   }
   #+end_src
-* article      
+* article
 ** article
    #+begin_src css :tangle assets/css/welcome.css
    article {
@@ -210,6 +210,26 @@
        padding-left:   1.5em;
        padding-right:  1.5em;
    }
+   #+end_src
+** advertisement
+   #+begin_src css :tangle assets/css/welcome.css   
+   #advertisement {
+       background-image: url("{{ site.url }}/assets/image/wei-ji-1.jpg");
+       background-repeat: no-repeat;
+       /* background-size: 100%; */
+       /* min-height: 100%; */
+       background-size: cover;
+       color: #ffffff;
+   }
+
+   #advertisement:hover {
+       background-image: url("{{ site.url }}/assets/image/wei-ji-2.jpg");
+       background-repeat: no-repeat;
+       /* background-size: 100%; */
+       /* min-height: 100%; */
+       background-size: cover;
+       color: #1b1d1e;
+   }   
    #+end_src
 ** cicada-nymph
    #+begin_src css :tangle assets/css/welcome.css
