@@ -179,8 +179,6 @@ article p {
 #advertisement {
     background-image: url("{{ site.url }}/assets/image/wei-ji-1.jpg");
     background-repeat: no-repeat;
-    /* background-size: 100%; */
-    /* min-height: 100%; */
     background-size: cover;
     color: #ffffff;
 }
@@ -188,26 +186,36 @@ article p {
 #advertisement:hover {
     background-image: url("{{ site.url }}/assets/image/wei-ji-2.jpg");
     background-repeat: no-repeat;
-    /* background-size: 100%; */
-    /* min-height: 100%; */
     background-size: cover;
     color: #1b1d1e;
 }
 
 #cicada-nymph {
-
+    background-image: url("{{ site.url }}/assets/image/tanna-japonensis-2.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #1b1d1e;
 }
 
 #cicada-nymph:hover {
-
+    background-image: url("{{ site.url }}/assets/image/tanna-japonensis-light-2.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #1b1d1e;
 }
 
 #cicada-language {
-
+    background-image: url("{{ site.url }}/assets/image/cicada-green.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
 }
 
 #cicada-language:hover {
-
+    background-image: url("{{ site.url }}/assets/image/cicada-green-light.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #1b1d1e;
 }
 
 #more {
