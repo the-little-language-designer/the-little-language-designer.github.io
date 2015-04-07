@@ -1,7 +1,6 @@
-#+TITLE:  learning biology
-#+AUTHOR: XIE Yuheng
+#+TITLE:  生物學記 / biology learning note
+#+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
-
 
 * stomatogastric nervous system
 ** 題解

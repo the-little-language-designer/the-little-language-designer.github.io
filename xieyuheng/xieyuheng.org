@@ -17,3 +17,5 @@
    * [[note/daoism/qi-wu-lun/overview.html][齊物論記]]
 ** 算法 / algorithm
    * [[note/algorithm/algorithm-learning-note/overview.html][算法學記]]
+** 生物 / biology
+   * [[note/biology/biology-learning-note/overview.html][生物學記]]
