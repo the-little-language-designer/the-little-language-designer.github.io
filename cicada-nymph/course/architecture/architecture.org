@@ -46,9 +46,13 @@
    * 檔案館有很多抽屜
      每個抽屜上有一個地址
      每個抽屜裏可以存放多張卡片
+     {% assign image = "drawer.jpg" %}{% assign size = "40" %}
+     {% include little-image.html %}
 ** 檔案館員工一名
    * 給這個員工配備了一個黑板
      用於計算時打草稿
+     {% assign image = "worker.jpg" %}{% assign size = "60" %}
+     {% include little-image.html %}     
 ** 推銷員的卡片
    * 有一些抽屜用來存放 公司的推銷員的卡片
      每個銷售員一個抽屜

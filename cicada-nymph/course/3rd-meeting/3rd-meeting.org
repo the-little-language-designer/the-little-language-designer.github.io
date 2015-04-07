@@ -2,9 +2,6 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
-* todo
-  * 在生成的 html 中手動添加圖片
-    做一些 模板 來幫助添加圖片
 * ===================================
 * 線串碼解釋器
 ** 題解
@@ -14,7 +11,8 @@
      而 "threaded" 在這裏是動詞
      意思是 "穿針" 的 "穿"
      而 "threaded code" 就是 "被線穿起來的一串代碼" 的意思
-     ><><>< [圖片]
+     {% assign image = "threaded-code.jpg" %}{% assign size = "40" %}
+     {% include little-image.html %}
    * 我用 珠[jo] 來 比喻 "線串碼" 中的 "碼"
      "一串碼" 就是 一串珠子[珠珠][jojo]
 * -----------------------------------
@@ -26,7 +24,7 @@
    * 比如下面是三顆珠子穿成的一串珠子
      #+begin_src return-stack
         (dup)
-        (multiple)
+        (mul)
         (end)
      #+end_src
      它所記錄的三個操作
@@ -34,7 +32,7 @@
    * 函數的複合就是把兩個函數相繼作用
      所以 穿珠子的過程就像是製作複合函數的過程
      所以 一串珠子就代表一個函數[複合函數]的函數體
-** 有一串珠子 那麼可以製作一個新珠子 來對應於這一串珠子　
+** 有一串珠子 那麼可以製作一個新珠子 來對應於這一串珠子
    * 給以 函數的複合所形成的 函數體[一串珠子] 一個名字
      就是用舊的函數定義新函數[一個新珠子]的過程
    * 一顆珠子代表一個函數
@@ -55,10 +53,13 @@
      對應於詞典中的一個詞條
      而 一串珠子
           (dup)
-          (multiple)
+          (mul)
           (end)
      對應於對這個詞條的解釋
      #+end_src
+   * 不同的詞典或字典有不同的功用
+     {% assign image = "chinese-dictionary-2.jpg" %}{% assign size = "39" %}
+     {% include little-image.html %}
 ** *代碼預覽*
    * 具體的用來實現這些的匯編代碼將是
      #+begin_src fasm
@@ -81,7 +82,10 @@
      找到這個詞條 然後查閱其內容
    * 在我們的 珠子的詞典 中也是一樣
      每個被定義到詞典中的珠子也有一個地址
-     ><><>< [圖片]
+     {% assign image = "english-dictionary.jpg" %}{% assign size = "50" %}
+     {% include little-image.html %}
+     {% assign image = "chinese-dictionary.jpg" %}{% assign size = "41" %}
+     {% include little-image.html %}
 ** 具體應該如何想像一粒珠子呢
 *** 首先要知道
     * 珠子上的需要記錄一些信息
@@ -114,7 +118,7 @@
      比如 (square)
      可以被分解成
           (dup)
-          (multiple)
+          (mul)
      而 (end) 只是用來標記一串珠子的結束而已
      並不算是分解出來的成分
      #+end_src
@@ -203,7 +207,7 @@
    * 計算的材料都要從 參數棧 中取 [即函數的參數]
      並且計算的結果也要返回 棧參數 中 [即函數的返回值]
      #+begin_src return-stack
-     比如 (multiple) 是一個 素函數珠
+     比如 (mul) 是一個 素函數珠
        它召喚出來一個小精靈 幫你做乘法
      而 (dup) 也是一個 素函數珠
        它召喚出來一個小精靈 來把 參數棧 頂部的數複製一下
@@ -234,7 +238,7 @@
       #+begin_src return-stack
           (square)
       - [ (square) ] - [ (dup) ]
-          (end)          (multiple)
+          (end)          (mul)
                          (end)
       #+end_src
 *** next (2)
@@ -243,7 +247,7 @@
     * return-stack
       #+begin_src return-stack
           (square)       (dup)
-      - [ (square) ] - [ (multiple) ]
+      - [ (square) ] - [ (mul) ]
           (end)          (end)
       #+end_src
 *** next (3)
@@ -251,7 +255,7 @@
     * return-stack
       #+begin_src return-stack
                          (dup)
-          (square)       (multiple)
+          (square)       (mul)
       - [ (square) ] - [ (end) ]
           (end)
       #+end_src
@@ -262,7 +266,7 @@
           (square)
           (square)
       - [ (end) ] - [ (dup) ]
-                      (multiple)
+                      (mul)
                       (end)
       #+end_src
 *** next (5)
@@ -272,7 +276,7 @@
       #+begin_src return-stack
           (square)
           (square)    (dup)
-      - [ (end) ] - [ (multiple) ]
+      - [ (end) ] - [ (mul) ]
                       (end)
       #+end_src
 *** next (6)
@@ -281,7 +285,7 @@
     * return-stack
       #+begin_src return-stack
           (square)    (dup)
-          (square)    (multiple)
+          (square)    (mul)
       - [ (end) ] - [ (end) ]
       #+end_src
 *** next (7)

@@ -77,11 +77,6 @@
         color: #afeeee;
         font-weight: bold;
       }
-      .org-done {
-        /* org-done */
-        color: #98fb98;
-        font-weight: bold;
-      }
       .org-level-1 {
         /* org-level-1 */
         color: #a6e22e;
@@ -172,9 +167,6 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
-<span class="org-level-1">* </span><span class="org-done">todo</span>
-  * &#22312;&#29983;&#25104;&#30340; html &#20013;&#25163;&#21205;&#28155;&#21152;&#22294;&#29255;
-    &#20570;&#19968;&#20123; &#27169;&#26495; &#20358;&#24171;&#21161;&#28155;&#21152;&#22294;&#29255;
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* &#32218;&#20018;&#30908;&#35299;&#37323;&#22120;</span>
 <span class="org-level-2">** &#38988;&#35299;</span>
@@ -184,7 +176,8 @@
      &#32780; "threaded" &#22312;&#36889;&#35023;&#26159;&#21205;&#35422;
      &#24847;&#24605;&#26159; "&#31359;&#37341;" &#30340; "&#31359;"
      &#32780; "threaded code" &#23601;&#26159; "&#34987;&#32218;&#31359;&#36215;&#20358;&#30340;&#19968;&#20018;&#20195;&#30908;" &#30340;&#24847;&#24605;
-     &gt;&lt;&gt;&lt;&gt;&lt; [&#22294;&#29255;]
+     {% assign image = "threaded-code.jpg" %}{% assign size = "40" %}
+     {% include little-image.html %}
    * &#25105;&#29992; &#29664;[jo] &#20358; &#27604;&#21947; "&#32218;&#20018;&#30908;" &#20013;&#30340; "&#30908;"
      "&#19968;&#20018;&#30908;" &#23601;&#26159; &#19968;&#20018;&#29664;&#23376;[&#29664;&#29664;][jojo]
 <span class="org-level-1">* -----------------------------------</span>
@@ -196,7 +189,7 @@
    * &#27604;&#22914;&#19979;&#38754;&#26159;&#19977;&#38982;&#29664;&#23376;&#31359;&#25104;&#30340;&#19968;&#20018;&#29664;&#23376;
 <span class="org-block-begin-line">     #+begin_src return-stack
 </span>        <span class="return-stack-jo">(dup)</span>
-        <span class="return-stack-jo">(multiple)</span>
+        <span class="return-stack-jo">(mul)</span>
         <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">     #+end_src
 </span>     &#23427;&#25152;&#35352;&#37636;&#30340;&#19977;&#20491;&#25805;&#20316;
@@ -204,7 +197,7 @@
    * &#20989;&#25976;&#30340;&#35079;&#21512;&#23601;&#26159;&#25226;&#20841;&#20491;&#20989;&#25976;&#30456;&#32380;&#20316;&#29992;
      &#25152;&#20197; &#31359;&#29664;&#23376;&#30340;&#36942;&#31243;&#23601;&#20687;&#26159;&#35069;&#20316;&#35079;&#21512;&#20989;&#25976;&#30340;&#36942;&#31243;
      &#25152;&#20197; &#19968;&#20018;&#29664;&#23376;&#23601;&#20195;&#34920;&#19968;&#20491;&#20989;&#25976;[&#35079;&#21512;&#20989;&#25976;]&#30340;&#20989;&#25976;&#39636;
-<span class="org-level-2">** &#26377;&#19968;&#20018;&#29664;&#23376; &#37027;&#40636;&#21487;&#20197;&#35069;&#20316;&#19968;&#20491;&#26032;&#29664;&#23376; &#20358;&#23565;&#25033;&#26044;&#36889;&#19968;&#20018;&#29664;&#23376;&#12288;</span>
+<span class="org-level-2">** &#26377;&#19968;&#20018;&#29664;&#23376; &#37027;&#40636;&#21487;&#20197;&#35069;&#20316;&#19968;&#20491;&#26032;&#29664;&#23376; &#20358;&#23565;&#25033;&#26044;&#36889;&#19968;&#20018;&#29664;&#23376;</span>
    * &#32102;&#20197; &#20989;&#25976;&#30340;&#35079;&#21512;&#25152;&#24418;&#25104;&#30340; &#20989;&#25976;&#39636;[&#19968;&#20018;&#29664;&#23376;] &#19968;&#20491;&#21517;&#23383;
      &#23601;&#26159;&#29992;&#33290;&#30340;&#20989;&#25976;&#23450;&#32681;&#26032;&#20989;&#25976;[&#19968;&#20491;&#26032;&#29664;&#23376;]&#30340;&#36942;&#31243;
    * &#19968;&#38982;&#29664;&#23376;&#20195;&#34920;&#19968;&#20491;&#20989;&#25976;
@@ -225,11 +218,14 @@
      &#23565;&#25033;&#26044;&#35422;&#20856;&#20013;&#30340;&#19968;&#20491;&#35422;&#26781;
      &#32780; &#19968;&#20018;&#29664;&#23376;
           <span class="return-stack-jo">(dup)</span>
-          <span class="return-stack-jo">(multiple)</span>
+          <span class="return-stack-jo">(mul)</span>
           <span class="return-stack-end">(end)</span>
      &#23565;&#25033;&#26044;&#23565;&#36889;&#20491;&#35422;&#26781;&#30340;&#35299;&#37323;
 <span class="org-block-end-line">     #+end_src
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*&#20195;&#30908;&#38928;&#35261;*</span></span>
+</span>   * &#19981;&#21516;&#30340;&#35422;&#20856;&#25110;&#23383;&#20856;&#26377;&#19981;&#21516;&#30340;&#21151;&#29992;
+     {% assign image = "chinese-dictionary-2.jpg" %}{% assign size = "39" %}
+     {% include little-image.html %}
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*&#20195;&#30908;&#38928;&#35261;*</span></span>
    * &#20855;&#39636;&#30340;&#29992;&#20358;&#23526;&#29694;&#36889;&#20123;&#30340;&#21295;&#32232;&#20195;&#30908;&#23559;&#26159;
 <span class="org-block-begin-line">     #+begin_src fasm
 </span>     define_function <span class="string">"square"</span>, square
@@ -251,7 +247,10 @@
      &#25214;&#21040;&#36889;&#20491;&#35422;&#26781; &#28982;&#24460;&#26597;&#38321;&#20854;&#20839;&#23481;
    * &#22312;&#25105;&#20497;&#30340; &#29664;&#23376;&#30340;&#35422;&#20856; &#20013;&#20063;&#26159;&#19968;&#27171;
      &#27599;&#20491;&#34987;&#23450;&#32681;&#21040;&#35422;&#20856;&#20013;&#30340;&#29664;&#23376;&#20063;&#26377;&#19968;&#20491;&#22320;&#22336;
-     &gt;&lt;&gt;&lt;&gt;&lt; [&#22294;&#29255;]
+     {% assign image = "english-dictionary.jpg" %}{% assign size = "50" %}
+     {% include little-image.html %}
+     {% assign image = "chinese-dictionary.jpg" %}{% assign size = "41" %}
+     {% include little-image.html %}
 <span class="org-level-2">** &#20855;&#39636;&#25033;&#35442;&#22914;&#20309;&#24819;&#20687;&#19968;&#31890;&#29664;&#23376;&#21602;</span>
 <span class="org-level-3">*** &#39318;&#20808;&#35201;&#30693;&#36947;</span>
     * &#29664;&#23376;&#19978;&#30340;&#38656;&#35201;&#35352;&#37636;&#19968;&#20123;&#20449;&#24687;
@@ -284,7 +283,7 @@
 </span>     &#27604;&#22914; <span class="return-stack-jo">(square)</span>
      &#21487;&#20197;&#34987;&#20998;&#35299;&#25104;
           <span class="return-stack-jo">(dup)</span>
-          <span class="return-stack-jo">(multiple)</span>
+          <span class="return-stack-jo">(mul)</span>
      &#32780; <span class="return-stack-end">(end)</span> &#21482;&#26159;&#29992;&#20358;&#27161;&#35352;&#19968;&#20018;&#29664;&#23376;&#30340;&#32080;&#26463;&#32780;&#24050;
      &#20006;&#19981;&#31639;&#26159;&#20998;&#35299;&#20986;&#20358;&#30340;&#25104;&#20998;
 <span class="org-block-end-line">     #+end_src
@@ -373,7 +372,7 @@
    * &#35336;&#31639;&#30340;&#26448;&#26009;&#37117;&#35201;&#24478; &#21443;&#25976;&#26855; &#20013;&#21462; [&#21363;&#20989;&#25976;&#30340;&#21443;&#25976;]
      &#20006;&#19988;&#35336;&#31639;&#30340;&#32080;&#26524;&#20063;&#35201;&#36820;&#22238; &#26855;&#21443;&#25976; &#20013; [&#21363;&#20989;&#25976;&#30340;&#36820;&#22238;&#20540;]
 <span class="org-block-begin-line">     #+begin_src return-stack
-</span>     &#27604;&#22914; <span class="return-stack-jo">(multiple)</span> &#26159;&#19968;&#20491; &#32032;&#20989;&#25976;&#29664;
+</span>     &#27604;&#22914; <span class="return-stack-jo">(mul)</span> &#26159;&#19968;&#20491; &#32032;&#20989;&#25976;&#29664;
        &#23427;&#21484;&#21914;&#20986;&#20358;&#19968;&#20491;&#23567;&#31934;&#38728; &#24171;&#20320;&#20570;&#20056;&#27861;
      &#32780; <span class="return-stack-jo">(dup)</span> &#20063;&#26159;&#19968;&#20491; &#32032;&#20989;&#25976;&#29664;
        &#23427;&#21484;&#21914;&#20986;&#20358;&#19968;&#20491;&#23567;&#31934;&#38728; &#20358;&#25226; &#21443;&#25976;&#26855; &#38914;&#37096;&#30340;&#25976;&#35079;&#35069;&#19968;&#19979;
@@ -404,7 +403,7 @@
 <span class="org-block-begin-line">      #+begin_src return-stack
 </span>          <span class="return-stack-jo">(square)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-          <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(multiple)</span>
+          <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(mul)</span>
                          <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">      #+end_src
 </span><span class="org-level-3">*** next (2)</span>
@@ -413,7 +412,7 @@
     * return-stack
 <span class="org-block-begin-line">      #+begin_src return-stack
 </span>          <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
-      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(mul)</span> <span class="return-stack-bar-ket">]</span>
           <span class="return-stack-end">(end)</span>          <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">      #+end_src
 </span><span class="org-level-3">*** next (3)</span>
@@ -421,7 +420,7 @@
     * return-stack
 <span class="org-block-begin-line">      #+begin_src return-stack
 </span>                         <span class="return-stack-jo">(dup)</span>
-          <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(multiple)</span>
+          <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(mul)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
           <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">      #+end_src
@@ -432,7 +431,7 @@
 </span>          <span class="return-stack-jo">(square)</span>
           <span class="return-stack-jo">(square)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-                      <span class="return-stack-jo">(multiple)</span>
+                      <span class="return-stack-jo">(mul)</span>
                       <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">      #+end_src
 </span><span class="org-level-3">*** next (5)</span>
@@ -442,7 +441,7 @@
 <span class="org-block-begin-line">      #+begin_src return-stack
 </span>          <span class="return-stack-jo">(square)</span>
           <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
-      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(mul)</span> <span class="return-stack-bar-ket">]</span>
                       <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">      #+end_src
 </span><span class="org-level-3">*** next (6)</span>
@@ -451,7 +450,7 @@
     * return-stack
 <span class="org-block-begin-line">      #+begin_src return-stack
 </span>          <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
-          <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(multiple)</span>
+          <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(mul)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
 <span class="org-block-end-line">      #+end_src
 </span><span class="org-level-3">*** next (7)</span>
