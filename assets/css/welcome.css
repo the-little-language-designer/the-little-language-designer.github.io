@@ -190,6 +190,12 @@ article p {
     color: #1b1d1e;
 }
 
+#sysu-course {
+}
+
+#sysu-course:hover {
+}
+
 #cicada-nymph {
     background-image: url("{{ site.url }}/assets/image/tanna-japonensis-2.jpg");
     background-repeat: no-repeat;
@@ -205,25 +211,23 @@ article p {
 }
 
 #cicada-language {
-    background-image: url("{{ site.url }}/assets/image/cicada-green.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #ffffff;
 }
 
 #cicada-language:hover {
-    background-image: url("{{ site.url }}/assets/image/cicada-green-light.jpg");
+}
+
+#more {
+    background-image: url("{{ site.url }}/assets/image/github-logo.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     color: #1b1d1e;
 }
 
-#more {
-
-}
-
 #more:hover {
-
+    background-image: url("{{ site.url }}/assets/image/github-logo-light.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #1b1d1e;
 }
 
 .primary-footer {

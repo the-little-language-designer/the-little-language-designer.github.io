@@ -227,6 +227,14 @@
        color: #1b1d1e;
    }
    #+end_src
+** sysu-course
+   #+begin_src css :tangle assets/css/welcome.css
+   #sysu-course {
+   }
+
+   #sysu-course:hover {
+   }
+   #+end_src
 ** cicada-nymph
    #+begin_src css :tangle assets/css/welcome.css
    #cicada-nymph {
@@ -246,27 +254,25 @@
 ** cicada-language
    #+begin_src css :tangle assets/css/welcome.css
    #cicada-language {
-       background-image: url("{{ site.url }}/assets/image/cicada-green.jpg");
-       background-repeat: no-repeat;
-       background-size: cover;
-       color: #ffffff;
    }
 
    #cicada-language:hover {
-       background-image: url("{{ site.url }}/assets/image/cicada-green-light.jpg");
-       background-repeat: no-repeat;
-       background-size: cover;
-       color: #1b1d1e;
    }
    #+end_src
 ** more
    #+begin_src css :tangle assets/css/welcome.css
    #more {
-
+       background-image: url("{{ site.url }}/assets/image/github-logo.jpg");
+       background-repeat: no-repeat;
+       background-size: cover;
+       color: #1b1d1e;
    }
 
    #more:hover {
-
+       background-image: url("{{ site.url }}/assets/image/github-logo-light.jpg");
+       background-repeat: no-repeat;
+       background-size: cover;
+       color: #1b1d1e;
    }
    #+end_src
 * primary-footer

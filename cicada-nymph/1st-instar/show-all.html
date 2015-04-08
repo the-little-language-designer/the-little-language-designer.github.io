@@ -195,20 +195,11 @@
    * <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/k2b2ssfy.aspx">Calling Conventions</a></span>
    * <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/a5s9345t.aspx">Calling Example: Function Prototype and Call</a></span>
      <span class="org-link"><a href="https://msdn.microsoft.com/en-us/library/25687bhx.aspx">Results of Calling Example</a></span>
-<span class="org-level-2">** header [windows32]</span>
+<span class="org-level-2">** format [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
-   <span class="preprocessor">define</span> STD_INPUT_HANDLE  -<span class="constant">10</span>
-   <span class="preprocessor">define</span> STD_OUTPUT_HANDLE -<span class="constant">11</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** format [windows32]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
-
-   <span class="keyword">format</span> PE <span class="keyword">console</span> <span class="keyword">as</span> <span class="string">"cicada-nymph-32.exe"</span>
+   <span class="keyword">format</span> PE <span class="keyword">console</span> <span class="keyword">as</span> <span class="string">"32.exe"</span>
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -465,7 +456,7 @@
 <span class="org-block-begin-line">       #+begin_src return-stack
 </span>           <span class="return-stack-jo">(square)</span>
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-           <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(multiple)</span>
+           <span class="return-stack-end">(end)</span>          <span class="return-stack-jo">(mul)</span>
                           <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">       #+end_src
 </span>  3. next
@@ -474,7 +465,7 @@
      * return-stack
 <span class="org-block-begin-line">       #+begin_src return-stack
 </span>           <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(dup)</span>
-       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(mul)</span> <span class="return-stack-bar-ket">]</span>
            <span class="return-stack-end">(end)</span>          <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">       #+end_src
 </span>  4. next
@@ -482,7 +473,7 @@
      * return-stack
 <span class="org-block-begin-line">       #+begin_src return-stack
 </span>                          <span class="return-stack-jo">(dup)</span>
-           <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(multiple)</span>
+           <span class="return-stack-jo">(square)</span>       <span class="return-stack-jo">(mul)</span>
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
            <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">       #+end_src
@@ -493,7 +484,7 @@
 </span>           <span class="return-stack-jo">(square)</span>
            <span class="return-stack-jo">(square)</span>
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
-                       <span class="return-stack-jo">(multiple)</span>
+                       <span class="return-stack-jo">(mul)</span>
                        <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">       #+end_src
 </span>  6. next
@@ -503,7 +494,7 @@
 <span class="org-block-begin-line">       #+begin_src return-stack
 </span>           <span class="return-stack-jo">(square)</span>
            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
-       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(multiple)</span> <span class="return-stack-bar-ket">]</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(mul)</span> <span class="return-stack-bar-ket">]</span>
                        <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">       #+end_src
 </span>  7. next
@@ -512,7 +503,7 @@
      * return-stack
 <span class="org-block-begin-line">       #+begin_src return-stack
 </span>           <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(dup)</span>
-           <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(multiple)</span>
+           <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(mul)</span>
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
 <span class="org-block-end-line">       #+end_src
 </span>  8. next
@@ -545,28 +536,6 @@
 
       pop_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">push</span> <span class="variable-name">rax</span>
-      <span class="builtin">call</span> [ExitProcess]
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_zero [windows32]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
-
-   __exit_with_zero:
-
-      <span class="builtin">push</span> <span class="constant">0</span>
-      <span class="builtin">call</span> [ExitProcess]
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_six  [windows32]</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
-
-   __exit_with_six:
-
-      <span class="builtin">push</span> <span class="constant">6</span>
       <span class="builtin">call</span> [ExitProcess]
 
    }
@@ -749,23 +718,10 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
-   _output_handle:
-      <span class="type">xx</span> <span class="constant">0</span>
-   _input_handle:
-      <span class="type">xx</span> <span class="constant">0</span>
-
    <span class="function-name">begin_to_interpret_threaded_code</span>:
 
       <span class="builtin">cld</span> <span class="comment">;; set DF = 0, then rsi and rdi are incremented
 </span>
-      <span class="builtin">push</span> STD_INPUT_HANDLE
-      <span class="builtin">call</span> [GetStdHandle]
-      <span class="builtin">mov</span> [_input_handle], <span class="variable-name">rax</span>
-
-      <span class="builtin">push</span> STD_OUTPUT_HANDLE
-      <span class="builtin">call</span> [GetStdHandle]
-      <span class="builtin">mov</span> [_output_handle], <span class="variable-name">rax</span>
-
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, first_jojo
       push_return_stack <span class="variable-name">rax</span>
       next
@@ -800,18 +756,6 @@
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
 <span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*un-initialized-memory*</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*un-initialized-memory*"</span>, V__un_initialized_memory
-     <span class="type">xx</span> address$un_initialized_memory
-
-   define_variable <span class="string">"*size,un-initialized-memory*"</span>, V__size__un_initialized_memory
-     <span class="type">xx</span> size$un_initialized_memory
-
-   define_variable <span class="string">"*current-free-address,un-initialized-memory*"</span>, V__current_free_address__un_initialized_memory
-     <span class="type">xx</span> current_free_address$un_initialized_memory
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** un_initialized_memory [windows32]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
