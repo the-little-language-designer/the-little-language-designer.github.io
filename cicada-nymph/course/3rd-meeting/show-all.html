@@ -99,11 +99,6 @@
         /* org-table */
         color: #87cefa;
       }
-      .org-todo {
-        /* org-todo */
-        color: #ffc0cb;
-        font-weight: bold;
-      }
       .preprocessor {
         /* font-lock-preprocessor-face */
         color: #a6e22e;
@@ -595,19 +590,36 @@
      <span class="org-table">| 1024 |   10010011 |</span>
      <span class="org-table">| 1025 |   00000001 |</span>
      <span class="org-table">| 1026 |   00001000 |</span>
-<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#40657;&#26495;</span>
-<span class="org-level-3">*** 32bit</span>
-<span class="org-level-3">*** 64bit</span>
-<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#27284;&#26696;&#39208;&#21729;&#24037;&#19968;&#21517;</span>
-<span class="org-level-3">*** </span><span class="org-todo">&#35352;</span>
-    * &#20808;&#32771;&#24942;&#32102;&#21934;&#20491; CPU &#32232;&#31243;
-<span class="org-level-3">*** 32bit</span>
-<span class="org-level-3">*** 64bit</span>
-<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#27284;&#26696;&#39208;&#21729;&#24037;&#30340;&#22522;&#26412;&#32032;&#39178;</span>
-<span class="org-level-3">*** 32bit</span>
-<span class="org-level-3">*** 64bit</span>
-<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#20013;&#26029;</span>
-<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-2">** &#40657;&#26495;</span>
+   * &#30333;&#26495; ?
+     {% assign image = "little-table-of-x86-registers.png" %}{% assign size = "40" %}
+     {% include little-image.html %}
+   * &#36890;&#29992;&#23492;&#23384;&#22120;&#30340;&#34920;&#26684;
+<span class="org-block-begin-line">     #+begin_src fasm
+</span>     |--------+--------+---------------+-------------+---------------|
+     | 8bit   | 16bit  | 32bit         | 64bit       | naming note   |
+     | [<span class="type">byte</span>] | [<span class="type">word</span>] | [double <span class="type">word</span>] | [quad <span class="type">word</span>] |               |
+     |--------+--------+---------------+-------------+---------------|
+     | <span class="variable-name">al</span>, <span class="variable-name">ah</span> | <span class="variable-name">ax</span>     | <span class="variable-name">eax</span>           | <span class="variable-name">rax</span>         | accumulator   |
+     | <span class="variable-name">bl</span>, <span class="variable-name">bh</span> | <span class="variable-name">bx</span>     | <span class="variable-name">ebx</span>           | <span class="variable-name">rbx</span>         | base          |
+     | <span class="variable-name">cl</span>, <span class="variable-name">ch</span> | <span class="variable-name">cx</span>     | <span class="variable-name">ecx</span>           | <span class="variable-name">rcx</span>         | counter       |
+     | <span class="variable-name">dl</span>, <span class="variable-name">dh</span> | <span class="variable-name">dx</span>     | <span class="variable-name">edx</span>           | <span class="variable-name">rdx</span>         | <span class="keyword">data</span>          |
+     | <span class="variable-name">sil</span>    | <span class="variable-name">si</span>     | <span class="variable-name">esi</span>           | <span class="variable-name">rsi</span>         | source        |
+     | <span class="variable-name">dil</span>    | <span class="variable-name">di</span>     | <span class="variable-name">edi</span>           | <span class="variable-name">rdi</span>         | destination   |
+     | <span class="variable-name">spl</span>    | <span class="variable-name">sp</span>     | <span class="variable-name">esp</span>           | <span class="variable-name">rsp</span>         | <span class="keyword">stack</span> pointer |
+     | <span class="variable-name">bpl</span>    | <span class="variable-name">bp</span>     | <span class="variable-name">ebp</span>           | <span class="variable-name">rbp</span>         | <span class="keyword">stack</span> base    |
+     |--------+--------+---------------+-------------+---------------|
+     | <span class="variable-name">r8b</span>    | <span class="variable-name">r8w</span>    | <span class="variable-name">r8d</span>           | <span class="variable-name">r8</span>          |               |
+     | <span class="variable-name">r9b</span>    | <span class="variable-name">r9w</span>    | <span class="variable-name">r9d</span>           | <span class="variable-name">r9</span>          |               |
+     | <span class="variable-name">r10b</span>   | <span class="variable-name">r10w</span>   | <span class="variable-name">r10d</span>          | <span class="variable-name">r10</span>         |               |
+     | <span class="variable-name">r11b</span>   | <span class="variable-name">r11w</span>   | <span class="variable-name">r11d</span>          | <span class="variable-name">r11</span>         |               |
+     | <span class="variable-name">r12b</span>   | <span class="variable-name">r12w</span>   | <span class="variable-name">r12d</span>          | <span class="variable-name">r12</span>         |               |
+     | <span class="variable-name">r13b</span>   | <span class="variable-name">r13w</span>   | <span class="variable-name">r13d</span>          | <span class="variable-name">r13</span>         |               |
+     | <span class="variable-name">r14b</span>   | <span class="variable-name">r14w</span>   | <span class="variable-name">r14d</span>          | <span class="variable-name">r14</span>         |               |
+     | <span class="variable-name">r15b</span>   | <span class="variable-name">r15w</span>   | <span class="variable-name">r15d</span>          | <span class="variable-name">r15</span>         |               |
+     |--------+--------+---------------+-------------+---------------|
+<span class="org-block-end-line">     #+end_src
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*&#20855;&#39636;&#30340;&#23526;&#29694;*</span></span>
   * &#20855;&#39636;&#22312;&#21295;&#32232;&#35486;&#35328;&#20013;
     &#20358;&#23526;&#29694;&#19978;&#38754;&#25152;&#25551;&#36848;&#30340; &#25277;&#35937;&#30340; &#32218;&#20018;&#30908;&#35299;&#37323;&#22120;
@@ -658,13 +670,6 @@
         &#29992;&#36889;&#27573;&#25351;&#20196;&#38283;&#38957;&#30340;&#22320;&#22336;&#20358;&#20195;&#34920;&#36889;&#20491;&#23376;&#31243;&#24207;
         &#26377;&#20102;&#36889;&#20491;&#22320;&#22336;
         &#23601;&#21487;&#20197;&#22312;&#21029;&#34389;&#35519;&#29992;&#23427;
-<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span>
-   * &#20989;&#25976; &#23559;&#26159;&#25105;&#20497;&#35373;&#35336;&#31243;&#24207;&#30340;&#26178;&#20505;&#25152;&#20351;&#29992;&#30340;&#22522;&#26412;&#27010;&#24565;&#21644;&#34899;&#35486;
-   * &#20989;&#25976;&#35486;&#32681;
-     &#31528;&#31528;&#30340;
-     &#32780;
-   * &#20043;&#24460;
-     &#23531;&#31243;&#24207;&#23601;&#20687;&#26159;&#29609;&#31309;&#26408;&#19968;&#27171;&#31777;&#21934;&#20102;
 <span class="org-level-1">* ===================================</span>
 </pre>
   </body>

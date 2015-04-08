@@ -734,6 +734,7 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="function-name">first_jojo</span>:
       <span class="type">xx</span> little_test
+      <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** exit_with_TOS a.k.a. bye</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -753,6 +754,24 @@
       <span class="type">xx</span> exit_with_TOS
       <span class="comment">;;;; 3
 </span><span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** </span><span class="org-todo">note</span>
+   * next
+<span class="org-block-begin-line">     #+begin_src return-stack
+</span>     <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(little_test)</span> <span class="return-stack-bar-ket">]</span>
+         <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">     #+end_src
+</span>   * next
+<span class="org-block-begin-line">     #+begin_src return-stack
+</span>         <span class="return-stack-jo">(little_test)</span>
+     <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">--------</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(V__little_test_number)</span> <span class="return-stack-bar-ket">]</span>
+                            <span class="return-stack-jo">(exit_with_TOS)</span>
+<span class="org-block-end-line">     #+end_src
+</span>   * next
+<span class="org-block-begin-line">     #+begin_src return-stack
+</span>         <span class="return-stack-jo">(little_test)</span>      <span class="return-stack-jo">(V__little_test_number)</span>
+     <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">--------</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exit_with_TOS)</span> <span class="return-stack-bar-ket">]</span>
+
+<span class="org-block-end-line">     #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
 <span class="org-level-2">** ----------------------------------</span>
