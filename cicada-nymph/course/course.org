@@ -9,7 +9,16 @@
      我期望
      相比 用匯編語言做一些平凡的練習程序
      在這門課上你能學到更多的東西
-* -----------------------------------
+** 學習
+   * 耐心
+     恆久的努力
+     認真弄清最簡單的例子
+     勤奮地練習
+   * 快速形成自己的模型[數學模型]來理解所觀察到的事物
+     而不是急着去看他人對這些事物的說明
+     當形成了自己的理解之後 再去看他人對這些事物的說明
+     然後 在這種交流當中
+     謙虛而勇敢地修改自己之前對事物的認識
 * 流程
 ** 下載
    * [[https://github.com/the-little-language-designer/fasm][fasm 匯編器]]
@@ -49,7 +58,6 @@
       還有對性狀的一些豐富與補充
       使得 小蟬語 在教學目的之外
       也能勝於其他任務
-* -----------------------------------
 * 見面
 ** 第一次
    課程簡介 與 [[architecture/overview.html][計算機的構架]]
@@ -59,14 +67,11 @@
 ** 第三次
    * 筆記
      [[3rd-meeting/overview.html][第三次見面]]
-   * 閱讀
-     [[an-apology-of-command-line-interface/overview.html][一個命令行用戶接口的辯白]]
-     [[an-apology-of-text-editor/overview.html][一個文本編輯器的辯白]]
-     [[programming-language/overview.html][程序語言淺說]]
 ** 第四次
    * 筆記
-     [[3rd-meeting/overview.html][第三次見面]]
-* -----------------------------------
+     [[4th-meeting/overview.html][第四次見面]]
+   * 閱讀
+     [[an-apology-of-command-line-interface/overview.html][一個命令行用戶接口的辯白]]
 * 資料
 ** [構架] 費恩曼的比喻
    * [[architecture/overview.html][費恩曼關於計算機構架的演講]]

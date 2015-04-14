@@ -1,8 +1,0 @@
-#+TITLE:  一個文本編輯器的辯白 
-#+TITLE:  an-apology-of-text-editor
-#+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
-
-一個文本編輯器哭了
-她跑來諮詢我
-讓我給她寫一篇辯白
