@@ -200,6 +200,17 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** stores platform as variable</span>
+<span class="org-level-2">** home-path &amp; search-path to load-files</span>
+<span class="org-level-2">** [BUG] about div</span>
+   * div can not handle the following
+     -8 2 div .
+<span class="org-level-2">** [BUG] about inline comment</span>
+   * inline comment such as
+     add1 &lt;&lt; dup . &gt;&gt; swap
+     will be viewed as
+     add1swap
+<span class="org-level-2">** use cicada home directory to load init-file</span>
 <span class="org-level-2">** [really needed] little tester</span>
 <span class="org-level-2">** error handling of load-file</span>
    * error code is different between windows and linux which is problematic
@@ -309,6 +320,67 @@
     * about comment
       * the comment of the argument &amp; return value of function
         is allowed to be written in free style normal comment
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> instar</span>
+<span class="org-level-2">** 1st-instar</span>
+   * indirect-threaded-code interpreter
+     1. macro about argument_stack &amp; return_stack
+     2. macro about jo &amp; jojo
+     3. macro about next
+     4. the way to do memory allocation
+     5. begin_to_interpret_threaded_code
+     6. little_test
+<span class="org-level-2">** 2ed-instar</span>
+   * instruction as special primitive function
+     1. literal
+     2. address
+   * and primitive functions about
+     1. the stack
+     2. bool
+     3. fixnum
+     4. memory
+   * and taca for explicit tail-call
+   * false?branch and taca are needed for "power"
+<span class="org-level-2">** 3rd-instar</span>
+   * primitive function about io
+     1. write_byte
+     2. read_byte
+<span class="org-level-2">** 4th-instar</span>
+   * more function about io
+     1. about word
+     2. about string
+     3. about number
+   * more function
+     1. jo
+     2. char
+     3. buffer
+   * more in epilog
+     1. last_link
+   * function about dictionary
+     1. find
+     2. execute-word
+   * basic-REPL as postfix-notation function executer
+     1. basic-REPL
+<span class="org-level-2">** 5th-instar</span>
+   * type of jo
+   * more in epilog
+     1. <span class="bold">*current-free-address,primitive-string-heap*</span>
+   * colon semicolon
+     1. ":" and ";" are used to read a string of words for compiler
+        [looks like bar-ket but special]
+     2. comment is handled here
+        "&lt;&lt; &gt;&gt;" as the only way to do comment
+   * compiler
+     * make-jojo
+       and macro for make-jojo
+       1. macro system
+       2. exception handling system
+     * function about definition
+       which leave data into memory
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>
+  * &lt;&lt; &gt;&gt; can not be in ""
+  * there are 64 positions below the all those stacks
+    when you are belowing-stack so much
+    bad things happen
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -371,6 +443,8 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** header [linux64]</span>
+   * /usr/include/asm/unistd_64.h (on archlinux)
+   * <span class="org-link"><a href="http://blog.rchapman.org/post/36801038863/linux-system-call-table-for-x86-64">http://blog.rchapman.org/post/36801038863/linux-system-call-table-for-x86-64</a></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
@@ -382,12 +456,12 @@
    <span class="preprocessor">define</span> linux64_sys_1_rdi <span class="variable-name">rdi</span>
    <span class="preprocessor">define</span> linux64_sys_n_rax <span class="variable-name">rax</span>
 
-   <span class="preprocessor">define</span> linux64_syscall_read  <span class="constant">0</span>
-   <span class="preprocessor">define</span> linux64_syscall_write <span class="constant">1</span>
-   <span class="preprocessor">define</span> linux64_syscall_open  <span class="constant">2</span>
-   <span class="preprocessor">define</span> linux64_syscall_close <span class="constant">3</span>
-   <span class="preprocessor">define</span> linux64_syscall_exit  <span class="constant">60</span>
-
+   <span class="preprocessor">define</span> linux64_syscall_read   <span class="constant">0</span>
+   <span class="preprocessor">define</span> linux64_syscall_write  <span class="constant">1</span>
+   <span class="preprocessor">define</span> linux64_syscall_open   <span class="constant">2</span>
+   <span class="preprocessor">define</span> linux64_syscall_close  <span class="constant">3</span>
+   <span class="preprocessor">define</span> linux64_syscall_getpid <span class="constant">39</span>
+   <span class="preprocessor">define</span> linux64_syscall_exit   <span class="constant">60</span>
    <span class="comment">;; about open &amp; read &amp; write
 </span>
    open_read         = <span class="constant">0</span>
@@ -432,6 +506,7 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** header [linux32]</span>
+   * /usr/include/asm/unistd_32.h (on archlinux)
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
 
@@ -443,11 +518,12 @@
    <span class="preprocessor">define</span> linux32_sys_1_ebx <span class="variable-name">ebx</span>
    <span class="preprocessor">define</span> linux32_sys_n_eax <span class="variable-name">eax</span>
 
-   <span class="preprocessor">define</span> linux32_syscall_exit  <span class="constant">1</span>
-   <span class="preprocessor">define</span> linux32_syscall_read  <span class="constant">3</span>
-   <span class="preprocessor">define</span> linux32_syscall_write <span class="constant">4</span>
-   <span class="preprocessor">define</span> linux32_syscall_open  <span class="constant">5</span>
-   <span class="preprocessor">define</span> linux32_syscall_close <span class="constant">6</span>
+   <span class="preprocessor">define</span> linux32_syscall_exit    <span class="constant">1</span>
+   <span class="preprocessor">define</span> linux32_syscall_read    <span class="constant">3</span>
+   <span class="preprocessor">define</span> linux32_syscall_write   <span class="constant">4</span>
+   <span class="preprocessor">define</span> linux32_syscall_open    <span class="constant">5</span>
+   <span class="preprocessor">define</span> linux32_syscall_close   <span class="constant">6</span>
+   <span class="preprocessor">define</span> linux32_syscall_getpid  <span class="constant">20</span>
 
    open_read         = <span class="constant">0</span>
    open_write        = <span class="constant">1</span>
@@ -1227,18 +1303,6 @@
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-heap*</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*primitive-string-heap*"</span>, V__primitive_string_heap
-     <span class="type">xx</span> address$primitive_string_heap
-
-   define_variable <span class="string">"*size,primitive-string-heap*"</span>, V__size__primitive_string_heap
-     <span class="type">xx</span> size$primitive_string_heap
-
-   <span class="comment">;; *current-free-address,primitive-string-heap*
-</span>   <span class="comment">;; is at epilog
-</span><span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* macro for make-jojo</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
@@ -1486,10 +1550,8 @@
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, subtraction
       <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, subtraction
       <span class="type">xx</span> fetch
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>, addition  <span class="comment">;; address
-</span>      <span class="type">xx</span> swap, fetch_two_bytes <span class="comment">;; length
-</span>      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span> address_to_primitive_string
+      <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** jo-&gt;link</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -1543,7 +1605,28 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* type of jo</span>
+<span class="org-level-1">* primitive-string-heap</span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-heap*</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_variable <span class="string">"*primitive-string-heap*"</span>, V__primitive_string_heap
+      <span class="type">xx</span> address$primitive_string_heap
+
+   define_variable <span class="string">"*size,primitive-string-heap*"</span>, V__size__primitive_string_heap
+      <span class="type">xx</span> size$primitive_string_heap
+
+   <span class="comment">;; *current-free-address,primitive-string-heap*
+</span>   <span class="comment">;; is at epilog
+</span><span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** address-&gt;primitive-string</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"address-&gt;primitive-string"</span>, address_to_primitive_string
+      <span class="comment">;; &lt;&lt; address -- string[address, length] &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">dup</span>
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>, addition  <span class="comment">;; address
+</span>      <span class="type">xx</span> swap, fetch_two_bytes <span class="comment">;; length
+</span>      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* type of jo</span>
 <span class="org-level-2">** primitive-function-jo?</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"primitive-function-jo?"</span>, primitive_function_jo?
@@ -1854,12 +1937,12 @@
 </span>      <span class="comment">;;;; echo line
 </span>
       <span class="comment">;;;; false?branch
-</span>      <span class="comment">;; xx V__false, false?branch, 9
+</span>      <span class="comment">;; xx false, false?branch, 9
 </span>      <span class="comment">;; xx   literal, 64, write_byte
 </span>      <span class="comment">;; xx   literal, 10, write_byte
 </span>      <span class="comment">;; xx   zero
 </span>      <span class="comment">;; xx   exit_with_TOS
-</span>      <span class="comment">;; xx V__true, false?branch, 9
+</span>      <span class="comment">;; xx true, false?branch, 9
 </span>      <span class="comment">;; xx   literal, 65, write_byte
 </span>      <span class="comment">;; xx   literal, 10, write_byte
 </span>      <span class="comment">;; xx   zero
@@ -1925,8 +2008,8 @@
       <span class="comment">;;;; basic-REPL (without the ability to define function)
 </span>      <span class="comment">;;;; after this test
 </span>      <span class="comment">;;;; we will use basic-REPL to do further tests
-</span>      <span class="type">xx</span> basic_REPL
-      <span class="comment">;;;; 1 2 add .
+</span>      <span class="comment">;; xx basic_REPL
+</span>      <span class="comment">;;;; 1 2 add .
 </span><span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* the stack</span>
@@ -2025,6 +2108,12 @@
       push_argument_stack <span class="variable-name">rax</span>
       next
 
+   define_primitive_function <span class="string">"x|over|xxxx"</span>, xoverxxxx
+      <span class="comment">;; &lt;&lt; a | b c d -- a | b c d | a &gt;&gt;
+</span>      <span class="builtin">mov</span>  <span class="variable-name">rax</span>, [pointer$argument_stack - (<span class="constant">5</span> * jo_size)]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
    define_primitive_function <span class="string">"xx|over|xxxx"</span>, xxoverxxxx
       <span class="comment">;; &lt;&lt; a b | c d e f -- a b | c d e f | a b &gt;&gt;
 </span>      <span class="builtin">mov</span>  <span class="variable-name">rax</span>, [pointer$argument_stack - (<span class="constant">6</span> * jo_size)]
@@ -2075,6 +2164,13 @@
       <span class="comment">;; &lt;&lt; a | b c d -- a | b c d | a &gt;&gt;
 </span>      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$argument_stack]
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span> - (<span class="constant">4</span> * jo_size)]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   define_primitive_function <span class="string">"x|over|xxxx"</span>, xoverxxxx
+      <span class="comment">;; &lt;&lt; a | b c d -- a | b c d | a &gt;&gt;
+</span>      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$argument_stack]
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span> - (<span class="constant">5</span> * jo_size)]
       push_argument_stack <span class="variable-name">rax</span>
       next
 
@@ -2438,6 +2534,41 @@
       push_argument_stack <span class="variable-name">ebx</span>
       push_argument_stack <span class="variable-name">ecx</span>
       push_argument_stack <span class="variable-name">edx</span>
+      next
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** address</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_variable <span class="string">"*the-stack*"</span>, V__the_stack
+      <span class="type">xx</span> address$argument_stack
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** pointer [64bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   define_variable <span class="string">"*the-stack-pointer-snapshot*"</span>, V__the_stack_pointer_snapshot
+      <span class="type">xx</span> address$argument_stack
+
+   define_primitive_function <span class="string">"snapshot-the-stack-pointer"</span>, snapshot_the_stack_pointer
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> [V__the_stack_pointer_snapshot + jo_size], pointer$argument_stack
+      next
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** pointer [32bit]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   define_variable <span class="string">"*the-stack-pointer-snapshot*"</span>, V__the_stack_pointer_snapshot
+      <span class="type">xx</span> address$argument_stack
+
+   define_primitive_function <span class="string">"snapshot-the-stack-pointer"</span>, snapshot_the_stack_pointer
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> <span class="variable-name">eax</span>, [pointer$argument_stack]
+      <span class="builtin">mov</span> [V__the_stack_pointer_snapshot + jo_size], <span class="variable-name">eax</span>
       next
 
    }
@@ -3432,6 +3563,20 @@
 
    }
 <span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** clear</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_primitive_function <span class="string">"clear-memory"</span>, clear_memory
+      <span class="comment">;; &lt;&lt; size, address -- &gt;&gt;
+</span>      pop_argument_stack <span class="variable-name">rdx</span>
+      pop_argument_stack <span class="variable-name">rcx</span>
+      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
+   <span class="function-name">.loop</span>:
+      <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdx</span>], <span class="variable-name">al</span>
+      <span class="builtin">inc</span> <span class="variable-name">rdx</span>
+      <span class="builtin">dec</span> <span class="variable-name">rcx</span>
+      <span class="builtin">loop</span> .loop
+      next
+<span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* basic io</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -3548,7 +3693,6 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
-   * calls the linux read system call to fill buffer$read_byte
    * do not exit the program
      when meeting &lt;end-of-file&gt;
      so
@@ -5440,7 +5584,7 @@
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$jo_heap = <span class="constant">3</span> * <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+</span>   size$jo_heap = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
 
    define_variable <span class="string">"*jo-heap*"</span>, V__jo_heap
      <span class="type">xx</span> address$jo_heap
@@ -5882,7 +6026,7 @@
 <span class="org-level-2">** save-into,primitive-string-heap</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"save-into,primitive-string-heap"</span>, save_into__primitive_string_heap
-      <span class="comment">;; &lt;&lt; string[address, length] -- address &gt;&gt;
+      <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>, V__current_free_address__primitive_string
       <span class="type">xx</span> save_two_bytes
 
@@ -5901,7 +6045,7 @@
 </span><span class="org-level-2">** save-into,jo-heap</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"save-into,jo-heap"</span>, save_into__jo_heap
-      <span class="comment">;; &lt;&lt; number -- address &gt;&gt;
+      <span class="comment">;; &lt;&lt; number -- &gt;&gt;
 </span>      <span class="type">xx</span> V__current_free_address__jo_heap
       <span class="type">xx</span> save
 
@@ -5953,12 +6097,15 @@
 </span>   last_link = link
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** size$un_initialized_memory</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
+</span><span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** un_initialized_memory [linux64]</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
-   size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
-</span>
    <span class="keyword">segment</span> <span class="keyword">readable</span> <span class="keyword">writeable</span>
    <span class="function-name">address$un_initialized_memory</span>:
       <span class="type">rb</span> size$un_initialized_memory
@@ -5970,8 +6117,6 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
 
-   size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
-</span>
    <span class="keyword">segment</span> <span class="keyword">readable</span> <span class="keyword">writeable</span>
    <span class="function-name">address$un_initialized_memory</span>:
       <span class="type">rb</span> size$un_initialized_memory
@@ -5983,8 +6128,6 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =windows =64bit, platform machine {
 
-   size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
-</span>
    <span class="keyword">section</span> <span class="default">'.data'</span> <span class="keyword">data</span> <span class="keyword">readable</span> <span class="keyword">writeable</span>
    <span class="function-name">address$un_initialized_memory</span>:
       <span class="type">rb</span> size$un_initialized_memory
@@ -6092,8 +6235,6 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =windows =32bit, platform machine {
 
-   size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
-</span>
    <span class="keyword">section</span> <span class="default">'.data'</span> <span class="keyword">data</span> <span class="keyword">readable</span> <span class="keyword">writeable</span>
    <span class="function-name">address$un_initialized_memory</span>:
       <span class="type">rb</span> size$un_initialized_memory

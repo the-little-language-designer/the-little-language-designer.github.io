@@ -2,15 +2,22 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
+* ===================================
+* 源碼
+  * [[https://github.com/the-little-language-designer/cicada][託管在 github 上的 主要代碼庫]]
+  * 在網頁上瀏覽源代碼
+    1. 蟬語代碼 : [[../../cicada/overview.html][cicada.org]]
 * 題解
   * 蟬語 這個名字
     來源與曹植的 [[../../poem/chan-fu/show-all.html][蟬賦]]
 * 筆記
   * 語言本身還在設計中
     目前只有一些 [[../note/contents.html][設計筆記]]
-* 代碼
-  * [[https://github.com/the-little-language-designer/cicada][蟬語之主要文庫]]
 * ===================================
+* source code
+  * [[https://github.com/the-little-language-designer/cicada][main repo of cicada language on github]]
+  * view the source code on web
+    1. cicada code : [[../../cicada/overview.html][cicada.org]]
 * to explain the title
   * the name cicada-language comes from
     the [[../../poem/chan-fu/show-all.html][cicada rhapsody]] of
@@ -19,5 +26,4 @@
 * design note
   * I am designing the language now
     you can find a little [[../note/contents.html][design note]]
-* source code
-  * [[https://github.com/the-little-language-designer/cicada][main repo of cicada language]]
+* ===================================

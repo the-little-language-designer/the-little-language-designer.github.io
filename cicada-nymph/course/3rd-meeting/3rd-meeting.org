@@ -360,14 +360,15 @@
       - [ (square) ] - [ (end) ]
           (end)
       #+end_src
-    * ><
+*** next (4)
+    * argument-stack << 4 >>
+    * return-stack
       #+begin_src return-stack
-
           (square)
       - [ (square) ]
           (end)
       #+end_src
-*** next (4)
+*** next (5)
     * argument-stack << 4 >>
     * return-stack
       #+begin_src return-stack
@@ -377,7 +378,7 @@
                       (mul)
                       (end)
       #+end_src
-*** next (5)
+*** next (6)
     * argument-stack
       << 4, 4 >>
     * return-stack
@@ -387,7 +388,7 @@
       - [ (end) ] - [ (mul) ]
                       (end)
       #+end_src
-*** next (6)
+*** next (7)
     * argument-stack
       << 16 >>
     * return-stack
@@ -396,7 +397,7 @@
           (square)    (mul)
       - [ (end) ] - [ (end) ]
       #+end_src
-*** next (7)
+*** next (8)
     * argument-stack
       << 16 >>
     * return-stack
@@ -405,7 +406,7 @@
           (square)
       - [ (end) ]
       #+end_src
-*** next (8)
+*** next (9)
     * argument-stack
       << 16 >>
     * return-stack

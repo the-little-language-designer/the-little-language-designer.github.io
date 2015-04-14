@@ -2,17 +2,17 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
-
-* note
+* note running
   * racket -il xrepl
-    is a better repl 
-* module 
-  * provide function
+    is a better repl
+* note to load file
+  * 解釋器爲了加載一個源代碼文件
     
-  #+begin_src scheme   
+* module
+  * provide function
+  #+begin_src racket   
   ;; require file
   (require "file.xxx")
-
 
   ;; require collect
   (require setup/dirs)
@@ -31,6 +31,4 @@
   (require 'hi)
   ;; later requires do not re-evaluate the module body
   (require 'hi)
-
   #+end_src  
-

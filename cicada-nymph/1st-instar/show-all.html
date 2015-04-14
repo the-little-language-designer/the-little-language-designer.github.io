@@ -144,14 +144,15 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* </span><span class="org-todo">note</span>
-  * indirect-threaded-code interpreter
-    1. macro about argument_stack &amp; return_stack
-    2. macro about jo &amp; jojo
-    3. macro about next
-    4. the way to do memory allocation
-    5. begin_to_interpret_threaded_code
-    6. little_test
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> instar</span>
+<span class="org-level-2">** 1st-instar</span>
+   * indirect-threaded-code interpreter
+     1. macro about argument_stack &amp; return_stack
+     2. macro about jo &amp; jojo
+     3. macro about next
+     4. the way to do memory allocation
+     5. begin_to_interpret_threaded_code
+     6. little_test
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -482,12 +483,20 @@
      * return-stack
 <span class="org-block-begin-line">       #+begin_src return-stack
 </span>           <span class="return-stack-jo">(square)</span>
+       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(square)</span> <span class="return-stack-bar-ket">]</span>
+           <span class="return-stack-end">(end)</span>
+<span class="org-block-end-line">       #+end_src
+</span>  6. next
+     * argument-stack &lt;&lt; 4 &gt;&gt;
+     * return-stack
+<span class="org-block-begin-line">       #+begin_src return-stack
+</span>           <span class="return-stack-jo">(square)</span>
            <span class="return-stack-jo">(square)</span>
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(dup)</span> <span class="return-stack-bar-ket">]</span>
                        <span class="return-stack-jo">(mul)</span>
                        <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">       #+end_src
-</span>  6. next
+</span>  7. next
      * argument-stack
        &lt;&lt; 4, 4 &gt;&gt;
      * return-stack
@@ -497,7 +506,7 @@
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(mul)</span> <span class="return-stack-bar-ket">]</span>
                        <span class="return-stack-end">(end)</span>
 <span class="org-block-end-line">       #+end_src
-</span>  7. next
+</span>  8. next
      * argument-stack
        &lt;&lt; 16 &gt;&gt;
      * return-stack
@@ -506,7 +515,7 @@
            <span class="return-stack-jo">(square)</span>    <span class="return-stack-jo">(mul)</span>
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
 <span class="org-block-end-line">       #+end_src
-</span>  8. next
+</span>  9. next
      * argument-stack
        &lt;&lt; 16 &gt;&gt;
      * return-stack
@@ -515,14 +524,14 @@
            <span class="return-stack-jo">(square)</span>
        <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span>
 <span class="org-block-end-line">       #+end_src
-</span>  9. next
-     * argument-stack
-       &lt;&lt; 16 &gt;&gt;
-     * return-stack
-<span class="org-block-begin-line">       #+begin_src return-stack
-</span>       <span class="return-stack-line">-</span> [  ]
-<span class="org-block-end-line">       #+end_src
-</span>  10. it is really simple
+</span>  10. next
+      * argument-stack
+        &lt;&lt; 16 &gt;&gt;
+      * return-stack
+<span class="org-block-begin-line">        #+begin_src return-stack
+</span>        <span class="return-stack-line">-</span> [  ]
+<span class="org-block-end-line">        #+end_src
+</span>  11. it is really simple
       ^-^
       is it not ?
 <span class="org-level-1">* -----------------------------------</span>
@@ -770,7 +779,6 @@
 <span class="org-block-begin-line">     #+begin_src return-stack
 </span>         <span class="return-stack-jo">(little_test)</span>      <span class="return-stack-jo">(V__little_test_number)</span>
      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">--------</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(exit_with_TOS)</span> <span class="return-stack-bar-ket">]</span>
-
 <span class="org-block-end-line">     #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>

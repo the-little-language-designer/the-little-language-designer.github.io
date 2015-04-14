@@ -200,6 +200,11 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** stores platform as variable</span>
+<span class="org-level-2">** home-path &amp; search-path to load-files</span>
+<span class="org-level-2">** [BUG] about div</span>...
+<span class="org-level-2">** [BUG] about inline comment</span>...
+<span class="org-level-2">** use cicada home directory to load init-file</span>
 <span class="org-level-2">** [really needed] little tester</span>
 <span class="org-level-2">** error handling of load-file</span>...
 <span class="org-level-2">** nested load-file</span>...
@@ -214,6 +219,13 @@
 <span class="org-level-2">** syntax of cicada-nymph</span>...
 <span class="org-level-2">** unique id</span>...
 <span class="org-level-2">** different from the re-designed cicada-language</span>...
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> instar</span>
+<span class="org-level-2">** 1st-instar</span>...
+<span class="org-level-2">** 2ed-instar</span>...
+<span class="org-level-2">** 3rd-instar</span>...
+<span class="org-level-2">** 4th-instar</span>...
+<span class="org-level-2">** 5th-instar</span>...
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -309,8 +321,6 @@
 <span class="org-level-2">** define_variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** explain$variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-heap*</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* macro for make-jojo</span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
@@ -335,7 +345,10 @@
 </span><span class="org-level-2">** jo-&gt;pre-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** jo-&gt;type</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* type of jo</span>
+<span class="org-level-1">* primitive-string-heap</span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-heap*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** address-&gt;primitive-string</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* type of jo</span>
 <span class="org-level-2">** primitive-function-jo?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** function-jo?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** macro-jo?</span>...<span class="org-block-end-line">
@@ -367,6 +380,10 @@
 </span><span class="org-level-2">** tuck</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** swap [64bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** swap [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** address</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** pointer [64bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** pointer [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* instruction</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -411,6 +428,7 @@
 </span><span class="org-level-2">** fetch [64bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** save  [32bit]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** fetch [32bit]</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** clear</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* basic io</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -574,6 +592,8 @@
 <span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-heap*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** last_link</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** size$un_initialized_memory</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** un_initialized_memory [linux64]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>

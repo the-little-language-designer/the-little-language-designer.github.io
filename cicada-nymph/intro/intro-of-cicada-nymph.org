@@ -2,8 +2,9 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
+* ===================================
 * 源碼
-  * [[https://github.com/the-little-language-designer/cicada-nymph][託管在 github 上的代碼庫]]
+  * [[https://github.com/the-little-language-designer/cicada][託管在 github 上的 主要代碼庫]]
   * 在網頁上瀏覽源代碼
     1. 匯編代碼 : [[../overview.html][cicada-nymph.org]]
     2. 小蟬語代碼 : [[../core/overview.html][core.org]]
@@ -30,11 +31,12 @@
        轉跳指令
     4. [[../4th-instar/overview.html][齡四]]
        基本 REPL
-    5. [[../5th-instar/overview.html][齡五]]
+    5. [[../overview.html][進行中的小蟬語]]
        加上 編譯器
        就得到完整的 小蟬語
-    6. [[../overview.html][進行中的小蟬語]]
-       對性狀的一些豐富與補充
+       另外
+       在最終的版本中
+       還有對性狀的一些豐富與補充
        使得 小蟬語 在教學目的之外
        也能勝於其他任務
   * 通過這種方式
@@ -103,7 +105,7 @@
    #+end_src
 * ===================================
 * source code
-  * [[https://github.com/the-little-language-designer/cicada-nymph][repo on github]]
+  * [[https://github.com/the-little-language-designer/cicada][main repo of cicada language on github]]
   * view the source code on web
     1. assembly code : [[../overview.html][cicada-nymph.org]]
     2. cicada-nymph code : [[../core/overview.html][core.org]]
@@ -133,11 +135,10 @@
        instructions about branching
     4. [[../4th-instar/overview.html][4th-instar]]
        basic REPL
-    5. [[../5th-instar/overview.html][5th-instar]]
+    5. [[../overview.html][the ongoing cicada-nymph]]
        with the compile
        we have the complete cicada-nymph
-    6. [[../overview.html][the ongoing cicada-nymph]]
-       add more features
+       and to add more features
        to let cicada-nymph be fit for missions other than teaching
   * thus
     I am able to use the implementation of this simple language
@@ -206,3 +207,4 @@
    << calculate the factorial of 4 and print the result >>
    4 3 2 1 mul mul mul .
    #+end_src
+* ===================================
