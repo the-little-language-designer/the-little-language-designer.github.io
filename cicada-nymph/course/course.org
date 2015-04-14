@@ -60,18 +60,28 @@
       也能勝於其他任務
 * 見面
 ** 第一次
-   課程簡介 與 [[architecture/overview.html][計算機的構架]]
+   * 課程簡介
+   * [[architecture/overview.html][抽象的計算機構架]]
 ** 第二次
-   在 windows 上 使用 emacs 中的 eshell
-   失敗極了 orz
+   * 實驗流程介紹
+     * 在 windows 上 使用 emacs 中的 eshell
+       失敗極了 orz
 ** 第三次
-   * 筆記
-     [[3rd-meeting/overview.html][第三次見面]]
+   * [[3rd-meeting/overview.html][線串碼解釋器的抽象模型]]
+     1. 珠珠
+     2. 棧
+     3. 函數語義之形成
+   * 複習 抽象的計算機構架
+     並介紹 具體計算機構架 之 x86 篇
 ** 第四次
-   * 筆記
-     [[4th-meeting/overview.html][第四次見面]]
-   * 閱讀
-     [[an-apology-of-command-line-interface/overview.html][一個命令行用戶接口的辯白]]
+   * 線串碼解釋器的具體實現
+     1. 匯編語言中製作棧
+     2. 珠珠之數據結構
+     3. 函數語義的形成
+   * 線串碼解釋器的優越性
+     * 利用線串碼解釋器
+       來測試你所感興趣的匯編指令
+   * 輸入與輸出
 * 資料
 ** [構架] 費恩曼的比喻
    * [[architecture/overview.html][費恩曼關於計算機構架的演講]]
