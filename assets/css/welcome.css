@@ -191,9 +191,17 @@ article p {
 }
 
 #sysu-assembly-course {
+    background-image: url("{{ site.url }}/assets/image/sysu-logo-dark.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #1b1d1e;
 }
 
 #sysu-assembly-course:hover {
+    background-image: url("{{ site.url }}/assets/image/sysu-logo-light.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #1b1d1e;
 }
 
 #cicada-nymph {
