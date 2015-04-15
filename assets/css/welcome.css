@@ -224,17 +224,23 @@ article p {
 #cicada-language:hover {
 }
 
+#toki-pona {
+    background-image: url("{{ site.url }}/assets/image/toki-pona-logo-dark.jpg");
+    color: #1b1d1e;
+}
+
+#toki-pona:hover {
+    background-image: url("{{ site.url }}/assets/image/toki-pona-logo-light.jpg");
+    color: #1b1d1e;
+}
+
 #more {
     background-image: url("{{ site.url }}/assets/image/github-logo.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
     color: #1b1d1e;
 }
 
 #more:hover {
     background-image: url("{{ site.url }}/assets/image/github-logo-light.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
     color: #1b1d1e;
 }
 

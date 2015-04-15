@@ -19,26 +19,6 @@
         /* font-lock-builtin-face */
         color: #a6e22e;
       }
-      .cicada-nymph-end {
-        /* cicada-nymph-end-face */
-        color: #00ffff;
-        font-weight: bold;
-      }
-      .cicada-nymph-lexicographer {
-        /* cicada-nymph-lexicographer-face */
-        color: #ae81ff;
-        font-weight: bold;
-      }
-      .cicada-nymph-sentence-reader {
-        /* cicada-nymph-sentence-reader-face */
-        color: #ffff00;
-        font-weight: bold;
-      }
-      .cicada-nymph-word-to-define {
-        /* cicada-nymph-word-to-define-face */
-        color: #ef5939;
-        font-weight: bold;
-      }
       .comment {
         /* font-lock-comment-face */
         color: #FF8888;
@@ -303,15 +283,6 @@
         <span class="type">dd</span> multiple
         <span class="type">dd</span> <span class="keyword">end</span>
 <span class="org-block-end-line">     #+end_src
-</span>   * &#32780;&#22312;&#26368;&#32066;&#23436;&#25104;&#20102;&#30340; cicada-nymph &#30340;&#35299;&#37323;&#22120;&#20013;
-     &#20855;&#39636;&#29992;&#20358;&#20316;&#23450;&#32681;&#30340;&#20195;&#30908;&#23559;&#26159;
-<span class="org-block-begin-line">     #+begin_src cicada-nymph
-</span>     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">square</span>
-       dup
-       mul
-       <span class="cicada-nymph-end">end</span>
-     <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-<span class="org-block-end-line">     #+end_src
 </span><span class="org-level-2">** &#29664;&#23376;&#30340;&#35422;&#20856;</span>
    * &#22312;&#19968;&#26412;&#35422;&#20856;&#20013;
      &#20320;&#21487;&#20197;&#36890;&#36942;&#19968;&#20491;&#35422;&#30340;&#38913;&#30908;&#21644;&#34892;&#25976;[&#21363;&#35422;&#30340;&#22320;&#22336;]
@@ -371,17 +342,16 @@
         push_argument_stack <span class="variable-name">rax</span>
         next
 <span class="org-block-end-line">     #+end_src
-</span>   * mul &#20316;&#29234; &#32032;&#20989;&#25976;&#29664; &#22312;&#21295;&#32232;&#20195;&#30908;&#20013;&#30340;&#23450;&#32681;&#23559;&#26159;
+</span>   * &#22914;&#26524;&#25226; define_primitive_function &#36889;&#20491; macro &#23637;&#38283;&#30340;&#35441;
 <span class="org-block-begin-line">     #+begin_src fasm
-</span>     define_primitive_function <span class="string">"mul"</span>, multiple
-        <span class="comment">;; &lt;&lt; a, b -- a*b &gt;&gt;
-</span>        pop_argument_stack  <span class="variable-name">rbx</span> <span class="comment">;; 2ed arg
-</span>        pop_argument_stack  <span class="variable-name">rax</span> <span class="comment">;; 1st arg
-</span>        <span class="builtin">imul</span> <span class="variable-name">rbx</span>, <span class="variable-name">rax</span>
-        <span class="comment">;; imul will ignore overflow
-</span>        <span class="comment">;; when there are two registers as arg
-</span>        <span class="comment">;; imul will save the result into the first register
-</span>        push_argument_stack <span class="variable-name">rbx</span>
+</span>        <span class="type">dd</span> (&#19968;&#20491;&#25351;&#21521;&#23383;&#31526;&#20018; <span class="string">"dup"</span> &#30340;&#25351;&#37341;)
+           <span class="comment">;; &#36889;&#27171; &#36889;&#20491;&#29664;&#23376;&#30340;&#21517;&#23383;&#23601;&#34987;&#35352;&#37636;&#19979;&#20358;&#20102;
+</span>        <span class="type">dd</span> (&#19968;&#20491;&#25351;&#21521;&#19978;&#19968;&#20491;&#29664;&#23376;&#30340;&#30340;&#25351;&#37341;)
+           <span class="comment">;; &#36889;&#27171; &#35422;&#20856;&#20013;&#30340;&#25152;&#26377;&#30340;&#29664;&#23376;&#23601;&#34987;&#35352;&#37636;&#22312;&#20102;&#19968;&#20491;&#37832;&#34920;&#20013;
+</span>        <span class="comment">;; &lt;&lt; a -- a, a &gt;&gt;
+</span>        pop_argument_stack <span class="variable-name">rax</span>
+        push_argument_stack <span class="variable-name">rax</span>
+        push_argument_stack <span class="variable-name">rax</span>
         next
 <span class="org-block-end-line">     #+end_src
 </span><span class="org-level-1">* &#26855;</span>

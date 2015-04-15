@@ -143,15 +143,6 @@
         dd multiple
         dd end
      #+end_src
-   * 而在最終完成了的 cicada-nymph 的解釋器中
-     具體用來作定義的代碼將是
-     #+begin_src cicada-nymph
-     : square
-       dup
-       mul
-       end
-     ; define-function
-     #+end_src
 ** 珠子的詞典
    * 在一本詞典中
      你可以通過一個詞的頁碼和行數[即詞的地址]
@@ -211,17 +202,16 @@
         push_argument_stack rax
         next
      #+end_src
-   * mul 作爲 素函數珠 在匯編代碼中的定義將是
+   * 如果把 define_primitive_function 這個 macro 展開的話
      #+begin_src fasm
-     define_primitive_function "mul", multiple
-        ;; << a, b -- a*b >>
-        pop_argument_stack  rbx ;; 2ed arg
-        pop_argument_stack  rax ;; 1st arg
-        imul rbx, rax
-        ;; imul will ignore overflow
-        ;; when there are two registers as arg
-        ;; imul will save the result into the first register
-        push_argument_stack rbx
+        dd (一個指向字符串 "dup" 的指針)
+           ;; 這樣 這個珠子的名字就被記錄下來了
+        dd (一個指向上一個珠子的的指針)
+           ;; 這樣 詞典中的所有的珠子就被記錄在了一個鏈表中
+        ;; << a -- a, a >>
+        pop_argument_stack rax
+        push_argument_stack rax
+        push_argument_stack rax
         next
      #+end_src
 * 棧
