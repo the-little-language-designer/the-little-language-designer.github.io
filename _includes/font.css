@@ -53,3 +53,91 @@
     font-weight: normal;
     font-style:  normal;
 }
+
+@font-face
+{
+    font-family: "sapirsans";
+    src: url("{{ site.url }}/assets/font/english-try/sapirsans.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "averoigne_regular";
+    src: url("{{ site.url }}/assets/font/english-try/averoigne_regular.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "angleterre_book";
+    src: url("{{ site.url }}/assets/font/english-try/angleterre_book.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "canadian";
+    src: url("{{ site.url }}/assets/font/english-try/canadian.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "cantabile";
+    src: url("{{ site.url }}/assets/font/english-try/cantabile.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "isotype_regular";
+    src: url("{{ site.url }}/assets/font/english-try/isotype_regular.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "sirona";
+    src: url("{{ site.url }}/assets/font/english-try/sirona.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "teletype_regular";
+    src: url("{{ site.url }}/assets/font/english-try/teletype_regular.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "temps_nouveau";
+    src: url("{{ site.url }}/assets/font/english-try/temps_nouveau.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "tiplo";
+    src: url("{{ site.url }}/assets/font/english-try/tiplo.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
+    font-family: "typist";
+    src: url("{{ site.url }}/assets/font/english-try/typist.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}

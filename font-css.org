@@ -33,36 +33,127 @@
   }
   #+end_src
 * 英
-  #+begin_src css :tangle _includes/font.css
-  @font-face
-  {
-      font-family: "monofur";
-      src: url("{{ site.url }}/assets/font/monofur/monof55.woff") format("woff");
-      font-weight: normal;
-      font-style:  normal;
-  }
+** 等寬
+   #+begin_src css :tangle _includes/font.css
+   @font-face
+   {
+       font-family: "monofur";
+       src: url("{{ site.url }}/assets/font/monofur/monof55.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
 
-  @font-face
-  {
-      font-family: "source-code-pro";
-      src: url("{{ site.url }}/assets/font/source-code-pro/source-code-pro.woff") format("woff");
-      font-weight: normal;
-      font-style:  normal;
-  }
+   @font-face
+   {
+       font-family: "source-code-pro";
+       src: url("{{ site.url }}/assets/font/source-code-pro/source-code-pro.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
 
-  @font-face
-  {
-      font-family: "envy-code";
-      src: url("{{ site.url }}/assets/font/Envy-Code-R-PR7/Envy-Code-R.woff") format("woff");
-      font-weight: normal;
-      font-style:  normal;
-  }
+   @font-face
+   {
+       font-family: "envy-code";
+       src: url("{{ site.url }}/assets/font/Envy-Code-R-PR7/Envy-Code-R.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
 
-  @font-face
-  {
-      font-family: "lmmono10";
-      src: url("{{ site.url }}/assets/font/Latin-Modern-Mono/lmmono10-regular.woff") format("woff");
-      font-weight: normal;
-      font-style:  normal;
-  }
-  #+end_src
+   @font-face
+   {
+       font-family: "lmmono10";
+       src: url("{{ site.url }}/assets/font/Latin-Modern-Mono/lmmono10-regular.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+   #+end_src
+** 非等寬
+   #+begin_src css :tangle _includes/font.css
+   @font-face
+   {
+       font-family: "sapirsans";
+       src: url("{{ site.url }}/assets/font/english-try/sapirsans.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "averoigne_regular";
+       src: url("{{ site.url }}/assets/font/english-try/averoigne_regular.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "angleterre_book";
+       src: url("{{ site.url }}/assets/font/english-try/angleterre_book.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "canadian";
+       src: url("{{ site.url }}/assets/font/english-try/canadian.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "cantabile";
+       src: url("{{ site.url }}/assets/font/english-try/cantabile.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "isotype_regular";
+       src: url("{{ site.url }}/assets/font/english-try/isotype_regular.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "sirona";
+       src: url("{{ site.url }}/assets/font/english-try/sirona.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "teletype_regular";
+       src: url("{{ site.url }}/assets/font/english-try/teletype_regular.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "temps_nouveau";
+       src: url("{{ site.url }}/assets/font/english-try/temps_nouveau.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "tiplo";
+       src: url("{{ site.url }}/assets/font/english-try/tiplo.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+
+   @font-face
+   {
+       font-family: "typist";
+       src: url("{{ site.url }}/assets/font/english-try/typist.woff") format("woff");
+       font-weight: normal;
+       font-style:  normal;
+   }
+   #+end_src
