@@ -75,6 +75,7 @@
       background-color: #1b1d1e;
       /* font-family: "envy-code", "ms-song"; */
       /* font-family: "envy-code", "pmingliu-tw"; */
+      /* font-family: "source-code-pro", "ming-lan"; */
       font-family: "envy-code", "ming-lan";
   }
   #+end_src
@@ -212,7 +213,7 @@
    }
    #+end_src
 ** advertisement
-   #+begin_src css :tangle assets/css/welcome.css
+   #+begin_src css
    #advertisement {
        background-image: url("{{ site.url }}/assets/image/wei-ji-1.jpg");
        background-repeat: no-repeat;
@@ -272,6 +273,22 @@
 
    #toki-pona:hover {
        background-image: url("{{ site.url }}/assets/image/toki-pona-logo-light.jpg");
+       color: #1b1d1e;
+   }
+   #+end_src
+** SICP
+   #+begin_src css :tangle assets/css/welcome.css
+   #SICP {
+       background-image: url("{{ site.url }}/assets/image/sicp-logo-dark.jpg");
+       background-repeat: no-repeat;
+       background-size: cover;
+       color: #1b1d1e;
+   }
+
+   #SICP:hover {
+       background-image: url("{{ site.url }}/assets/image/sicp-logo-light.jpg");
+       background-repeat: no-repeat;
+       background-size: cover;
        color: #1b1d1e;
    }
    #+end_src

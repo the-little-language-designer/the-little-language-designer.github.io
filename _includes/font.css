@@ -32,6 +32,14 @@
 
 @font-face
 {
+    font-family: "source-code-pro";
+    src: url("{{ site.url }}/assets/font/source-code-pro/source-code-pro.woff") format("woff");
+    font-weight: normal;
+    font-style:  normal;
+}
+
+@font-face
+{
     font-family: "envy-code";
     src: url("{{ site.url }}/assets/font/Envy-Code-R-PR7/Envy-Code-R.woff") format("woff");
     font-weight: normal;
