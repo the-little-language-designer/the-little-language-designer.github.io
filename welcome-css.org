@@ -79,13 +79,13 @@
       /* font-family: "sapirsans", "ming-lan"; */
       /* font-family: "angleterre_book", "ming-lan"; */
 
-      font-family: "canadian", "ming-lan";
+      /* font-family: "canadian", "ming-lan"; */
 
       /* font-family: "cantabile", "ming-lan"; */
       /* font-family: "isotype_regular", "ming-lan"; */
       /* font-family: "sirona", "ming-lan"; */
 
-      /* font-family: "teletype_regular", "ming-lan"; */
+      font-family: "teletype_regular", "ming-lan";
 
       /* font-family: "temps_nouveau", "ming-lan"; */
       /* font-family: "tiplo", "ming-lan"; */
