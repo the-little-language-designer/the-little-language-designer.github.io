@@ -22,23 +22,31 @@
     可以獨立工作的程序
     並且用一些簡單測試
     來展示每個關鍵步驟中所實現的性狀
-    1. [[../1st-instar/overview.html][齡一]]
-       基本的線串碼解釋器
-    2. [[../2nd-instar/overview.html][齡二]]
-       線串碼中的基本指令
-    3. [[../3rd-instar/overview.html][齡三]]
-       基本輸入輸出
-       轉跳指令
-    4. [[../4th-instar/overview.html][齡四]]
-       基本 REPL
-    5. [[../overview.html][進行中的小蟬語]]
-       加上 編譯器
-       就得到完整的 小蟬語
-       另外
-       在最終的版本中
-       還有對性狀的一些豐富與補充
-       使得 小蟬語 在教學目的之外
-       也能勝於其他任務
+    我把它們稱作 齡一 齡二 等等
+    就像是蟬的幼蟲的年齡
+    你可以從第一個的代碼開始看起
+    逐步學習解釋器的實現方式
+    * [[../1st-instar/overview.html][齡一]]
+      * 基本的線串碼解釋器
+    * [[../2nd-instar/overview.html][齡二]]
+      * 線串碼中的基本指令
+    * [[../3rd-instar/overview.html][齡三]]
+      * 基本輸入輸出
+      * 轉跳指令
+    * [[../4th-instar/overview.html][齡四]]
+      * 基本 REPL
+    * [[../5th-instar/overview.html][齡五]]
+      * [[../5th-instar/core/overview.html][被加載的核文件]]
+      * 編譯器
+      * 對文件的加載
+    * [[../overview.html][進行中的小蟬語]]
+      * [[../core/overview.html][被加載的核文件]]
+      * 局部變元
+      * 另外
+        在進行的版本中
+        還有對性狀的一些豐富與補充
+        使得 小蟬語 在教學目的之外
+        也能勝於其他任務
   * 通過這種方式
     並補充以
     計算機構架 和 匯編語言的基本知識
@@ -46,7 +54,7 @@
     以這個簡單的程序語言的實現爲基礎
     來講授 [[../course/overview.html][匯編語言課程的實驗課]]
 * 運行
-  * [[https://github.com/the-little-language-designer/cicada-nymph][請到這裏下載源代碼]]
+  * [[https://github.com/the-little-language-designer/cicada][請到這裏下載源代碼]]
     並依照指示編譯解釋器
 * 簡單的例子
 ** 執行函數
@@ -126,27 +134,31 @@
     and equip it with simple test
     to demonstrate the feature that got implemented
     from that specific step of development
-    1. [[../1st-instar/overview.html][1st-instar]]
-       the threaded code interpreter
-    2. [[../2nd-instar/overview.html][2nd-instar]]
-       basic instructions of threaded code
-    3. [[../3rd-instar/overview.html][3rd-instar]]
-       basic io
-       instructions about branching
-    4. [[../4th-instar/overview.html][4th-instar]]
-       basic REPL
-    5. [[../overview.html][the ongoing cicada-nymph]]
-       with the compile
-       we have the complete cicada-nymph
-       and to add more features
-       to let cicada-nymph be fit for missions other than teaching
+    * [[../1st-instar/overview.html][1st-instar]]
+      * the threaded code interpreter
+    * [[../2nd-instar/overview.html][2nd-instar]]
+      * basic instructions of threaded code
+    * [[../3rd-instar/overview.html][3rd-instar]]
+      * basic io
+      * instructions about branching
+    * [[../4th-instar/overview.html][4th-instar]]
+      * basic REPL
+    * [[../5th-instar/overview.html][5th-instar]]
+      * [[../5th-instar/core/overview.html][core file to load]]
+      * compiler
+      * load-file
+    * [[../overview.html][the ongoing cicada-nymph]]
+      * [[../core/overview.html][core file to load]]
+      * local-variable
+      * and to add more features
+        to let cicada-nymph be fit for missions other than teaching
   * thus
     I am able to use the implementation of this simple language
     to teach an [[../course/overview.html][experimental assembly course]]
     (currently Chinese version only
      I will translate it to English when needed)
 * to run
-  * [[https://github.com/the-little-language-designer/cicada-nymph][please visit this repository to download the source code]]
+  * [[https://github.com/the-little-language-designer/cicada][please visit this repository to download the source code]]
     and follow the instructions there
     to compile the interpreter
 * simple examples

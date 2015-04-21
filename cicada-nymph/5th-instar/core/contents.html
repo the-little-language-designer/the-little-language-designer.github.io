@@ -49,16 +49,6 @@
         color: #fd971f;
         font-weight: bold;
       }
-      .cicada-nymph-save-local-variable-1 {
-        /* cicada-nymph-save-local-variable-1-face */
-        color: #FF4C4C;
-        font-weight: bold;
-      }
-      .cicada-nymph-save-local-variable-2 {
-        /* cicada-nymph-save-local-variable-2-face */
-        color: #dc322f;
-        font-weight: bold;
-      }
       .cicada-nymph-sentence-reader {
         /* cicada-nymph-sentence-reader-face */
         color: #ffff00;
@@ -152,7 +142,9 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** use name-hash-table to implement local-variable-support</span>
 <span class="org-level-2">** re-design the color of cicada-nymph-mode and re-write the emacs-lisp code</span>
+<span class="org-level-2">** compare the improvement about syntax after local-variable is supported</span>
 <span class="org-level-2">** name-hash-table</span>...
 <span class="org-level-2">** little tester</span>
 <span class="org-level-2">** title-name-table</span>
@@ -177,18 +169,13 @@
 </span><span class="org-level-2">** allocate-memory</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* report</span>
-<span class="org-level-2">** report-dictionary</span>
-<span class="org-level-3">*** report-dictionary,primitive-function</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** report-dictionary,function</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** report-dictionary,macro</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** report-dictionary,exception</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** report-dictionary,variable</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** report-dictionary</span>...<span class="org-block-end-line">
+<span class="org-level-2">** show-dictionary,primitive-function</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** show-dictionary,function</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** show-dictionary,macro</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** show-dictionary,exception</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** show-dictionary,variable</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** show-dictionary</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** report-memory</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** report-platform</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** report-jo-size</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** report-machine-word-size</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** initial-report</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* to load</span>
 <span class="org-level-2">** load core.cn.test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* I wish you a lovely day</span>
@@ -210,7 +197,7 @@
 </span><span class="org-level-3">*** name,used?</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** name,used-as-title?</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** name,fetch-string</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** name,fetch-title-index sadsfiljdasd</span>...<span class="org-block-end-line">
+</span><span class="org-level-3">*** name,fetch-title-index</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** name,fetch-orbit-length</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** name,fetch-orbiton</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** name,save-string</span>...<span class="org-block-end-line">
@@ -234,6 +221,9 @@
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* ===================================</span>
-</pre>
+<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span>
+<span class="org-level-2">** insert</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** insert</span>...<span class="org-block-end-line">
+</span></pre>
   </body>
 </html>
