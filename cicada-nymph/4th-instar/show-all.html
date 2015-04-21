@@ -2127,7 +2127,7 @@
         and saved to a buffer
      2. when reading from stdin
         a whole line is readed at a time
-     3. not that
+     3. note that
         reading line instead of keyboard-code
         will limit the design of the user interface
    * by factoring out the low-level calls
@@ -2141,7 +2141,7 @@
      in my view
      meta-programming should NOT
      be achieved by editing string
-   * not that
+   * note that
      this point of view
      is not conflict with my macro system
 <span class="org-level-2">** memory allocation</span>
@@ -3087,14 +3087,6 @@
 
    define_variable <span class="string">"*current-free-address,un-initialized-memory*"</span>, V__current_free_address__un_initialized_memory
      <span class="type">xx</span> current_free_address$un_initialized_memory
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-heap*</span></span>
-   * the last_primitive_string_in_assembly
-     is just "<span class="bold">*current-free-address,primitive-string-heap*</span>"
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*current-free-address,primitive-string-heap*"</span>, V__current_free_address__primitive_string
-      <span class="type">xx</span> current_free_address$primitive_string_heap
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** last_link</span>
