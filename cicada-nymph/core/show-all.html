@@ -24,6 +24,15 @@
         /* cicada-nymph-comment-face */
         color: #FF8888;
       }
+      .cicada-nymph-constant {
+        /* cicada-nymph-constant-face */
+        color: #fd971f;
+        font-weight: bold;
+      }
+      .cicada-nymph-curly-braces {
+        /* cicada-nymph-curly-braces-face */
+        color: #aebed8;
+      }
       .cicada-nymph-end {
         /* cicada-nymph-end-face */
         color: #00ffff;
@@ -77,10 +86,19 @@
         /* cicada-nymph-variable-face */
         color: #fd971f;
       }
+      .cicada-nymph-wody {
+        /* cicada-nymph-wody-face */
+        color: #a6e22e;
+        font-weight: bold;
+      }
       .cicada-nymph-word-to-define {
         /* cicada-nymph-word-to-define-face */
         color: #ef5939;
         font-weight: bold;
+      }
+      .italic {
+        /* italic */
+        text-decoration: underline;
       }
       .org-block-begin-line {
         /* org-block-begin-line */
@@ -125,6 +143,10 @@
         /* org-table */
         color: #87cefa;
       }
+      .org-tag {
+        /* org-tag */
+        font-weight: bold;
+      }
       .org-todo {
         /* org-todo */
         color: #ffc0cb;
@@ -152,14 +174,30 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** wrap more syscalls</span>
+<span class="org-level-2">** nested load-file</span>
+   * a stack of allocate buffers in another local-data-heap
+     the previous local-data-heap maybe should be called local-data-vector
+<span class="org-level-2">** [really needed] error handling for io function</span>
+   * write-file &#21487;&#33021;&#36935;&#21040;&#30913;&#30436;&#28415;&#36617;&#30340;&#24773;&#27841;
+<span class="org-level-2">** fixnum in other base</span>
+<span class="org-level-2">** round-heap for string literal in REPL</span>
+<span class="org-level-2">** more design about the command-line-interface</span>
+<span class="org-level-2">** home-path &amp; search-path to load files</span>
+   * poi denotes path-organizer
+   * &#23526;&#29694; &#26781;&#20214;&#24615;&#30340;&#34987;&#35299;&#37323;&#30340;&#20195;&#30908;
+     &#36889;&#27171;&#23601;&#33021;&#23526;&#29694;
+     1. little-tester
+     2. &#22312;&#19981;&#21516;&#30340;&#24179;&#33274;&#19979;&#22519;&#34892;&#19981;&#21516;&#30340;&#20195;&#30908;
+<span class="org-level-2">** little tester</span>
+<span class="org-level-2">** be able to switch REPL</span>
 <span class="org-level-2">** re-design the color of cicada-nymph-mode and re-write the emacs-lisp code</span>
+<span class="org-level-2">** [how] variable must be able to store string</span>
 <span class="org-level-2">** name-hash-table</span>
    * better factoring
    * better naming
-<span class="org-level-2">** little tester</span>
 <span class="org-level-2">** title-name-table</span>
 <span class="org-level-2">** data-giver</span>
-<span class="org-level-2">** be able to switch REPL</span>
 <span class="org-level-2">** syntax for exception handling in cicada-nymph</span>
 <span class="org-level-2">** big number and &#21516;&#39192;&#26041;&#31243;</span>
    * &#29234;&#20102;&#29609; hash-table
@@ -168,11 +206,6 @@
 <span class="org-level-2">** notation</span>
    * use ","
 <span class="org-level-2">** data section in cicada-nymph</span>
-<span class="org-level-2">** style</span>
-   * to use global-variable more
-     may will make code be better
-     for stack operations are less
-   * another way is to design good macro for operations
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* misc</span>
 <span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
@@ -182,124 +215,125 @@
     <span class="cicada-nymph-end">end</span>
   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* if &amp; else &amp; then</span>
-  * one predicate can make two branchs
-    three predicates can make four branchs
-    three predicates may only make three branchs
-    but indeed there must be an invisible branch
-<span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
-</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">if</span>
-    <span class="cicada-nymph-comment">&lt;&lt; string[address, length] --
-       address, string[address, length] &gt;&gt;</span>
-    <span class="cicada-nymph-variable">*false?branch*</span> save-into,jo-heap
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xx|swap|x
-    <span class="cicada-nymph-number">0</span> save-into,jo-heap
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
+</span><span class="org-level-1">* if &amp; else &amp; then</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>
+   * one predicate can make two branchs
+     three predicates can make four branchs
+     three predicates may only make three branchs
+     but indeed there must be an invisible branch
+<span class="org-level-2">** if &amp; else &amp; then</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">if</span>
+     <span class="cicada-nymph-comment">&lt;&lt; string[address, length] --
+        address, string[address, length] &gt;&gt;</span>
+     <span class="cicada-nymph-variable">*false?branch*</span> save-into,jo-heap
+     <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xx|swap|x
+     <span class="cicada-nymph-number">0</span> save-into,jo-heap
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
 
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">else</span>
-    <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
-       address, string[address, length] &gt;&gt;</span>
-    <span class="cicada-nymph-variable">*branch*</span> save-into,jo-heap
-    x|swap|xx
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xxx|swap|x
-    <span class="cicada-nymph-number">0</span> save-into,jo-heap
-    <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length], address &gt;&gt;</span>
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
-    over sub <span class="cicada-nymph-variable">*jo-size*</span> div
-    swap save
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">else</span>
+     <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
+        address, string[address, length] &gt;&gt;</span>
+     <span class="cicada-nymph-variable">*branch*</span> save-into,jo-heap
+     x|swap|xx
+     <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span> xxx|swap|x
+     <span class="cicada-nymph-number">0</span> save-into,jo-heap
+     <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length], address &gt;&gt;</span>
+     <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
+     over sub <span class="cicada-nymph-variable">*jo-size*</span> div
+     swap save
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
 
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
-       string[address, length] &gt;&gt;</span>
-    x|swap|xx
-    <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
-    over sub <span class="cicada-nymph-variable">*jo-size*</span> div
-    swap save
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
-<span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* </span><span class="org-done">test</span>
-<span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn.test
-</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">kkk</span>
-    <span class="cicada-nymph-string">"kkk took my baby away !"</span> write-string
-    cr
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length] --
+        string[address, length] &gt;&gt;</span>
+     x|swap|xx
+     <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
+     over sub <span class="cicada-nymph-variable">*jo-size*</span> div
+     swap save
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-macro</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** </span><span class="org-done">test</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn.test
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">kkk</span>
+     <span class="cicada-nymph-string">"kkk took my baby away !"</span> write-string
+     cr
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial</span>
-    <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
-    dup
-    one? <span class="cicada-nymph-syntax-key-word">if</span>
-      <span class="cicada-nymph-end">end</span>
-    <span class="cicada-nymph-syntax-key-word">then</span>
-    dup sub1 factorial
-    mul
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial</span>
+     <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
+     dup
+     one? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     dup sub1 factorial
+     mul
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial,test</span>
-    cr
-    <span class="cicada-nymph-number">1</span> factorial . cr
-    <span class="cicada-nymph-number">2</span> factorial . cr
-    <span class="cicada-nymph-number">3</span> factorial . cr
-    <span class="cicada-nymph-number">4</span> factorial . cr
-    <span class="cicada-nymph-number">5</span> factorial . cr
-    <span class="cicada-nymph-number">6</span> factorial . cr
-    <span class="cicada-nymph-number">7</span> factorial . cr
-    <span class="cicada-nymph-number">8</span> factorial . cr
-    <span class="cicada-nymph-number">9</span> factorial . cr
-    <span class="cicada-nymph-number">10</span> factorial . cr
-    <span class="cicada-nymph-number">11</span> factorial . cr
-    <span class="cicada-nymph-number">12</span> factorial . cr
-    <span class="cicada-nymph-number">13</span> factorial . cr
-    <span class="cicada-nymph-number">14</span> factorial . cr
-    <span class="cicada-nymph-number">15</span> factorial . cr
-    <span class="cicada-nymph-number">16</span> factorial . cr
-    <span class="cicada-nymph-number">17</span> factorial . cr
-    <span class="cicada-nymph-number">18</span> factorial . cr
-    <span class="cicada-nymph-number">19</span> factorial . cr
-    <span class="cicada-nymph-number">20</span> factorial . cr
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial,test</span>
+     cr
+     <span class="cicada-nymph-number">1</span> factorial . cr
+     <span class="cicada-nymph-number">2</span> factorial . cr
+     <span class="cicada-nymph-number">3</span> factorial . cr
+     <span class="cicada-nymph-number">4</span> factorial . cr
+     <span class="cicada-nymph-number">5</span> factorial . cr
+     <span class="cicada-nymph-number">6</span> factorial . cr
+     <span class="cicada-nymph-number">7</span> factorial . cr
+     <span class="cicada-nymph-number">8</span> factorial . cr
+     <span class="cicada-nymph-number">9</span> factorial . cr
+     <span class="cicada-nymph-number">10</span> factorial . cr
+     <span class="cicada-nymph-number">11</span> factorial . cr
+     <span class="cicada-nymph-number">12</span> factorial . cr
+     <span class="cicada-nymph-number">13</span> factorial . cr
+     <span class="cicada-nymph-number">14</span> factorial . cr
+     <span class="cicada-nymph-number">15</span> factorial . cr
+     <span class="cicada-nymph-number">16</span> factorial . cr
+     <span class="cicada-nymph-number">17</span> factorial . cr
+     <span class="cicada-nymph-number">18</span> factorial . cr
+     <span class="cicada-nymph-number">19</span> factorial . cr
+     <span class="cicada-nymph-number">20</span> factorial . cr
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">.12</span>
-    <span class="cicada-nymph-comment">&lt;&lt; 1 2 -- &gt;&gt;</span>
-    <span class="cicada-nymph-number">2</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-      <span class="cicada-nymph-string">"(^-^)"</span> write-string
-      <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-        <span class="cicada-nymph-string">"\^o^/"</span> write-string
-      <span class="cicada-nymph-syntax-key-word">else</span>
-        <span class="cicada-nymph-string">"     "</span> write-string
-      <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-syntax-key-word">else</span>
-      <span class="cicada-nymph-string">"     "</span> write-string
-      <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-        <span class="cicada-nymph-string">"\^o^/"</span> write-string
-      <span class="cicada-nymph-syntax-key-word">else</span>
-        <span class="cicada-nymph-string">"     "</span> write-string
-      <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-syntax-key-word">then</span>
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">.12</span>
+     <span class="cicada-nymph-comment">&lt;&lt; 1 2 -- &gt;&gt;</span>
+     <span class="cicada-nymph-number">2</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-string">"(^-^)"</span> write-string
+       <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+         <span class="cicada-nymph-string">"\^o^/"</span> write-string
+       <span class="cicada-nymph-syntax-key-word">else</span>
+         <span class="cicada-nymph-string">"     "</span> write-string
+       <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       <span class="cicada-nymph-string">"     "</span> write-string
+       <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+         <span class="cicada-nymph-string">"\^o^/"</span> write-string
+       <span class="cicada-nymph-syntax-key-word">else</span>
+         <span class="cicada-nymph-string">"     "</span> write-string
+       <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
-  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">.12,test</span>
-    cr
-    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> .12 cr
-    <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">2</span> .12 cr
-    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">6</span> .12 cr
-    <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">6</span> .12 cr
-    <span class="cicada-nymph-end">end</span>
-  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">.12,test</span>
+     cr
+     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> .12 cr
+     <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">2</span> .12 cr
+     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">6</span> .12 cr
+     <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">6</span> .12 cr
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
 
-  factorial,test
-  .12,test
-<span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* re-define execute-word &amp; basic-REPL</span>
+   factorial,test
+   .12,test
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* execute-word &amp; basic-REPL           </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>
   * to protect macro &amp; exception from be called from basic-REPL
 <span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
 </span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">execute-word</span>
@@ -312,13 +346,13 @@
     find <span class="cicada-nymph-syntax-key-word">if</span>
       dup macro-jo? <span class="cicada-nymph-syntax-key-word">if</span>
         drop
-        <span class="cicada-nymph-string">"* (execute-word) CAN NOT EXECUTE MACRO DIRECTLY : "</span> write-string
+        <span class="cicada-nymph-string">"* (execute-word) can not execute macro directly : "</span> write-string
         write-string cr
         <span class="cicada-nymph-end">end</span>
       <span class="cicada-nymph-syntax-key-word">then</span>
       dup exception-jo? <span class="cicada-nymph-syntax-key-word">if</span>
         drop
-        <span class="cicada-nymph-string">"* (execute-word) CAN NOT EXECUTE EXCEPTION DIRECTLY : "</span> write-string
+        <span class="cicada-nymph-string">"* (execute-word) can not execute exception directly : "</span> write-string
         write-string cr
         <span class="cicada-nymph-end">end</span>
       <span class="cicada-nymph-syntax-key-word">then</span>
@@ -327,7 +361,7 @@
       execute-jo
       <span class="cicada-nymph-end">end</span>
     <span class="cicada-nymph-syntax-key-word">else</span>
-    <span class="cicada-nymph-string">"* (execute-word) MEETS UNDEFINED WORD : "</span> write-string
+    <span class="cicada-nymph-string">"* (execute-word) meets undefined word : "</span> write-string
     write-string cr
     <span class="cicada-nymph-syntax-key-word">then</span>
     <span class="cicada-nymph-end">end</span>
@@ -371,8 +405,41 @@
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* report</span>
+</span><span class="org-level-1">* init-syscall-number</span>
+<span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
+</span>  <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">:syscall-number,open:</span>  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable</span>
+  <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">:syscall-number,close:</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable</span>
+  <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">:syscall-number,read:</span>  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable</span>
+  <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">:syscall-number,write:</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable</span>
+  <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">:syscall-number,exit:</span>  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable</span>
+  <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">:syscall-number,times:</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable</span>
+
+  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">init-syscall-number</span>
+    <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+    <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">8</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+      <span class="cicada-nymph-number">2</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,open:</span>  save
+      <span class="cicada-nymph-number">3</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,close:</span> save
+      <span class="cicada-nymph-number">0</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,read:</span>  save
+      <span class="cicada-nymph-number">1</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,write:</span> save
+      <span class="cicada-nymph-number">60</span>  <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,exit:</span>  save
+      <span class="cicada-nymph-number">100</span> <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,times:</span> save
+      <span class="cicada-nymph-end">end</span>
+    <span class="cicada-nymph-syntax-key-word">then</span>
+    <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">4</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+      <span class="cicada-nymph-number">5</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,open:</span>  save
+      <span class="cicada-nymph-number">6</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,close:</span> save
+      <span class="cicada-nymph-number">3</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,read:</span>  save
+      <span class="cicada-nymph-number">4</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,write:</span> save
+      <span class="cicada-nymph-number">1</span>   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,exit:</span>  save
+      <span class="cicada-nymph-number">43</span>  <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">:syscall-number,times:</span> save
+      <span class="cicada-nymph-end">end</span>
+    <span class="cicada-nymph-syntax-key-word">then</span>
+    <span class="cicada-nymph-end">end</span>
+  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+
+  init-syscall-number
+<span class="org-block-end-line">  #+end_src
+</span><span class="org-level-1">* report</span>
 <span class="org-level-2">** report-dictionary</span>
 <span class="org-level-3">*** report-dictionary,primitive-function</span>
 <span class="org-block-begin-line">    #+begin_src cicada-nymph :tangle core.cn
@@ -393,7 +460,7 @@
       dup jo-&gt;name
       dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
         drop2
-        <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+        <span class="cicada-nymph-string">" un-named "</span> write-string cr
       <span class="cicada-nymph-syntax-key-word">else</span>
         write-string cr
       <span class="cicada-nymph-syntax-key-word">then</span>
@@ -403,7 +470,7 @@
 
     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-dictionary,primitive-function</span>
       <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-      <span class="cicada-nymph-string">"* ALL PRIMITIVE-FUNCTION IN DICTIONARY :"</span> write-string cr
+      <span class="cicada-nymph-string">"* all primitive-function in dictionary :"</span> write-string cr
       <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
       loop,report-dictionary,primitive-function
       <span class="cicada-nymph-end">end</span>
@@ -428,7 +495,7 @@
       dup jo-&gt;name
       dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
         drop2
-        <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+        <span class="cicada-nymph-string">" un-named "</span> write-string cr
       <span class="cicada-nymph-syntax-key-word">else</span>
         write-string cr
       <span class="cicada-nymph-syntax-key-word">then</span>
@@ -438,7 +505,7 @@
 
     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-dictionary,function</span>
       <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-      <span class="cicada-nymph-string">"* ALL FUNCTION IN DICTIONARY :"</span> write-string cr
+      <span class="cicada-nymph-string">"* all function in dictionary :"</span> write-string cr
       <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
       loop,report-dictionary,function
       <span class="cicada-nymph-end">end</span>
@@ -463,7 +530,7 @@
       dup jo-&gt;name
       dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
         drop2
-        <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+        <span class="cicada-nymph-string">" un-named "</span> write-string cr
       <span class="cicada-nymph-syntax-key-word">else</span>
         write-string cr
       <span class="cicada-nymph-syntax-key-word">then</span>
@@ -473,7 +540,7 @@
 
     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-dictionary,macro</span>
       <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-      <span class="cicada-nymph-string">"* ALL MACRO IN DICTIONARY :"</span> write-string cr
+      <span class="cicada-nymph-string">"* all macro in dictionary :"</span> write-string cr
       <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
       loop,report-dictionary,macro
       <span class="cicada-nymph-end">end</span>
@@ -498,7 +565,7 @@
       dup jo-&gt;name
       dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
         drop2
-        <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+        <span class="cicada-nymph-string">" un-named "</span> write-string cr
       <span class="cicada-nymph-syntax-key-word">else</span>
         write-string cr
       <span class="cicada-nymph-syntax-key-word">then</span>
@@ -508,7 +575,7 @@
 
     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-dictionary,exception</span>
       <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-      <span class="cicada-nymph-string">"* ALL EXCEPTION IN DICTIONARY :"</span> write-string cr
+      <span class="cicada-nymph-string">"* all exception in dictionary :"</span> write-string cr
       <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
       loop,report-dictionary,exception
       <span class="cicada-nymph-end">end</span>
@@ -533,7 +600,7 @@
       dup jo-&gt;name
       dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
         drop2
-        <span class="cicada-nymph-string">"UN-NAMED"</span> write-string cr
+        <span class="cicada-nymph-string">" un-named "</span> write-string cr
       <span class="cicada-nymph-syntax-key-word">else</span>
         write-string cr
       <span class="cicada-nymph-syntax-key-word">then</span>
@@ -543,7 +610,7 @@
 
     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-dictionary,variable</span>
       <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-      <span class="cicada-nymph-string">"* ALL VARIABLE IN DICTIONARY :"</span> write-string cr
+      <span class="cicada-nymph-string">"* all variable in dictionary :"</span> write-string cr
       <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-variable">*first-jo-in-dictionary*</span>
       loop,report-dictionary,variable
       <span class="cicada-nymph-end">end</span>
@@ -560,7 +627,7 @@
       report-dictionary,macro
       report-dictionary,exception
       report-dictionary,variable
-      <span class="cicada-nymph-string">"* TOTALLY : "</span> write-string
+      <span class="cicada-nymph-string">"* totally : "</span> write-string
       add add add add . cr
       <span class="cicada-nymph-end">end</span>
     <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
@@ -570,39 +637,39 @@
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-memory</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
      <span class="cicada-nymph-string">"* *un-initialized-memory*"</span> write-string cr
-     <span class="cicada-nymph-string">"  * SIZE : "</span> write-string
+     <span class="cicada-nymph-string">"  * size : "</span> write-string
           <span class="cicada-nymph-variable">*size,un-initialized-memory*</span>
           . cr
-     <span class="cicada-nymph-string">"  * USED : "</span> write-string
+     <span class="cicada-nymph-string">"  * used : "</span> write-string
           <span class="cicada-nymph-variable">*current-free-address,un-initialized-memory*</span>
           <span class="cicada-nymph-variable">*un-initialized-memory*</span>
           sub . cr
-     <span class="cicada-nymph-string">"  * FREE : "</span> write-string
+     <span class="cicada-nymph-string">"  * free : "</span> write-string
           <span class="cicada-nymph-variable">*size,un-initialized-memory*</span>
           <span class="cicada-nymph-variable">*current-free-address,un-initialized-memory*</span>
           <span class="cicada-nymph-variable">*un-initialized-memory*</span>
           sub sub . cr
      <span class="cicada-nymph-string">"* *primitive-string-heap*"</span> write-string cr
-     <span class="cicada-nymph-string">"  * SIZE : "</span> write-string
+     <span class="cicada-nymph-string">"  * size : "</span> write-string
           <span class="cicada-nymph-variable">*size,primitive-string-heap*</span>
           . cr
-     <span class="cicada-nymph-string">"  * USED : "</span> write-string
+     <span class="cicada-nymph-string">"  * used : "</span> write-string
           <span class="cicada-nymph-variable">*current-free-address,primitive-string-heap*</span>
           <span class="cicada-nymph-variable">*primitive-string-heap*</span>
           sub . cr
-     <span class="cicada-nymph-string">"  * FREE : "</span> write-string
+     <span class="cicada-nymph-string">"  * free : "</span> write-string
           <span class="cicada-nymph-variable">*size,primitive-string-heap*</span>
           <span class="cicada-nymph-variable">*current-free-address,primitive-string-heap*</span>
           <span class="cicada-nymph-variable">*primitive-string-heap*</span>
           sub sub . cr
      <span class="cicada-nymph-string">"* *jo-heap*"</span> write-string cr
-     <span class="cicada-nymph-string">"  * SIZE : "</span> write-string
+     <span class="cicada-nymph-string">"  * size : "</span> write-string
           <span class="cicada-nymph-variable">*size,jo-heap*</span> . cr
-     <span class="cicada-nymph-string">"  * USED : "</span> write-string
+     <span class="cicada-nymph-string">"  * used : "</span> write-string
           <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
           <span class="cicada-nymph-variable">*jo-heap*</span>
           sub . cr
-     <span class="cicada-nymph-string">"  * FREE : "</span> write-string
+     <span class="cicada-nymph-string">"  * free : "</span> write-string
           <span class="cicada-nymph-variable">*size,jo-heap*</span>
           <span class="cicada-nymph-variable">*current-free-address,jo-heap*</span>
           <span class="cicada-nymph-variable">*jo-heap*</span>
@@ -614,7 +681,7 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-platform</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-     <span class="cicada-nymph-string">"* PLATFORM : "</span> write-string
+     <span class="cicada-nymph-string">"* platform : "</span> write-string
      platform write-string
      cr
      <span class="cicada-nymph-end">end</span>
@@ -624,7 +691,7 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-jo-size</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-     <span class="cicada-nymph-string">"* JO-SIZE : "</span> write-string
+     <span class="cicada-nymph-string">"* jo-size : "</span> write-string
      <span class="cicada-nymph-variable">*jo-size*</span> write-nature-number
      <span class="cicada-nymph-string">" bytes"</span> write-string
      cr
@@ -635,7 +702,7 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-machine-word-size</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-     <span class="cicada-nymph-string">"* MACHINE-WORD-SIZE : "</span> write-string
+     <span class="cicada-nymph-string">"* machine-word-size : "</span> write-string
      <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">8</span> mul write-nature-number
      <span class="cicada-nymph-string">" bits"</span> write-string
      cr
@@ -646,24 +713,24 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">initial-report</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* initial-report : "</span> write-string cr
      <span class="cicada-nymph-string">"  "</span> write-string report-platform
      <span class="cicada-nymph-string">"  "</span> write-string report-machine-word-size
      <span class="cicada-nymph-string">"  "</span> write-string report-jo-size
-     cr
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* to load</span>
-<span class="org-level-2">** load core.cn.test</span>
+</span><span class="org-level-2">** report-loaded-core-file</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">test</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">report-loaded-core-file</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-     <span class="cicada-nymph-string">"core.cn.test"</span> load-file
+     <span class="cicada-nymph-string">"* loaded-core-file : "</span> .s
+     <span class="cicada-nymph-string">"    "</span> write-string
+     get-path,loaded-core-file .s
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* I wish you a lovely day</span>
-<span class="org-level-2">** hi</span>
+</span><span class="org-level-2">** hi</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-number">0</span>
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">*hi,random-base*</span>
@@ -671,23 +738,30 @@
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">hi,random</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- random-number &gt;&gt;</span>
-     <span class="cicada-nymph-variable">*hi,random-base*</span>
-     <span class="cicada-nymph-variable">*hi,random-base*</span> add1 <span class="cicada-nymph-number">10</span> mod
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*hi,random-base*</span> save
+     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-constant">:syscall-number,times:</span>
+     <span class="cicada-nymph-number">1</span> syscall
+     <span class="cicada-nymph-number">13</span> mod
+     <span class="cicada-nymph-comment">&lt;&lt;
+      *hi,random-base*
+      *hi,random-base* add1 13 mod
+      address *hi,random-base* save
+     &gt;&gt;</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">hi,say</span>
      <span class="cicada-nymph-comment">&lt;&lt; number -- &gt;&gt;</span>
-     dup <span class="cicada-nymph-number">0</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" cica cica da yaya !!!"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" hi ^-^"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-number">2</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" hello :)"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-number">3</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" hey *^-^*"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-number">4</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" hiya \^o^/"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-number">5</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" I wish you a lovely day"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-number">6</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" I wish you a lovely day { or night :P }"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-number">7</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">" o.o"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
-     drop <span class="cicada-nymph-string">" love love ^3^"</span> .s <span class="cicada-nymph-end">end</span>
+     dup <span class="cicada-nymph-number">0</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* do not forget to eat good good coder !"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* me wile moku e pona moku ^-^"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">2</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* cica cica da yaya !!!"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">3</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* hi ^-^"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">4</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* hello :)"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">5</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* hey *^-^*"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">6</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* hiya \^o^/"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">7</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* I wish you a lovely day"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">8</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* I wish you a lovely day { or night :P }"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     dup <span class="cicada-nymph-number">9</span> equal? <span class="cicada-nymph-syntax-key-word">if</span> drop <span class="cicada-nymph-string">"* o.o"</span> .s <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-syntax-key-word">then</span>
+     drop <span class="cicada-nymph-string">"* love love ^3^"</span> .s <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">hi</span>
@@ -697,11 +771,10 @@
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* stack-REPL</span>
+</span><span class="org-level-1">* stack-REPL</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * print argument-stack in every loop
-<span class="org-level-2">** write-argument-stack</span>
+<span class="org-level-2">** print-argument-stack</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">print-argument-stack,loop</span>
      <span class="cicada-nymph-comment">&lt;&lt; address, counter -- &gt;&gt;</span>
@@ -731,12 +804,10 @@
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** stack-REPL</span>
+</span><span class="org-level-2">** print-argument-stack,pretty</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">stack-REPL</span>
-     <span class="cicada-nymph-comment">&lt;&lt; unknown -- unknown &gt;&gt;</span>
-     read-word-for-REPL
-     execute-word
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">print-argument-stack,pretty</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
      snapshot-the-stack-pointer
      cr
      <span class="cicada-nymph-string">" * "</span> write-string
@@ -756,8 +827,170 @@
        print-argument-stack
      <span class="cicada-nymph-string">"--"</span> write-string
      cr
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** stack-REPL</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">stack-REPL</span>
+     <span class="cicada-nymph-comment">&lt;&lt; unknown -- unknown &gt;&gt;</span>
+     read-word-for-REPL
+     execute-word
+     print-argument-stack,pretty
      <span class="cicada-nymph-end">&lt;&gt;</span> stack-REPL
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* port</span>
+<span class="org-level-1">* file-tree</span>
+<span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#38364;&#26044;&#25509;&#21475;</span>
+   * &#24213;&#23652;&#30340; IO &#20989;&#25976;&#25105;&#36996;&#19981;&#30693;&#36947;&#25033;&#35442;&#22914;&#20309;&#35373;&#35336;
+     &#20294;&#26159;&#30456;&#23565;&#39640;&#23652;&#30340;&#26681;&#25991;&#20214;&#30340;&#31777;&#21934;&#35712;&#23531;&#26377;&#38364;&#30340;&#20989;&#25976;
+     &#24050;&#32147;&#22522;&#26412;&#30906;&#23450;&#20102;
+     &#20854;&#29305;&#40670;&#26159;
+     &#31777;&#21270;&#25481; port &#36889;&#20491;&#21443;&#25976;
+     &#25152;&#26377;&#30340;&#20989;&#25976;&#37117;&#20197;&#36335;&#24465;&#29234;&#21443;&#25976;
+<span class="org-level-2">** </span><span class="org-todo">note</span>
+   * file-tree is a database
+     the following interface is provided
+     1. add
+     2. sub
+     3. up
+     4. find
+     5. list
+   * a path is always one of the needed argument
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> macro about path</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph
+</span>   <span class="cicada-nymph-curly-braces">{</span><span class="cicada-nymph-wody">path:</span> home xyh cicada core.cn<span class="cicada-nymph-curly-braces">}</span>
+   <span class="cicada-nymph-string">"/home/xyh/cicada/core.cn"</span>
+
+   <span class="cicada-nymph-curly-braces">{</span><span class="cicada-nymph-wody">path:</span> home xyh cicada<span class="cicada-nymph-curly-braces">}</span>
+   <span class="cicada-nymph-string">"/home/xyh/cicada"</span>
+
+   <span class="cicada-nymph-comment">&lt;&lt; +working+ "." &gt;&gt;</span>
+   <span class="cicada-nymph-curly-braces">{</span><span class="cicada-nymph-wody">path:</span> <span class="cicada-nymph-constant">+working+</span> core.cn<span class="cicada-nymph-curly-braces">}</span>
+   <span class="cicada-nymph-string">"./core.cn"</span>
+
+   <span class="cicada-nymph-comment">&lt;&lt; +parent+ ".." &gt;&gt;</span>
+   <span class="cicada-nymph-curly-braces">{</span><span class="cicada-nymph-wody">path:</span> <span class="cicada-nymph-constant">+parent+</span> cicada core.cn<span class="cicada-nymph-curly-braces">}</span>
+   <span class="cicada-nymph-string">"../cicada/core.cn"</span>
+
+   <span class="cicada-nymph-comment">&lt;&lt; +library+ "/home/xyh/.cicada/library" &gt;&gt;</span>
+   <span class="cicada-nymph-curly-braces">{</span><span class="cicada-nymph-wody">path:</span> <span class="cicada-nymph-constant">+library+</span> kkk main.cn<span class="cicada-nymph-curly-braces">}</span>
+   <span class="cicada-nymph-string">"/home/xyh/.cicada/library/kkk/main.cn"</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* path</span>
+<span class="org-level-2">** relative-path?</span>
+<span class="org-level-2">** full-path?</span>
+<span class="org-level-1">* poi</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>
+   * poi denotes path-organizer
+     it can give a name to a path
+     one path one name
+     it is designed for (load-file)
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> two directories</span>
+   * two directories to store the name path record
+     1. user :
+        "<span class="italic">/home/&lt;user&gt;/</span>.cicada/poi"
+     2. system :
+        "/etc/cicada/poi"
+   * note that
+     these two directories are viewed as one by poi
+     no such things like
+     user overriding system will happen
+     one name can only exist in one of the two directories
+     more on this in the following note
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> interface for command-line-function</span>
+   * cn poi add  &lt;name&gt; &lt;relative-path&gt;
+   * cn poi sub  &lt;name&gt;
+   * cn poi up   &lt;name&gt; &lt;relative-path&gt;
+   * cn poi show &lt;name&gt;
+   * cn poi list
+   * &lt;relative-path&gt; is converted to &lt;full-path&gt;
+     with the help of working-directory
+   * &lt;relative-path&gt; is in the format of
+     "./dictionary/file"
+     "./dictionary/dictionary"
+     note that
+     for a &lt;relative-path&gt; of dictionary
+     not tailing "/" should be added
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> interface for load-file</span>
+   * a path can be a file or a directory
+     1. file
+        "name" load-file
+     2. directory
+        "name/file" load-file
+        note that
+        use "name/file"
+        instead of "name/file.cn"
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> interface in cicada-nymph code</span>
+   * poi should not be called in cicada-nymph code
+<span class="org-level-2">** help</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">poi,help</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** add</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">poi,add</span>
+     <span class="cicada-nymph-comment">&lt;&lt; name[address, length], relative-path[address, length] -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** sub</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">poi,sub</span>
+     <span class="cicada-nymph-comment">&lt;&lt; name[address, length] -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** up</span>
+   * up denotes update
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">poi,up</span>
+     <span class="cicada-nymph-comment">&lt;&lt; name[address, length], relative-path[address, length] -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** list</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">poi,list</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** show</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">poi,show</span>
+     <span class="cicada-nymph-comment">&lt;&lt; name[address, length] -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* load-file</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">load-file</span>
+     <span class="cicada-nymph-comment">&lt;&lt; ??? -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> little-tester</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span>
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> fixnum in other base</span>
+<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* name-hash-table</span>
@@ -1192,23 +1425,104 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">name-hash-table,report</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
      <span class="cicada-nymph-number">0</span> name-hash-table,report,loop
-     <span class="cicada-nymph-string">"* TOTALLY : "</span> write-string
+     <span class="cicada-nymph-string">"* totally : "</span> write-string
      <span class="cicada-nymph-variable">*name-hash-table,counter*</span> write-nature-number
      cr
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> title-name-table</span>
-<span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> return-stack</span>
-<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> argument-stack</span>
-<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> frame-stack</span>
-<span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* epilog</span>
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* command-line-interface</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>
+<span class="org-level-2">** command-line,unknow-function</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">command-line,unknow-function</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* (cicada-nymph) unknow command-line-function : "</span> write-string
+     get-command-line
+     string-tail,word
+     string-head,word .s
+     <span class="cicada-nymph-string">"* good bye ^-^/"</span> .s
+     bye
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** command-line,stack-REPL</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">command-line,stack-REPL</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     welcome
+     report-loaded-core-file
+     initial-report
+     hi
+     <span class="cicada-nymph-string">"* you are in the (stack-REPL)"</span> .s
+     <span class="cicada-nymph-string">"  every time after a word is executed"</span> .s
+     <span class="cicada-nymph-string">"  the argument-stack get printed"</span> .s
+     print-argument-stack,pretty
+     <span class="cicada-nymph-end">&lt;&gt;</span> stack-REPL
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** command-line,basic-REPL</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">command-line,basic-REPL</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     welcome
+     report-loaded-core-file
+     initial-report
+     hi
+     <span class="cicada-nymph-string">"* you are in the (basic-REPL)"</span> .s
+     <span class="cicada-nymph-string">"  this REPL does not print any thing automaticly"</span> .s
+     <span class="cicada-nymph-end">&lt;&gt;</span> basic-REPL
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** command-line,poi</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">command-line,poi</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-string">"* poi byebye"</span> .s
+     bye
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** command-line,no-function</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">command-line,no-function</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     <span class="cicada-nymph-end">&lt;&gt;</span> command-line,stack-REPL
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** command-line-dispatcher</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">command-line-dispatcher</span>
+     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+     get-command-line
+     string-tail,word
+     dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
+       drop2
+       <span class="cicada-nymph-end">&lt;&gt;</span> command-line,no-function
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     string-head,word
+     <span class="cicada-nymph-save-local-variable-2">&gt;::1st-word</span>
+     <span class="cicada-nymph-fetch-local-variable-2">::1st-word</span> <span class="cicada-nymph-string">"basic-REPL"</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-end">&lt;&gt;</span> command-line,basic-REPL
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-fetch-local-variable-2">::1st-word</span> <span class="cicada-nymph-string">"stack-REPL"</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-end">&lt;&gt;</span> command-line,stack-REPL
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-fetch-local-variable-2">::1st-word</span> <span class="cicada-nymph-string">"poi"</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-end">&lt;&gt;</span> command-line,poi
+     <span class="cicada-nymph-syntax-key-word">then</span>
+       <span class="cicada-nymph-end">&lt;&gt;</span> command-line,unknow-function
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* the-story-begin</span>
 <span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
-</span>  initial-report
-  stack-REPL
-  hi
+</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">the-story-begin</span>
+    <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+    <span class="cicada-nymph-end">&lt;&gt;</span> command-line-dispatcher
+  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+
+  the-story-begin
 <span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-done">test</span>

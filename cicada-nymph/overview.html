@@ -104,6 +104,10 @@
         /* font-lock-function-name-face */
         color: #a6e22e;
       }
+      .italic {
+        /* italic */
+        text-decoration: underline;
+      }
       .keyword {
         /* font-lock-keyword-face */
         color: #f92672;
@@ -157,9 +161,18 @@
         color: #00ffff;
         text-decoration: underline;
       }
+      .org-special-keyword {
+        /* org-special-keyword */
+        color: #f92672;
+        font-weight: bold;
+      }
       .org-table {
         /* org-table */
         color: #87cefa;
+      }
+      .org-tag {
+        /* org-tag */
+        font-weight: bold;
       }
       .org-todo {
         /* org-todo */
@@ -169,6 +182,10 @@
       .preprocessor {
         /* font-lock-preprocessor-face */
         color: #a6e22e;
+      }
+      .rainbow-delimiters-depth-1 {
+        /* rainbow-delimiters-depth-1-face */
+        color: #8c8c8c;
       }
       .return-stack-bar-ket {
         /* return-stack-bar-ket-face */
@@ -230,11 +247,12 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>...
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>...
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> instar</span>...
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#25976;&#25818;&#32080;&#27083;&#33287;&#21475;&#32317;&#32080;</span>...
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#24615;&#29376;&#32317;&#32080;</span>...
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>...
 <span class="org-level-1">* -----------------------------------</span>
@@ -266,9 +284,12 @@
 <span class="org-level-1">* basic io</span>...
 <span class="org-level-1">* eval-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* file io</span>...
-<span class="org-level-1">* load-file</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* load-init-file</span>...<span class="org-block-end-line">
+<span class="org-level-1">* port</span>...
+<span class="org-level-1">* to load core file</span>...
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* to expose syscall</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* initialization</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* buffer</span>...<span class="org-block-end-line">
