@@ -173,44 +173,57 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
+<span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span>
+<span class="org-level-1">* a way to exit REPLs</span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** more and better report</span>...
 <span class="org-level-2">** wrap more syscalls</span>
-<span class="org-level-2">** nested load-file</span>...
+<span class="org-level-2">** about load-file</span>...
+<span class="org-level-2">** round-heap for string literal in REPL</span>...
+<span class="org-level-2">** home-path &amp; search-path to load files</span>...
+<span class="org-level-2">** debug-REPL</span>
 <span class="org-level-2">** [really needed] error handling for io function</span>...
 <span class="org-level-2">** fixnum in other base</span>
-<span class="org-level-2">** round-heap for string literal in REPL</span>
 <span class="org-level-2">** more design about the command-line-interface</span>
-<span class="org-level-2">** home-path &amp; search-path to load files</span>...
 <span class="org-level-2">** little tester</span>
-<span class="org-level-2">** be able to switch REPL</span>
 <span class="org-level-2">** re-design the color of cicada-nymph-mode and re-write the emacs-lisp code</span>
 <span class="org-level-2">** [how] variable must be able to store string</span>
 <span class="org-level-2">** name-hash-table</span>...
 <span class="org-level-2">** title-name-table</span>
 <span class="org-level-2">** data-giver</span>
-<span class="org-level-2">** syntax for exception handling in cicada-nymph</span>
 <span class="org-level-2">** big number and &#21516;&#39192;&#26041;&#31243;</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
 <span class="org-level-2">** notation</span>...
 <span class="org-level-2">** data section in cicada-nymph</span>
-<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* misc</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* if &amp; else &amp; then</span>
+</span><span class="org-level-1">* more syntax for make-jojo</span>
+<span class="org-level-2">** word:[if|else|then]?</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** syntax,[if|else|then],make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** more,rule-set,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> if &amp; else &amp; then</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** word:prepare-for?</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** syntax,prepare-for,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** more,rule-set,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* basic-REPL                          </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>
+<span class="org-level-2">** execute-word</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** basic-REPL</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* stack-REPL</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** if &amp; else &amp; then</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* execute-word &amp; basic-REPL           </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>...<span class="org-block-end-line">
+<span class="org-level-2">** print-argument-stack</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** print-argument-stack,pretty</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** stack-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* allocate</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** clear-memory [not using]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** allocate-memory</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* init-syscall-number</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* report</span>
-<span class="org-level-2">** report-dictionary</span>
+<span class="org-level-2">** welcome</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** report-dictionary</span>
 <span class="org-level-3">*** report-dictionary,primitive-function</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** report-dictionary,function</span>...<span class="org-block-end-line">
-</span><span class="org-level-3">*** report-dictionary,macro</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** report-dictionary,exception</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** report-dictionary,variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-3">*** report-dictionary</span>...<span class="org-block-end-line">
@@ -218,20 +231,17 @@
 </span><span class="org-level-2">** report-platform</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** report-jo-size</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** report-machine-word-size</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** report-syntax-set                  </span><span class="org-level-2"><span class="org-tag">:not_using:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** initial-report</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** report-loaded-core-file</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** hi</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* stack-REPL</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** print-argument-stack</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** print-argument-stack,pretty</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** stack-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* port</span>
+<span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#38364;&#26044;&#36664;&#20837;&#36664;&#20986;</span>
 <span class="org-level-1">* file-tree</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#38364;&#26044;&#25509;&#21475;</span>...
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> macro about path</span>...<span class="org-block-end-line">
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> syntax about path</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* path</span>
 <span class="org-level-2">** relative-path?</span>
 <span class="org-level-2">** full-path?</span>
@@ -290,8 +300,8 @@
 </span><span class="org-level-2">** command-line,poi</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** command-line,no-function</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** command-line-dispatcher</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* the-story-begin</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the-story-begin*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* ===================================</span>
 </pre>

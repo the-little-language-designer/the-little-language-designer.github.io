@@ -151,11 +151,6 @@
         /* org-level-2 */
         color: #fd971f;
       }
-      .org-level-3 {
-        /* org-level-3 */
-        color: #f92672;
-        font-weight: bold;
-      }
       .org-link {
         /* org-link */
         color: #00ffff;
@@ -183,10 +178,6 @@
         /* font-lock-preprocessor-face */
         color: #a6e22e;
       }
-      .rainbow-delimiters-depth-1 {
-        /* rainbow-delimiters-depth-1-face */
-        color: #8c8c8c;
-      }
       .return-stack-bar-ket {
         /* return-stack-bar-ket-face */
         color: #dc322f;
@@ -194,6 +185,11 @@
       }
       .return-stack-end {
         /* return-stack-end-face */
+        color: #00ffff;
+        font-weight: bold;
+      }
+      .return-stack-exception {
+        /* return-stack-exception-face */
         color: #00ffff;
         font-weight: bold;
       }
@@ -246,6 +242,9 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
+<span class="org-level-1">* better naming of headings</span>
+<span class="org-level-1">* &#26356;&#22810;&#30340;&#20013;&#25991;&#31558;&#35352;</span>
+<span class="org-level-1">* local-data-vector &amp; local-data-heap</span>...
 <span class="org-level-1">* </span><span class="org-done">todo</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>...
@@ -263,18 +262,18 @@
 <span class="org-level-1">* next</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>...
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* helper function in assembly code</span>...
-<span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* macro for jo &amp; explainer</span>...
-<span class="org-level-1">* macro for make-jojo</span>...
+<span class="org-level-1">* macro and explainer for exceptions</span>...
 <span class="org-level-1">* execute-jo &amp; structure of jo</span>...
 <span class="org-level-1">* primitive-string-heap</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* type of jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* end &amp; taca</span>...
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the story begin*</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* helper function in assembly</span>...
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the-story-begin*</span></span>...
+<span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* the stack</span>...
 <span class="org-level-1">* instruction</span>...
 <span class="org-level-1">* bool</span>...<span class="org-block-end-line">
@@ -285,8 +284,9 @@
 <span class="org-level-1">* eval-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* port</span>...
-<span class="org-level-1">* to load core file</span>...
-<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* system environment</span>...
+<span class="org-level-1">* to load core file</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* to expose syscall</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* initialization</span>...<span class="org-block-end-line">
@@ -300,10 +300,15 @@
 </span><span class="org-level-1">* basic-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* colon semicolon</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* function &amp; jojo</span>...
-<span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* local-variable</span>...
-<span class="org-level-1">* -----------------------------------</span>
+</span><span class="org-level-1">* jojo-heap</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* syntax-stack</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* rule-set</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* rule-set,make-jojo</span>...
+<span class="org-level-1">* make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-[function|exception|variable]</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* local-variable</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* some global variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>...
