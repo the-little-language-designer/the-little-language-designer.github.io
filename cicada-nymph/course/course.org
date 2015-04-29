@@ -62,6 +62,12 @@
        小蟬語的優越性
    * 輸入與輸出的具體實現
      * 字符串這個數據結構
+** 第六次
+   * 反思
+   * 解釋器的雛型
+     * REPL
+   * define-function 與 make-jojo
+     * 簡單的編譯
 * 資料
 ** [構架] 費恩曼的比喻
    * [[architecture/overview.html][費恩曼關於計算機構架的演講]]
@@ -92,13 +98,5 @@
 ** [版本控制] git & github
    * [[https://help.github.com/][github 的幫助頁面]]
    * [[http://git-scm.com/][git 主頁]]
-   * 開放源代碼運動
-     * [[https://en.wikipedia.org/wiki/Free_software_movement][free software movement]]
-     * [[https://en.wikipedia.org/wiki/Open-source_movement][open source movement]]
-   * [[https://github.com/xieyuheng][我的 github 頁面]]
-   * [[https://github.com/the-little-language-designer][小小語言設計家的 github 頁面]]
    * [[https://pages.github.com/][github 所提供的構建靜態網站的服務 -- github page]]
-   * [[http://the-little-language-designer.github.io/][小小語言設計家利用 guthub page 所製作的主頁]]
-     頁面內容的生成
-     還利用到了 [[http://jekyllrb.com/][jekyll]] 和 eamcs
 * ===================================

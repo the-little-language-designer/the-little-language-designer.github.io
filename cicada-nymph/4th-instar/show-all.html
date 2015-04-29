@@ -961,21 +961,21 @@
 </span>          <span class="return-stack-jo">(example)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(fun1)</span> <span class="return-stack-bar-ket">]</span>
                       <span class="return-stack-jo">(fun2)</span>
-                      <span class="return-stack-end">(taca)</span>
+                      <span class="return-stack-jo">(taca)</span>
                       <span class="return-stack-jo">(example)</span>
 <span class="org-block-end-line">      #+end_src
 </span>   6. next
 <span class="org-block-begin-line">      #+begin_src return-stack
 </span>          <span class="return-stack-jo">(example)</span>   <span class="return-stack-jo">(fun1)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(fun2)</span> <span class="return-stack-bar-ket">]</span>
-                      <span class="return-stack-end">(taca)</span>
+                      <span class="return-stack-jo">(taca)</span>
                       <span class="return-stack-jo">(example)</span>
 <span class="org-block-end-line">      #+end_src
 </span>   7. next
 <span class="org-block-begin-line">      #+begin_src return-stack
 </span>                      <span class="return-stack-jo">(fun1)</span>
           <span class="return-stack-jo">(example)</span>   <span class="return-stack-jo">(fun2)</span>
-      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(taca)</span> <span class="return-stack-bar-ket">]</span>
+      <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(taca)</span> <span class="return-stack-bar-ket">]</span>
                       <span class="return-stack-jo">(example)</span>
 <span class="org-block-end-line">      #+end_src
 </span>   8. next
@@ -984,7 +984,7 @@
 </span>          <span class="return-stack-jo">(example)</span>
       <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-end">(end)</span> <span class="return-stack-bar-ket">]</span> <span class="return-stack-line">-</span> <span class="return-stack-bar-ket">[</span> <span class="return-stack-the-jo">(fun1)</span> <span class="return-stack-bar-ket">]</span>
                       <span class="return-stack-jo">(fun2)</span>
-                      <span class="return-stack-end">(taca)</span>
+                      <span class="return-stack-jo">(taca)</span>
                       <span class="return-stack-jo">(example)</span>
 <span class="org-block-end-line">      #+end_src
 </span>   9. you can see return-stack of (8.)
@@ -1036,7 +1036,6 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_variable <span class="string">""</span>, V__little_test_number
       <span class="type">xx</span> <span class="constant">3</span>
-
 
    define_function <span class="string">"little_test"</span>, little_test
 
@@ -1126,22 +1125,6 @@
 </span>      <span class="comment">;; xx exit_with_TOS
 </span>      <span class="comment">;;;; print "jo-&gt;name"
 </span>      <span class="comment">;;;; print "add"
-</span>
-      <span class="comment">;;;; xxoverxx
-</span>      <span class="comment">;; xx literal, 1
-</span>      <span class="comment">;; xx literal, 2
-</span>      <span class="comment">;; xx literal, 3
-</span>      <span class="comment">;; xx literal, 4
-</span>      <span class="comment">;; xx xxoverxx
-</span>      <span class="comment">;; xx pretty_write_integer
-</span>      <span class="comment">;; xx pretty_write_integer
-</span>      <span class="comment">;; xx pretty_write_integer
-</span>      <span class="comment">;; xx pretty_write_integer
-</span>      <span class="comment">;; xx pretty_write_integer
-</span>      <span class="comment">;; xx pretty_write_integer
-</span>      <span class="comment">;; xx zero
-</span>      <span class="comment">;; xx exit_with_TOS
-</span>      <span class="comment">;;;; 2 1 4 3 2 1
 </span>
       <span class="comment">;;;; find
 </span>      <span class="comment">;; xx read_word, string_to_integer ;; number
@@ -2871,14 +2854,16 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"read-word"</span>, read_word
       <span class="comment">;; &lt;&lt; -- word[address of buffer$read_word, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_word, read_word_to_buffer
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_word
+      <span class="type">xx</span> read_word_to_buffer
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-word-for-REPL</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"read-word-for-REPL"</span>, read_word_for_REPL
       <span class="comment">;; &lt;&lt; -- word[address of buffer$read_word_for_REPL, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_word_for_REPL, read_word_to_buffer
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_word_for_REPL
+      <span class="type">xx</span> read_word_to_buffer
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -2991,35 +2976,19 @@
       <span class="type">xx</span> (last_link + jo_size)
 
    define_function <span class="string">"find"</span>, find
-      <span class="comment">;; found :
-</span>      <span class="comment">;; &lt;&lt; word[address, length] -- jo, true &gt;&gt;
-</span>      <span class="comment">;; not found :
-</span>      <span class="comment">;; &lt;&lt; word[address, length] -- false &gt;&gt;
+      <span class="comment">;; &lt;&lt; word[address, length]
+</span>      <span class="comment">;;    -- jo, true
+</span>      <span class="comment">;;    -- false &gt;&gt;
 </span>      <span class="type">xx</span> V__first_jo_in_dictionary
       <span class="type">xx</span> help__find
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"help,find"</span>, help__find
-      <span class="comment">;; found :
-</span>      <span class="comment">;; &lt;&lt; word[address, length], jo -- jo, true &gt;&gt;
-</span>      <span class="comment">;; not found :
-</span>      <span class="comment">;; &lt;&lt; word[address, length], jo -- false &gt;&gt;
+      <span class="comment">;; &lt;&lt; word[address, length], jo
+</span>      <span class="comment">;;    -- jo, true
+</span>      <span class="comment">;;    -- false &gt;&gt;
 </span>      <span class="type">xx</span> xxtuckx
-
-
       <span class="type">xx</span> jo_to_name, xxoverxx
-
-      <span class="comment">;; for debug
-</span>      <span class="comment">;; xx jo_to_name
-</span>      <span class="comment">;; xx   dup2
-</span>      <span class="comment">;; xx   dup, write_integer, literal, 32, write_byte
-</span>      <span class="comment">;; xx   write_string, literal, 10, write_byte
-</span>      <span class="comment">;; xx xxoverxx
-</span>      <span class="comment">;; xx   dup2
-</span>      <span class="comment">;; xx   dup, write_integer, literal, 32, write_byte
-</span>      <span class="comment">;; xx   write_string, literal, 10, write_byte
-</span>
-
       <span class="type">xx</span> string_equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop2, true
       <span class="type">xx</span>   <span class="keyword">end</span>
