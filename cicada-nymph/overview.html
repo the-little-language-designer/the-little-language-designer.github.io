@@ -19,6 +19,11 @@
         /* font-lock-builtin-face */
         color: #a6e22e;
       }
+      .cicada-nymph-allocate {
+        /* cicada-nymph-allocate-face */
+        color: #AE7C3B;
+        font-weight: bold;
+      }
       .cicada-nymph-bool {
         /* cicada-nymph-bool-face */
         color: #fd971f;
@@ -63,11 +68,6 @@
         color: #dc322f;
         font-weight: bold;
       }
-      .cicada-nymph-save-local-variable-X {
-        /* cicada-nymph-save-local-variable-@-face */
-        color: #AE7C3B;
-        font-weight: bold;
-      }
       .cicada-nymph-sentence-reader {
         /* cicada-nymph-sentence-reader-face */
         color: #ffff00;
@@ -106,7 +106,7 @@
       }
       .italic {
         /* italic */
-        text-decoration: underline;
+        font-style: italic;
       }
       .keyword {
         /* font-lock-keyword-face */
@@ -242,9 +242,6 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
-<span class="org-level-1">* better naming of headings</span>
-<span class="org-level-1">* &#26356;&#22810;&#30340;&#20013;&#25991;&#31558;&#35352;</span>
-<span class="org-level-1">* local-data-vector &amp; local-data-heap</span>...
 <span class="org-level-1">* </span><span class="org-done">todo</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>...
@@ -262,8 +259,13 @@
 <span class="org-level-1">* next</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>...
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* macro for jo &amp; explainer</span>...
-<span class="org-level-1">* macro and explainer for exceptions</span>...
+<span class="org-level-1">* link</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* primitive_string_heap</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* function-jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* primitive-function-jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* variable-jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* exception-jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* execute-jo &amp; structure of jo</span>...
 <span class="org-level-1">* primitive-string-heap</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* type of jo</span>...<span class="org-block-end-line">
@@ -274,8 +276,9 @@
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the-story-begin*</span></span>...
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* the stack</span>...
 <span class="org-level-1">* instruction</span>...
+<span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* the stack</span>...
 <span class="org-level-1">* bool</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* fixnum</span>...
 <span class="org-level-1">* memory</span>...<span class="org-block-end-line">
@@ -287,7 +290,7 @@
 <span class="org-level-1">* system environment</span>...
 <span class="org-level-1">* to load core file</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* to expose syscall</span>...<span class="org-block-end-line">
+<span class="org-level-1">* syscall</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* initialization</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
@@ -307,9 +310,14 @@
 <span class="org-level-1">* make-jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* define-[function|exception|variable]</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* local-variable</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* some global variable</span>...<span class="org-block-end-line">
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#26377;&#21517;&#23383;&#30340;&#23616;&#37096;&#35722;&#37327; &#33287; &#35722;&#38263;&#30340;&#23616;&#37096;&#25976;&#25818;</span>...
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> </span><span class="org-level-1"><span class="bold">*to compare readability*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#20877;&#22686;&#21152;&#23616;&#37096;&#35722;&#20803;&#25903;&#25345;&#20043;&#24460; &#38656;&#35201;&#37325;&#23531;&#30340;&#37096;&#20998;</span>...
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#32317;&#32080;</span>...
+<span class="org-level-1">* local-data-vector</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* local-variable-table</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* two syntaxes</span>...
+<span class="org-level-1">* local-data-heap</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>...
 <span class="org-level-1">* ===================================</span>
