@@ -1,15 +1,29 @@
-#+TITLE: learning erlang
-#+AUTHOR: XIE Yuheng
-#+EMAIL: xyheme@gmail.com
-
+#+TITLE:  learning erlang
+#+AUTHOR: 謝宇恆 / XIE Yuheng
+#+EMAIL:  xyheme@gmail.com
 
 * 記
   * 二郎 之好
     在於
-    它是對函數式編程範式有最好支持的
-    有獨立且完善的生態系統的語言
+    在對函數式編程範式有較好支持的語言當中
+    它是有獨立且優良的完善生態系統的語言
   * 我想 erlang 之 lfe 和 shen 有很多相似之處
     也許其設計靈感部分來源與此
+* 下載於安裝
+  * 下載
+    https://github.com/erlang/otp
+  * 安裝
+    1. 配置
+       export ERL_TOP=`pwd`
+       echo $ERL_TOP
+       ./otp_build autoconf
+       ./configure
+    2. 主要程序的編譯和安裝
+       make
+       sudo make install
+    3. 文檔的編譯和安裝 [失敗]
+       make docs
+       sudo make install-docs
 * 串行程序
 ** 據類型
    #+begin_src erlang
