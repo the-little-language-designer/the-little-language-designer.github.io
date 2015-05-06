@@ -66,9 +66,11 @@
    * 反思
    * 解釋器的雛型
      * REPL
-   * define-function 與 make-jojo
-     * 簡單的編譯
+   * 簡單的編譯
+     * define-function 與 make-jojo
+     * exception handling
 ** 結課作業
+   * 首先是做任務的資料 [[https://github.com/the-little-language-designer/cicada-instar][各個階段的代碼]]
    * 下列任務可供選擇
      難度由低到高
      任選其一完成即可

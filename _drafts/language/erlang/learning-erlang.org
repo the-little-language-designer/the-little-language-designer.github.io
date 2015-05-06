@@ -21,9 +21,6 @@
     2. 主要程序的編譯和安裝
        make
        sudo make install
-    3. 文檔的編譯和安裝 [失敗]
-       make docs
-       sudo make install-docs
 * 串行程序
 ** 據類型
    #+begin_src erlang
