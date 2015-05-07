@@ -21,6 +21,9 @@
     2. 主要程序的編譯和安裝
        make
        sudo make install
+* 特點
+  * 不寫 REPL
+    而寫一個獨立的進程
 * 串行程序
 ** 據類型
    #+begin_src erlang

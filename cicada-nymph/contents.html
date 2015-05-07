@@ -82,6 +82,11 @@
         color: #f92672;
         font-weight: bold;
       }
+      .cicada-nymph-title {
+        /* cicada-nymph-title-face */
+        color: #ffffff;
+        font-weight: bold;
+      }
       .cicada-nymph-variable {
         /* cicada-nymph-variable-face */
         color: #fd971f;
@@ -107,10 +112,6 @@
       .function-name {
         /* font-lock-function-name-face */
         color: #a6e22e;
-      }
-      .italic {
-        /* italic */
-        font-style: italic;
       }
       .keyword {
         /* font-lock-keyword-face */
@@ -242,7 +243,6 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** &#25972;&#29702;&#20013;&#25991;&#31558;&#35352; &#20006;&#23531;&#26356;&#22810;&#20013;&#25991;&#31558;&#35352;</span>
 <span class="org-level-2">** protect on the overloading of a variety of memories</span>
 <span class="org-level-2">** better naming of headings</span>
 <span class="org-level-2">** add more notes about the limitations of the program</span>
@@ -332,7 +332,7 @@
 </span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>...
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* link</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* primitive_string_heap</span>
+</span><span class="org-level-1">* primitive_string_area</span>
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** make_primitive_string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* function-jo</span>
@@ -366,8 +366,8 @@
 </span><span class="org-level-2">** jo-&gt;pre-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** jo-&gt;type</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* primitive-string-heap</span>
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-heap*</span></span>...<span class="org-block-end-line">
+<span class="org-level-1">* primitive-string-area</span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-area*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** address-&gt;primitive-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* type of jo</span>
 <span class="org-level-2">** primitive-function-jo?</span>...<span class="org-block-end-line">
@@ -397,14 +397,16 @@
 </span><span class="org-level-2">** __reset_argument_stack             </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** __reset_return_stack               </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __reset_local_data_vector</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** __reset_local_data_heap</span>...<span class="org-block-end-line">
+<span class="org-level-2">** __reset_local_jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** __reset_local_byte</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the-story-begin*</span></span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#21295;&#32232;&#20195;&#30908;&#20013;&#30340;&#21021;&#22987;&#21270;</span>...
 <span class="org-level-2">** begin_to_interpret_threaded_code   </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** initialization</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** load-core-file</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> top-level-REPL</span>...
 <span class="org-level-2">** report-return-stack-is-empty-and-exit</span>...<span class="org-block-end-line">
@@ -516,54 +518,6 @@
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> nested call of eval-string</span>...
 <span class="org-level-2">** eval-string,ready</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* port</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** input-port,open                    </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** port,close                         </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** port,read                          </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** input-port,open                    </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** port,close                         </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** port,read                          </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* system environment</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> two directories</span>...
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> linux system environment</span>...
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** init-operating-system-environment  </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** init-pid                           </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** init-pid                           </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** get-pid                            </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** [init|get]-command-line            </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** [init|get]-environment-string-variable-list </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** find-environment-string-variable   </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** [init|get]-path,home-directory     </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** [init|get]-path,working-directory  </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** [init|get]-path,user-core-file     </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** get-path,system-core-file          </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** get-path,loaded-core-file          </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* to load core file</span>
-<span class="org-level-2">** path-file?</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** load-first-file</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** load-core-file                     </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* syscall</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** string-&gt;syscall-string</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** string-&gt;syscall-string-2</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* initialization</span>
-<span class="org-level-2">** initialization</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** initialize-system                  </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>
 <span class="org-level-2">** space-char?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** bar-ket-char?</span>...<span class="org-block-end-line">
@@ -625,11 +579,11 @@
 </span><span class="org-level-2">** colon &amp; semicolon</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ignore-comment</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* jojo-heap</span>
+</span><span class="org-level-1">* jo-area</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** save-into,primitive-string-heap</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** save-into,jo-heap</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** save-into,primitive-string-area</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** save-into,jo-area</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* syntax-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>...
 <span class="org-level-2">** memory allocate</span>...<span class="org-block-end-line">
@@ -698,7 +652,7 @@
 <span class="org-level-2">** interface</span>...
 <span class="org-level-2">** &#35486;&#32681;&#29305;&#40670;&#32317;&#32080;</span>...
 <span class="org-level-2">** &#35486;&#29992;&#29305;&#40670;&#32317;&#32080;</span>...
-<span class="org-level-1">* local-data-vector</span>
+<span class="org-level-1">* local-jo</span>
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#27880;&#24847;&#32080;&#23614;&#35422;&#26371;&#21021;&#22987;&#21270;&#23616;&#37096;&#35722;&#37327;&#25351;&#37341;</span>...
 <span class="org-level-2">** local_data_allocate__jo</span>...<span class="org-block-end-line">
@@ -722,17 +676,24 @@
 <span class="org-level-2">** local-variable-save-string?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** syntax,local-variable-save,make-jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* local-data-heap</span>
+<span class="org-level-1">* local-byte</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>...
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#20351;&#29992;</span>...
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** allocate-local-memory</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* syscall</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>...
+<span class="org-level-2">** string-&gt;syscall-string</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** string-&gt;syscall-string-2</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
 <span class="org-level-2">** platform</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*un-initialized-memory*</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-heap*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-area*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** last_link</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** un_initialized_memory              </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* ===================================</span>

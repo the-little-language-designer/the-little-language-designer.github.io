@@ -82,6 +82,11 @@
         color: #f92672;
         font-weight: bold;
       }
+      .cicada-nymph-title {
+        /* cicada-nymph-title-face */
+        color: #ffffff;
+        font-weight: bold;
+      }
       .cicada-nymph-variable {
         /* cicada-nymph-variable-face */
         color: #fd971f;
@@ -107,10 +112,6 @@
       .function-name {
         /* font-lock-function-name-face */
         color: #a6e22e;
-      }
-      .italic {
-        /* italic */
-        font-style: italic;
       }
       .keyword {
         /* font-lock-keyword-face */
@@ -259,14 +260,14 @@
 </span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>...
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* link</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* primitive_string_heap</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* primitive_string_area</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* function-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* primitive-function-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* variable-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* exception-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* execute-jo &amp; structure of jo</span>...
-<span class="org-level-1">* primitive-string-heap</span>...<span class="org-block-end-line">
+<span class="org-level-1">* primitive-string-area</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* type of jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* end &amp; taca</span>...
@@ -286,14 +287,6 @@
 <span class="org-level-1">* basic io</span>...
 <span class="org-level-1">* eval-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* port</span>...
-<span class="org-level-1">* system environment</span>...
-<span class="org-level-1">* to load core file</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* syscall</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* initialization</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* buffer</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* string</span>...
@@ -303,7 +296,7 @@
 </span><span class="org-level-1">* basic-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* colon semicolon</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* jojo-heap</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* jo-area</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* syntax-stack</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* rule-set</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* rule-set,make-jojo</span>...
@@ -314,10 +307,12 @@
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> </span><span class="org-level-1"><span class="bold">*to compare readability*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#20877;&#22686;&#21152;&#23616;&#37096;&#35722;&#20803;&#25903;&#25345;&#20043;&#24460; &#38656;&#35201;&#37325;&#23531;&#30340;&#37096;&#20998;</span>...
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#32317;&#32080;</span>...
-<span class="org-level-1">* local-data-vector</span>...<span class="org-block-end-line">
+<span class="org-level-1">* local-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* local-variable-table</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* two syntaxes</span>...
-<span class="org-level-1">* local-data-heap</span>...<span class="org-block-end-line">
+<span class="org-level-1">* local-byte</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* syscall</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* ===================================</span>

@@ -82,6 +82,11 @@
         color: #f92672;
         font-weight: bold;
       }
+      .cicada-nymph-title {
+        /* cicada-nymph-title-face */
+        color: #ffffff;
+        font-weight: bold;
+      }
       .cicada-nymph-variable {
         /* cicada-nymph-variable-face */
         color: #fd971f;
@@ -107,10 +112,6 @@
       .function-name {
         /* font-lock-function-name-face */
         color: #a6e22e;
-      }
-      .italic {
-        /* italic */
-        font-style: italic;
       }
       .keyword {
         /* font-lock-keyword-face */
@@ -242,7 +243,6 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** &#25972;&#29702;&#20013;&#25991;&#31558;&#35352; &#20006;&#23531;&#26356;&#22810;&#20013;&#25991;&#31558;&#35352;</span>
 <span class="org-level-2">** protect on the overloading of a variety of memories</span>
 <span class="org-level-2">** better naming of headings</span>
 <span class="org-level-2">** add more notes about the limitations of the program</span>
@@ -398,7 +398,7 @@
 <span class="org-level-2">** 5th-instar</span>
    * type of jo
    * more in epilog
-     1. <span class="bold">*current-free-address,primitive-string-heap*</span>
+     1. <span class="bold">*current-free-address,primitive-string-area*</span>
    * colon semicolon
      1. ":" and ";" are used to read a string of words for compiler
         [looks like bar-ket but special]
@@ -430,13 +430,12 @@
    * &#20841;&#20491;&#19968;&#23565;
 <span class="org-level-2">** syntax-set</span>
 <span class="org-level-2">** local-variable-table</span>
-   * a heap like table of string
    * &#21482;&#26377;&#19968;&#20491; local-variable-table
      &#29992;&#20197;&#22312;&#32232;&#35695;&#26178;&#26399;&#35299;&#27770;&#23616;&#37096;&#35722;&#20803;&#30340;&#21517;&#33287;&#20540;&#30340;&#23565;&#25033;
      &#36889;&#20491;&#25976;&#25818;&#32080;&#27083;&#34987; syntax__local_variable_save__make_jojo
      &#21644; syntax__local_variable_fetch__make_jojo &#25152;&#20351;&#29992;
    * &#20854;&#20013;&#20445;&#23384;
-     * offset-in-local-data-vector
+     * offset-in-local-jo
      * length-of-string
      * address-of-string
    * &#20006;&#19988;&#27599;&#27425;&#22312;&#23450;&#32681;&#19968;&#20491;&#26032;&#30340;&#20989;&#25976;&#39636;&#30340;&#26178;&#20505;
@@ -445,9 +444,9 @@
      * clear
        &#28165;&#31354; offset &#21644; border
      * insert
-       &#25554;&#20837;&#23383;&#31526;&#20018; &#21644; offset-in-local-data-vector
+       &#25554;&#20837;&#23383;&#31526;&#20018; &#21644; offset-in-local-jo
      * find
-       &#36890;&#36942;&#23383;&#31526;&#20018;&#23563;&#25214; offset-in-local-data-vector
+       &#36890;&#36942;&#23383;&#31526;&#20018;&#23563;&#25214; offset-in-local-jo
      &#26377;&#20841;&#20491;&#20840;&#23616;&#35722;&#37327;&#24171;&#21161;&#23526;&#29694;&#36889;&#20123;&#25509;&#21475;
      * cursor
        &#27599;&#27425; find &#30340;&#26178;&#20505;&#20351;&#29992;&#19968;&#20491;&#26032;&#30340; cursor &#20358;&#20570;&#24490;&#29872;
@@ -456,7 +455,7 @@
        find &#20197; border &#29234;&#37002;&#30028;
      &#21478;&#22806; &#36996;&#26377;&#19968;&#20491;&#20840;&#23616;&#35722;&#37327;
      * offset
-       &#29992;&#20197;&#35336;&#31639; offset-in-local-data-vector
+       &#29992;&#20197;&#35336;&#31639; offset-in-local-jo
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#24615;&#29376;&#32317;&#32080;</span>
 <span class="org-level-2">** &#33258;&#21205;&#31649;&#29702;&#21152;&#36617;&#25991;&#20214;&#26178;&#25152;&#20351;&#29992;&#30340;&#25628;&#32034;&#36335;&#24465;&#21015;&#34920;</span>
    * &#21407;&#29702;&#22914;&#19979;
@@ -566,7 +565,6 @@
    <span class="preprocessor">define</span> linux64_syscall_write  <span class="constant">1</span>
    <span class="preprocessor">define</span> linux64_syscall_open   <span class="constant">2</span>
    <span class="preprocessor">define</span> linux64_syscall_close  <span class="constant">3</span>
-   <span class="preprocessor">define</span> linux64_syscall_getpid <span class="constant">39</span>
    <span class="preprocessor">define</span> linux64_syscall_exit   <span class="constant">60</span>
    <span class="comment">;; about open &amp; read &amp; write
 </span>
@@ -607,7 +605,6 @@
    <span class="preprocessor">define</span> linux32_syscall_write   <span class="constant">4</span>
    <span class="preprocessor">define</span> linux32_syscall_open    <span class="constant">5</span>
    <span class="preprocessor">define</span> linux32_syscall_close   <span class="constant">6</span>
-   <span class="preprocessor">define</span> linux32_syscall_getpid  <span class="constant">20</span>
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -951,15 +948,19 @@
 </span>  <span class="comment">;; initial link to point to 0 (as null)
 </span>  link = <span class="constant">0</span>
 <span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* primitive_string_heap</span>
+</span><span class="org-level-1">* primitive_string_area</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$primitive_string_heap = <span class="constant">64</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
-</span>
-   <span class="function-name">address$primitive_string_heap</span>:
-      <span class="keyword">times</span> size$primitive_string_heap <span class="type">db</span> <span class="constant">0</span>
+</span>   <span class="function-name">address$primitive_string_area</span>:
+      <span class="keyword">times</span> <span class="constant">64</span> * <span class="constant">1024</span> <span class="type">db</span> <span class="constant">0</span>
 
-   current_free_address$primitive_string_heap = address$primitive_string_heap
+   <span class="function-name">address$core_file</span>:
+      <span class="keyword">file</span> <span class="string">"core/core.cn"</span>
+   <span class="function-name">end$core_file</span>:
+
+   <span class="function-name">end$primitive_string_area</span>:
+
+   current_free_address$primitive_string_area = address$primitive_string_area
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** make_primitive_string</span>
    * 2 bytes for length of name_string
@@ -975,17 +976,17 @@
       <span class="type">dw</span> (.end$string - .start$string)
       <span class="keyword">load</span> .length <span class="type">word</span> <span class="keyword">from</span> (.end$string)
    <span class="keyword">finish</span> <span class="keyword">virtual</span>
-   <span class="keyword">store</span> <span class="type">word</span> .length <span class="keyword">at</span> (current_free_address$primitive_string_heap)
+   <span class="keyword">store</span> <span class="type">word</span> .length <span class="keyword">at</span> (current_free_address$primitive_string_area)
 
-   current_free_address$primitive_string_heap = current_free_address$primitive_string_heap + <span class="constant">2</span>
+   current_free_address$primitive_string_area = current_free_address$primitive_string_area + <span class="constant">2</span>
 
    <span class="keyword">repeat</span> .length
       <span class="keyword">virtual</span> <span class="keyword">at</span> <span class="constant">0</span>
          <span class="type">db</span> string
          <span class="keyword">load</span> .char <span class="type">byte</span> <span class="keyword">from</span> (% - <span class="constant">1</span>)
       <span class="keyword">finish</span> <span class="keyword">virtual</span>
-      <span class="keyword">store</span> <span class="type">byte</span> .char <span class="keyword">at</span> (current_free_address$primitive_string_heap)
-      current_free_address$primitive_string_heap = current_free_address$primitive_string_heap + <span class="constant">1</span>
+      <span class="keyword">store</span> <span class="type">byte</span> .char <span class="keyword">at</span> (current_free_address$primitive_string_area)
+      current_free_address$primitive_string_area = current_free_address$primitive_string_area + <span class="constant">1</span>
    <span class="keyword">finish</span> <span class="keyword">repeat</span>
 
    }
@@ -1008,7 +1009,7 @@
    define_function__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_heap
+      <span class="type">xx</span> current_free_address$primitive_string_area
 
       make_primitive_string string
 
@@ -1031,9 +1032,9 @@
      which stores a jo
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="function-name">explain$function</span>:
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_data_heap]
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_byte]
       push_return_stack <span class="variable-name">rbx</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_data_vector]
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_jo]
       push_return_stack <span class="variable-name">rbx</span>
       <span class="builtin">add</span> <span class="variable-name">rax</span>, jo_size
       push_return_stack <span class="variable-name">rax</span>
@@ -1051,7 +1052,7 @@
    define_primitive_function__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_heap
+      <span class="type">xx</span> current_free_address$primitive_string_area
 
       make_primitive_string string
 
@@ -1084,7 +1085,7 @@
    define_variable__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_heap
+      <span class="type">xx</span> current_free_address$primitive_string_area
 
       make_primitive_string string
 
@@ -1130,7 +1131,7 @@
    define_exception__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_heap
+      <span class="type">xx</span> current_free_address$primitive_string_area
 
       make_primitive_string string
 
@@ -1234,10 +1235,10 @@
 </span>      pop_return_stack <span class="variable-name">rax</span>
       <span class="builtin">mov</span> pointer$argument_stack, <span class="variable-name">rax</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_data_vector]
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_jo]
       push_return_stack <span class="variable-name">rbx</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_data_heap]
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_byte]
       push_return_stack <span class="variable-name">rbx</span>
 
       <span class="builtin">add</span> <span class="variable-name">rsi</span>, jo_size
@@ -1288,10 +1289,10 @@
 </span>      pop_return_stack <span class="variable-name">rax</span>
       <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">rax</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_data_vector]
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_jo]
       push_return_stack <span class="variable-name">rbx</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_data_heap]
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_byte]
       push_return_stack <span class="variable-name">rbx</span>
 
       <span class="builtin">add</span> <span class="variable-name">rsi</span>, jo_size
@@ -1395,16 +1396,16 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* primitive-string-heap</span>
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-heap*</span></span>
+<span class="org-level-1">* primitive-string-area</span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-area*</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*primitive-string-heap*"</span>, V__primitive_string_heap
-      <span class="type">xx</span> address$primitive_string_heap
+</span>   define_variable <span class="string">"*primitive-string-area*"</span>, V__primitive_string_area
+      <span class="type">xx</span> address$primitive_string_area
 
-   define_variable <span class="string">"*size,primitive-string-heap*"</span>, V__size__primitive_string_heap
-      <span class="type">xx</span> size$primitive_string_heap
+   define_variable <span class="string">"*size,primitive-string-area*"</span>, V__size__primitive_string_area
+      <span class="type">xx</span> (end$primitive_string_area - address$primitive_string_area)
 
-   <span class="comment">;; *current-free-address,primitive-string-heap*
+   <span class="comment">;; *current-free-address,primitive-string-area*
 </span>   <span class="comment">;; is at epilog
 </span><span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** address-&gt;primitive-string</span>
@@ -1461,12 +1462,12 @@
      &#24478;&#26855;&#38914;&#38283;&#22987;&#25976; &#36889;&#19977;&#20491;&#20540;&#20998;&#21029;&#26159;
      1. &#32080;&#26463;&#22519;&#34892;&#30340;&#19968;&#20018;&#29664;&#29664;&#26412;&#36523;
         &#36889;&#20491;&#20540;&#26159;&#34987;&#25448;&#26820;&#30340;
-     2. local_data_vector &#20013;&#30340;&#19968;&#20491;&#22320;&#22336;
+     2. local_jo &#20013;&#30340;&#19968;&#20491;&#22320;&#22336;
         &#29992;&#26044;&#37325;&#32622;
-        [current_free_address$local_data_vector]
-     3. local_data_heap &#20013;&#30340;&#19968;&#20491;&#22320;&#22336;
+        [current_free_address$local_jo]
+     3. local_byte &#20013;&#30340;&#19968;&#20491;&#22320;&#22336;
         &#29992;&#26044;&#37325;&#32622;
-        [current_free_address$local_data_heap]
+        [current_free_address$local_byte]
    * end &#21644; taca &#30340;&#21312;&#21029;&#22312;&#26044;
      * end
        &#20837;&#36820;&#22238;&#26855;&#19968;&#20018;&#26032;&#30340;&#29664;&#29664;
@@ -1480,9 +1481,9 @@
 </span>   define_primitive_function <span class="string">"end"</span>, <span class="keyword">end</span>
       pop_return_stack <span class="variable-name">rbx</span>
       pop_return_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> [current_free_address$local_data_vector], <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> [current_free_address$local_jo], <span class="variable-name">rax</span>
       pop_return_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> [current_free_address$local_data_heap], <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> [current_free_address$local_byte], <span class="variable-name">rax</span>
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** taca</span>
@@ -1493,9 +1494,9 @@
    define_primitive_function <span class="string">"&lt;&gt;"</span>, <span class="keyword">taca</span>
       pop_return_stack <span class="variable-name">rbx</span>
       pop_return_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> [current_free_address$local_data_vector], <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> [current_free_address$local_jo], <span class="variable-name">rax</span>
       pop_return_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> [current_free_address$local_data_heap], <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> [current_free_address$local_byte], <span class="variable-name">rax</span>
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
       <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
    }
@@ -1506,9 +1507,9 @@
    define_primitive_function <span class="string">"&lt;&gt;"</span>, <span class="keyword">taca</span>
       pop_return_stack <span class="variable-name">rbx</span>
       pop_return_stack <span class="variable-name">rcx</span>
-      <span class="builtin">mov</span> [current_free_address$local_data_vector], <span class="variable-name">rcx</span>
+      <span class="builtin">mov</span> [current_free_address$local_jo], <span class="variable-name">rcx</span>
       pop_return_stack <span class="variable-name">rcx</span>
-      <span class="builtin">mov</span> [current_free_address$local_data_heap], <span class="variable-name">rcx</span>
+      <span class="builtin">mov</span> [current_free_address$local_byte], <span class="variable-name">rcx</span>
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
       <span class="builtin">jmp</span> <span class="type">dword</span> [<span class="variable-name">rax</span>]
 
@@ -1519,7 +1520,7 @@
 </span>   <span class="comment">;; define_primitive_function "&lt;&gt;", taca
 </span>   <span class="comment">;;    pop_return_stack ebx
 </span>   <span class="comment">;;    pop_return_stack eax
-</span>   <span class="comment">;;    mov [current_free_address$local_data_vector], eax
+</span>   <span class="comment">;;    mov [current_free_address$local_jo], eax
 </span>   <span class="comment">;;    mov eax, [ebx]
 </span>   <span class="comment">;;    jmp dword [eax]
 </span>
@@ -1726,18 +1727,18 @@
    }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __reset_local_data_vector</span>
+<span class="org-level-2">** __reset_local_jo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   __reset_local_data_vector:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_data_vector
-      <span class="builtin">mov</span> [current_free_address$local_data_vector], <span class="variable-name">rax</span>
+</span>   __reset_local_jo:
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_jo
+      <span class="builtin">mov</span> [current_free_address$local_jo], <span class="variable-name">rax</span>
       <span class="builtin">ret</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __reset_local_data_heap</span>
+</span><span class="org-level-2">** __reset_local_byte</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   __reset_local_data_heap:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_data_heap
-      <span class="builtin">mov</span> [current_free_address$local_data_heap], <span class="variable-name">rax</span>
+</span>   __reset_local_byte:
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_byte
+      <span class="builtin">mov</span> [current_free_address$local_byte], <span class="variable-name">rax</span>
       <span class="builtin">ret</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -1762,10 +1763,10 @@
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, jojo_for__report_return_stack_is_empty_and_exit
       push_return_stack <span class="variable-name">rax</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_data_heap
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_byte
       push_return_stack <span class="variable-name">rax</span>
 
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_data_vector
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_jo
       push_return_stack <span class="variable-name">rax</span>
 
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, first_jojo
@@ -1779,6 +1780,22 @@
       <span class="type">xx</span> <span class="keyword">taca</span>, basic_REPL
 
    }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** initialization</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"initialization"</span>, initialization
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="type">xx</span> init__rule_set__make_jojo
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** load-core-file</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"load-core-file"</span>, load_core_file
+      <span class="comment">;; &lt;&lt; unknown -- unknown &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, address$core_file
+      <span class="type">xx</span> <span class="keyword">literal</span>, (end$core_file - address$core_file)
+      <span class="type">xx</span> eval_string__ready
+      <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> top-level-REPL</span>
@@ -1804,7 +1821,7 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="function-name">string$report_return_stack_is_empty_and_exit</span>:
       <span class="type">db</span> <span class="string">"* the return-stack is empty now"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"* good bye ^-^/"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  good bye ^-^/"</span>, <span class="constant">10</span>
    <span class="function-name">.end</span>:
    length$report_return_stack_is_empty_and_exit = (.end - string$report_return_stack_is_empty_and_exit)
 
@@ -1821,7 +1838,7 @@
       <span class="type">xx</span> report_return_stack_is_empty_and_exit
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** reset-top-level-REPL</span>
-   * local_data_vector &amp; local_data_heap
+   * local_jo &amp; local_byte
      will get reseted in by this function
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =64bit, machine {
@@ -1829,8 +1846,8 @@
    define_primitive_function <span class="string">"reset-top-level-REPL"</span>, reset_top_level_REPL
       <span class="comment">;; &lt;&lt; top_level_REPL [jo] -- &gt;&gt;
 </span>      <span class="builtin">call</span> __reset_return_stack
-      <span class="builtin">call</span> __reset_local_data_vector
-      <span class="builtin">call</span> __reset_local_data_heap
+      <span class="builtin">call</span> __reset_local_jo
+      <span class="builtin">call</span> __reset_local_byte
       pop_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">jmp</span> <span class="type">qword</span> [<span class="variable-name">rax</span>]
 
@@ -1841,8 +1858,8 @@
    define_primitive_function <span class="string">"reset-top-level-REPL"</span>, reset_top_level_REPL
       <span class="comment">;; &lt;&lt; top_level_REPL [jo] -- &gt;&gt;
 </span>      <span class="builtin">call</span> __reset_return_stack
-      <span class="builtin">call</span> __reset_local_data_vector
-      <span class="builtin">call</span> __reset_local_data_heap
+      <span class="builtin">call</span> __reset_local_jo
+      <span class="builtin">call</span> __reset_local_byte
       pop_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">jmp</span> <span class="type">dword</span> [<span class="variable-name">rax</span>]
 
@@ -3804,7 +3821,7 @@
 
    <span class="cicada-nymph-number">2</span><span class="cicada-nymph-number-light">#</span><span class="cicada-nymph-number">10011001</span> <span class="cicada-nymph-number">4</span> bit-left  .#2
    <span class="cicada-nymph-number">2</span><span class="cicada-nymph-number-light">#</span><span class="cicada-nymph-number">10011001</span> <span class="cicada-nymph-number">4</span> bit-right .#2
-   <span class="cicada-nymph-number">2</span><span class="cicada-nymph-number-light">#</span><span class="cicada-nymph-number">-10011001</span> <span class="cicada-nymph-number">4</span> bit-right,sign .#2
+   <span class="cicada-nymph-number">2</span><span class="cicada-nymph-number-light">#</span><span class="cicada-nymph-number">-10011001</span> <span class="cicada-nymph-number">4</span> <span class="cicada-nymph-title">bit-right</span>,sign .#2
 
    <span class="cicada-nymph-number">2</span><span class="cicada-nymph-number-light">#</span><span class="cicada-nymph-number">10011001</span> <span class="cicada-nymph-number">0</span> get-bit .
    <span class="cicada-nymph-number">2</span><span class="cicada-nymph-number-light">#</span><span class="cicada-nymph-number">10011001</span> <span class="cicada-nymph-number">1</span> get-bit .
@@ -4146,881 +4163,6 @@
 </span>      <span class="type">xx</span> push_eval_string_stack
       <span class="type">xx</span> push_eval_string_stack
       <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* port</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** input-port,open                    </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
-
-   name_buffer$input_port__open <span class="keyword">labeling</span>
-      <span class="type">preserve</span> <span class="constant">512</span>
-
-   define_primitive_function <span class="string">"input-port,open"</span>, input_port__open
-      <span class="comment">;; &lt;&lt; file-name-string[address, length] --
-</span>      <span class="comment">;;    [file handle] or [error code] &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rcx</span>
-      pop_argument_stack <span class="variable-name">rsi</span>
-      <span class="comment">;; copy file-name as a null-terminal string
-</span>      <span class="builtin">mov</span> <span class="variable-name">rdi</span>, name_buffer$input_port__open
-      <span class="builtin">rep</span> <span class="builtin">movsb</span>
-      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdi</span>], <span class="variable-name">al</span>
-      <span class="builtin">mov</span> linux64_sys_2_rsi, <span class="constant">0</span> <span class="comment">;; OPEN__read_only
-</span>      <span class="builtin">mov</span> linux64_sys_1_rdi, name_buffer$input_port__open
-      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_open
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** port,close                         </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
-
-   define_primitive_function <span class="string">"port,close"</span>, port__close
-      <span class="comment">;; &lt;&lt; file-handle -- &gt;&gt;
-</span>      pop_argument_stack linux64_sys_1_rdi
-      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_close
-      <span class="builtin">syscall</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** port,read                          </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
-   * from disk to memory
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
-
-   define_primitive_function <span class="string">"port,read"</span>, port__read
-      <span class="comment">;; &lt;&lt; [file handle], buffer[address, length] --
-</span>      <span class="comment">;;    [number of char] or [error code] &gt;&gt;
-</span>      pop_argument_stack linux64_sys_3_rdx
-      pop_argument_stack linux64_sys_2_rsi
-      pop_argument_stack linux64_sys_1_rdi
-      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_read
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** input-port,open                    </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   name_buffer$input_port__open <span class="keyword">labeling</span>
-      <span class="type">preserve</span> <span class="constant">512</span>
-
-   define_primitive_function <span class="string">"input-port,open"</span>, input_port__open
-      <span class="comment">;; &lt;&lt; file-name-string[address, length] --
-</span>      <span class="comment">;;    [file handle] or [error code] &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rcx</span>
-      pop_argument_stack <span class="variable-name">rsi</span>
-      <span class="comment">;; copy file-name as a null-terminal string
-</span>      <span class="builtin">mov</span> <span class="variable-name">rdi</span>, name_buffer$input_port__open
-      <span class="builtin">rep</span> <span class="builtin">movsb</span>
-      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdi</span>], <span class="variable-name">al</span>
-      <span class="builtin">mov</span> linux32_sys_2_ecx, <span class="constant">0</span> <span class="comment">;; OPEN__read_only
-</span>      <span class="builtin">mov</span> linux32_sys_1_ebx, name_buffer$input_port__open
-      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_open
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** port,close                         </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   define_primitive_function <span class="string">"port,close"</span>, port__close
-      <span class="comment">;; &lt;&lt; file-handle -- &gt;&gt;
-</span>      pop_argument_stack linux32_sys_1_ebx
-      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_close
-      <span class="builtin">syscall</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** port,read                          </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-   * from disk to memory
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   define_primitive_function <span class="string">"port,read"</span>, port__read
-      <span class="comment">;; &lt;&lt; [file handle], buffer[address, length] --
-</span>      <span class="comment">;;    [number of char] or [error code] &gt;&gt;
-</span>      pop_argument_stack linux32_sys_3_edx
-      pop_argument_stack linux32_sys_2_ecx
-      pop_argument_stack linux32_sys_1_ebx
-      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_read
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* system environment</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> two directories</span>
-   * all files about cicada
-     are stored in two directories only
-     1. user :
-        "<span class="italic">/home/&lt;user&gt;/</span>.cicada"
-     2. system :
-        "/etc/cicada"
-   * note that
-     the convention of linux is not followed
-     "/share" and "/include" are not used
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> linux system environment</span>
-   * pid is the key to all the linux system environment
-   * command-line
-     /proc/&lt;pid&gt;/cmdline
-   * environment-string-variable-list
-     /proc/&lt;pid&gt;/environ
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** init-operating-system-environment  </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   define_function <span class="string">"init-operating-system-environment"</span>, init_operating_system_environment
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> init_pid
-      <span class="type">xx</span> init_command_line
-      <span class="type">xx</span> init_environment_string_variable_list
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** init-pid                           </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
-
-   define_primitive_function <span class="string">"init-pid"</span>, init_pid
-      <span class="comment">;; &lt;&lt; -- pid &gt;&gt;
-</span>      <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_getpid
-      <span class="builtin">syscall</span>
-      <span class="builtin">mov</span> [value$get_pid], <span class="variable-name">rax</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** init-pid                           </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   define_primitive_function <span class="string">"init-pid"</span>, init_pid
-      <span class="comment">;; &lt;&lt; -- pid &gt;&gt;
-</span>      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_getpid
-      <span class="builtin">syscall</span>
-      <span class="builtin">mov</span> [value$get_pid], <span class="variable-name">rax</span>
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** get-pid                            </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">value$get_pid</span>:
-      <span class="type">xx</span> <span class="constant">2</span>
-
-   define_function <span class="string">"get-pid"</span>, get_pid
-      <span class="comment">;; &lt;&lt; -- pid &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, value$get_pid, fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** [init|get]-command-line            </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">file$init_command_line</span>:
-      <span class="type">db</span> <span class="string">"/cmdline"</span> <span class="comment">;; length of 8
-</span>
-   <span class="function-name">path$init_command_line</span>:
-      <span class="type">db</span> <span class="string">"/proc/"</span>   <span class="comment">;; length of 6
-</span>   <span class="function-name">pid$init_command_line</span>:
-      <span class="type">db</span> <span class="string">"********************************"</span>
-
-   <span class="function-name">address$init_command_line</span>:
-      <span class="keyword">times</span> <span class="constant">512</span> <span class="type">db</span> <span class="constant">0</span>
-   <span class="function-name">length$init_command_line</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"init-command-line"</span>, init_command_line
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> get_pid
-      <span class="type">xx</span> write_number__fill_buffer
-      <span class="type">xx</span> tuck
-      <span class="type">xx</span> <span class="keyword">literal</span>, pid$init_command_line
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">literal</span>, file$init_command_line
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">8</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, pid$init_command_line
-      <span class="type">xx</span> xoverxxx, addition
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">literal</span>, path$init_command_line
-      <span class="type">xx</span> swap
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">8</span>, addition
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">6</span>, addition
-      <span class="type">xx</span> input_port__open
-      <span class="type">xx</span> <span class="keyword">literal</span>, address$init_command_line
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">512</span>
-      <span class="type">xx</span> port__read
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$init_command_line
-      <span class="type">xx</span> save
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"get-command-line"</span>, get_command_line
-      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, address$init_command_line
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$init_command_line, fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** [init|get]-environment-string-variable-list </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-   * the size of /proc/&lt;pid&gt;/environ is limited to 4k
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">file$init_environment_string_variable_list</span>:
-      <span class="type">db</span> <span class="string">"/environ"</span> <span class="comment">;; length of 8
-</span>
-   <span class="function-name">path$init_environment_string_variable_list</span>:
-      <span class="type">db</span> <span class="string">"/proc/"</span>   <span class="comment">;; length of 6
-</span>   <span class="function-name">pid$init_environment_string_variable_list</span>:
-      <span class="type">db</span> <span class="string">"********************************"</span>
-
-   <span class="function-name">address$init_environment_string_variable_list</span>:
-      <span class="keyword">times</span> (<span class="constant">4</span> * <span class="constant">1024</span>) <span class="type">db</span> <span class="constant">0</span>
-   <span class="function-name">length$init_environment_string_variable_list</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"init-environment-string-variable-list"</span>, init_environment_string_variable_list
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> get_pid
-      <span class="type">xx</span> write_number__fill_buffer
-      <span class="type">xx</span> tuck
-      <span class="type">xx</span> <span class="keyword">literal</span>, pid$init_environment_string_variable_list
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">literal</span>, file$init_environment_string_variable_list
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">8</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, pid$init_environment_string_variable_list
-      <span class="type">xx</span> xoverxxx, addition
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">literal</span>, path$init_environment_string_variable_list
-      <span class="type">xx</span> swap
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">8</span>, addition
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">6</span>, addition
-      <span class="type">xx</span> input_port__open
-      <span class="type">xx</span> <span class="keyword">literal</span>, address$init_environment_string_variable_list
-      <span class="type">xx</span> <span class="keyword">literal</span>, (<span class="constant">4</span> * <span class="constant">1024</span>)
-      <span class="type">xx</span> port__read
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$init_environment_string_variable_list
-      <span class="type">xx</span> save
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"get-environment-string-variable-list"</span>, get_environment_string_variable_list
-      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, address$init_environment_string_variable_list
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$init_environment_string_variable_list, fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** find-environment-string-variable   </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-   * the string used to find an environment-string-variable
-     can not contain "="
-     no error handling on this
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   define_function <span class="string">"find-environment-string-variable"</span>, find_environment_string_variable
-      <span class="comment">;; &lt;&lt; string[address, length]
-</span>      <span class="comment">;;    -- string[address, length], true
-</span>      <span class="comment">;;    -- false &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, address$init_environment_string_variable_list <span class="comment">;; cursor
-</span>      <span class="type">xx</span> find_environment_string_variable__loop
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"find-environment-string-variable,loop"</span>, find_environment_string_variable__loop
-      <span class="comment">;; &lt;&lt; string[address, length], cursor
-</span>      <span class="comment">;;    -- string[address, length], true
-</span>      <span class="comment">;;    -- false &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, address$init_environment_string_variable_list
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$init_environment_string_variable_list, fetch
-      <span class="type">xx</span> addition
-      <span class="type">xx</span> greater_than?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-      <span class="type">xx</span>   drop, drop2
-      <span class="type">xx</span>   false
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> xxoverx, xoverxx, swap
-      <span class="type">xx</span> compare_buffer, false?, <span class="keyword">false?branch</span>, <span class="constant">7</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
-      <span class="type">xx</span>   cursor_to_next_matching_byte
-      <span class="type">xx</span>   add1
-      <span class="type">xx</span>   <span class="keyword">taca</span>, find_environment_string_variable__loop
-      <span class="type">xx</span> <span class="keyword">dup</span>, xoverxx, addition, fetch_byte
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">'='</span>, equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">7</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
-      <span class="type">xx</span>   cursor_to_next_matching_byte
-      <span class="type">xx</span>   add1
-      <span class="type">xx</span>   <span class="keyword">taca</span>, find_environment_string_variable__loop
-      <span class="type">xx</span> xswapxx, drop
-      <span class="type">xx</span> addition, add1
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
-      <span class="type">xx</span> cursor_to_next_matching_byte
-      <span class="type">xx</span> over, subtraction
-      <span class="type">xx</span> true
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** [init|get]-path,home-directory     </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-   * need error handling
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">string$init_path__home_directory</span>:
-      <span class="type">db</span> <span class="string">"HOME"</span>
-
-   define_function <span class="string">"init-path,home-directory"</span>, init_path__home_directory
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$init_path__home_directory
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">4</span>
-      <span class="type">xx</span> find_environment_string_variable
-      <span class="type">xx</span> drop
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__home_directory
-      <span class="type">xx</span> save
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__home_directory
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$get_path__home_directory</span>:
-      <span class="keyword">times</span> <span class="constant">512</span> <span class="type">db</span> <span class="constant">0</span>
-   <span class="function-name">length$get_path__home_directory</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"get-path,home-directory"</span>, get_path__home_directory
-      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__home_directory
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__home_directory, fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** [init|get]-path,working-directory  </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-   * need error handling
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">string$init_path__working_directory</span>:
-      <span class="type">db</span> <span class="string">"PWD"</span>
-
-   define_function <span class="string">"init-path,working-directory"</span>, init_path__working_directory
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$init_path__working_directory
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">3</span>
-      <span class="type">xx</span> find_environment_string_variable
-      <span class="type">xx</span> drop
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__working_directory
-      <span class="type">xx</span> save
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__working_directory
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$get_path__working_directory</span>:
-      <span class="keyword">times</span> <span class="constant">512</span> <span class="type">db</span> <span class="constant">0</span>
-   <span class="function-name">length$get_path__working_directory</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"get-path,working-directory"</span>, get_path__working_directory
-      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__working_directory
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__working_directory, fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** [init|get]-path,user-core-file     </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">string$init_path__user_core_file</span>:
-      <span class="type">db</span> <span class="string">"/.cicada/core.cn"</span>
-   <span class="function-name">.end</span>:
-   length$init_path__user_core_file = (.end - string$init_path__user_core_file)
-
-
-   define_function <span class="string">"init-path,user-core-file"</span>, init_path__user_core_file
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> get_path__home_directory
-      <span class="type">xx</span> tuck
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__user_core_file
-      <span class="type">xx</span> string_to_buffer!
-
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$init_path__user_core_file
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$init_path__user_core_file
-      <span class="type">xx</span> xoverxx
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__user_core_file
-      <span class="type">xx</span> addition
-      <span class="type">xx</span> string_to_buffer!
-
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$init_path__user_core_file
-      <span class="type">xx</span> addition
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__user_core_file
-      <span class="type">xx</span> save
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$get_path__user_core_file</span>:
-      <span class="keyword">times</span> <span class="constant">510</span> <span class="type">db</span> <span class="constant">0</span>
-
-   <span class="function-name">length$get_path__user_core_file</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"get-path,user-core-file"</span>, get_path__user_core_file
-      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__user_core_file
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__user_core_file, fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** get-path,system-core-file          </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">string$get_path__system_core_file</span>:
-      <span class="type">db</span> <span class="string">"/etc/cicada/core.cn"</span>
-   <span class="function-name">.end</span>:
-   length$get_path__system_core_file = (.end - string$get_path__system_core_file)
-
-   define_function <span class="string">"get-path,system-core-file"</span>, get_path__system_core_file
-      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__system_core_file
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__system_core_file
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** get-path,loaded-core-file          </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   <span class="function-name">string$get_path__loaded_core_file</span>:
-      <span class="keyword">times</span> <span class="constant">510</span> <span class="type">db</span> <span class="constant">0</span>
-
-   <span class="function-name">length$get_path__loaded_core_file</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"get-path,loaded-core-file"</span>, get_path__loaded_core_file
-      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$get_path__loaded_core_file
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$get_path__loaded_core_file, fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* to load core file</span>
-<span class="org-level-2">** path-file?</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">address$path_file?</span>:
-      <span class="type">db</span> <span class="constant">0</span>
-
-   define_function <span class="string">"path-file?"</span>, path_file?
-      <span class="comment">;; &lt;&lt; path[address, length] -- bool &gt;&gt;
-</span>      <span class="type">xx</span> input_port__open
-      <span class="type">xx</span> <span class="keyword">dup</span>, negative?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   drop
-      <span class="type">xx</span>   false
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, address$path_file?
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">1</span>
-      <span class="type">xx</span> port__read
-      <span class="type">xx</span> swap, port__close
-      <span class="type">xx</span> positive?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
-      <span class="type">xx</span>   true
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> false
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** load-first-file</span>
-   * load is read and eval
-   * load-first-file can not be nested
-   * a function (load-file) will be implemented in core
-     to support nested loading
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   buffer$load_first_file <span class="keyword">labeling</span>
-     <span class="type">preserve</span> <span class="constant">128</span> * <span class="constant">1024</span>
-
-   define_function <span class="string">"load-first-file"</span>, load_first_file
-      <span class="comment">;; &lt;&lt; name-string[address, length] -- unknown &gt;&gt;
-</span>      <span class="type">xx</span> input_port__open
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$load_first_file <span class="comment">;; buffer
-</span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">1024</span> * <span class="constant">1024</span>      <span class="comment">;; length
-</span>      <span class="type">xx</span>   port__read
-      <span class="type">xx</span> swap, port__close
-      <span class="type">xx</span> <span class="keyword">dup</span>, positive?, <span class="keyword">false?branch</span>, (.error-$)/jo_size
-      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$load_first_file
-      <span class="type">xx</span>   swap
-      <span class="type">xx</span>   eval_string__ready
-      <span class="type">xx</span>   <span class="keyword">end</span>
-   <span class="function-name">.error</span>:
-      <span class="type">xx</span> error_report__load_first_file
-      <span class="type">xx</span> write_integer
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"error-report,load-file"</span>, error_report__load_first_file
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$error_report__load_first_file
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$error_report__load_first_file
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$error_report__load_first_file</span>:
-      <span class="type">db</span> <span class="string">"* (load-file) meets error  (port,read) error code : "</span>
-   <span class="function-name">.end</span>:
-   length$error_report__load_first_file = (.end - string$error_report__load_first_file)
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** load-core-file                     </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   define_function <span class="string">"load-core-file"</span>, load_core_file
-      <span class="comment">;; &lt;&lt; unknown -- unknown &gt;&gt;
-</span>      <span class="type">xx</span> get_path__user_core_file, path_file?, <span class="keyword">false?branch</span>, (.fail_user_core_file-$)/jo_size
-      <span class="type">xx</span>   get_path__user_core_file
-      <span class="type">xx</span>   <span class="keyword">dup</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, length$get_path__loaded_core_file
-      <span class="type">xx</span>   save
-      <span class="type">xx</span>   <span class="keyword">literal</span>, string$get_path__loaded_core_file
-      <span class="type">xx</span>   string_to_buffer!
-      <span class="type">xx</span>   get_path__user_core_file, load_first_file
-      <span class="type">xx</span>   <span class="keyword">end</span>
-   <span class="function-name">.fail_user_core_file</span>:
-
-      <span class="type">xx</span> get_path__system_core_file, path_file?, <span class="keyword">false?branch</span>, (.fail_system_core_file-$)/jo_size
-      <span class="type">xx</span>   get_path__system_core_file
-      <span class="type">xx</span>   <span class="keyword">dup</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, length$get_path__loaded_core_file
-      <span class="type">xx</span>   save
-      <span class="type">xx</span>   <span class="keyword">literal</span>, string$get_path__loaded_core_file
-      <span class="type">xx</span>   string_to_buffer!
-      <span class="type">xx</span>   get_path__system_core_file, load_first_file
-      <span class="type">xx</span>   <span class="keyword">end</span>
-   <span class="function-name">.fail_system_core_file</span>:
-
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$load_core_file__report_1
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$load_core_file__report_1
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> get_path__user_core_file, write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$load_core_file__report_2
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$load_core_file__report_2
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> get_path__system_core_file, write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$load_core_file__report_3
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$load_core_file__report_3
-      <span class="type">xx</span> write_string
-
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$load_core_file__report_1</span>:
-      <span class="type">db</span> <span class="string">"* (load-core-file)"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"  * no core file is loaded"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"  * when cicada-nymph is started"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"    first"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"    it trys to load the user's core file from :"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"       "</span>
-   <span class="function-name">.end</span>:
-   length$load_core_file__report_1 = (.end - string$load_core_file__report_1)
-
-   <span class="function-name">string$load_core_file__report_2</span>:
-      <span class="type">db</span> <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"    if it fails"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"    then"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"    it trys to load the system core file from :"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"       "</span>
-   <span class="function-name">.end</span>:
-   length$load_core_file__report_2 = (.end - string$load_core_file__report_2)
-
-   <span class="function-name">string$load_core_file__report_3</span>:
-      <span class="type">db</span> <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"    if it fails"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"    no core file is loaded"</span>, <span class="constant">10</span>
-      <span class="type">db</span> <span class="string">"  * now you are running cicada-nymph without core"</span>, <span class="constant">10</span>
-   <span class="function-name">.end</span>:
-   length$load_core_file__report_3 = (.end - string$load_core_file__report_3)
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* syscall</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>
-   * there are two ways to treat the syscall
-     1. syscall is NOT expose to cicada-nymph
-        system functions are wraped in assembly code
-        thus
-        make cicada-nymph code be more clean
-     2. syscall is expose to cicada-nymph
-        system functions are wraped in cicada-nymph code
-        thus
-        more easy to wraped more system functions
-        and
-        make assembly code be more clean
-        [only needs some system functions to load core file]
-   * I choose the second way for now
-<span class="org-level-2">** string-&gt;syscall-string</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">string$string_to_syscall_string</span>:
-      <span class="keyword">times</span> <span class="constant">256</span> <span class="type">db</span> <span class="constant">0</span>
-
-   define_function <span class="string">"string-&gt;syscall-string"</span>, string_to_syscall_string
-      <span class="comment">;; &lt;&lt; string[address, length] -- syscall-string[address] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, string$string_to_syscall_string
-      <span class="type">xx</span>   addition
-      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
-      <span class="type">xx</span>   swap, save_byte
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** string-&gt;syscall-string-2</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">string$string_to_syscall_string_2</span>:
-      <span class="keyword">times</span> <span class="constant">256</span> <span class="type">db</span> <span class="constant">0</span>
-
-   define_function <span class="string">"string-&gt;syscall-string-2"</span>, string_to_syscall_string_2
-      <span class="comment">;; &lt;&lt; string[address, length] -- syscall-string[address] &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, string$string_to_syscall_string_2
-      <span class="type">xx</span>   addition
-      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
-      <span class="type">xx</span>   swap, save_byte
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string_2
-      <span class="type">xx</span> string_to_buffer!
-      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string_2
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
-
-   define_primitive_function <span class="string">"syscall"</span>, CICADA__syscall
-      <span class="comment">;; &lt;&lt; ..., argument2, argument1,
-</span>      <span class="comment">;;    syscall-number,
-</span>      <span class="comment">;;    number-of-arguments
-</span>      <span class="comment">;;    -- return-value &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">0</span>
-      <span class="builtin">je</span> __syscall_with_0
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">1</span>
-      <span class="builtin">je</span> __syscall_with_1
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">2</span>
-      <span class="builtin">je</span> __syscall_with_2
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">3</span>
-      <span class="builtin">je</span> __syscall_with_3
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">4</span>
-      <span class="builtin">je</span> __syscall_with_4
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">5</span>
-      <span class="builtin">je</span> __syscall_with_5
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">6</span>
-      <span class="builtin">je</span> __syscall_with_6
-      <span class="builtin">jmp</span> __syscall_with_too_many
-
-   __syscall_with_0:
-      pop_argument_stack linux64_sys_n_rax
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_1:
-      pop_argument_stack linux64_sys_n_rax
-      pop_argument_stack linux64_sys_1_rdi
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_2:
-      pop_argument_stack linux64_sys_n_rax
-      pop_argument_stack linux64_sys_1_rdi
-      pop_argument_stack linux64_sys_2_rsi
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_3:
-      pop_argument_stack linux64_sys_n_rax
-      pop_argument_stack linux64_sys_1_rdi
-      pop_argument_stack linux64_sys_2_rsi
-      pop_argument_stack linux64_sys_3_rdx
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_4:
-      pop_argument_stack linux64_sys_n_rax
-      pop_argument_stack linux64_sys_1_rdi
-      pop_argument_stack linux64_sys_2_rsi
-      pop_argument_stack linux64_sys_3_rdx
-      pop_argument_stack linux64_sys_4_r10
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_5:
-      pop_argument_stack linux64_sys_n_rax
-      pop_argument_stack linux64_sys_1_rdi
-      pop_argument_stack linux64_sys_2_rsi
-      pop_argument_stack linux64_sys_3_rdx
-      pop_argument_stack linux64_sys_4_r10
-      pop_argument_stack linux64_sys_5_r9
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_6:
-      pop_argument_stack linux64_sys_n_rax
-      pop_argument_stack linux64_sys_1_rdi
-      pop_argument_stack linux64_sys_2_rsi
-      pop_argument_stack linux64_sys_3_rdx
-      pop_argument_stack linux64_sys_4_r10
-      pop_argument_stack linux64_sys_5_r9
-      pop_argument_stack linux64_sys_6_r8
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_too_many:
-      <span class="builtin">call</span> __exit_with_six
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   define_primitive_function <span class="string">"syscall"</span>, CICADA__syscall
-      <span class="comment">;; &lt;&lt; ..., argument2, argument1,
-</span>      <span class="comment">;;    syscall-number,
-</span>      <span class="comment">;;    number-of-arguments
-</span>      <span class="comment">;;    -- return-value &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">0</span>
-      <span class="builtin">je</span> __syscall_with_0
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">1</span>
-      <span class="builtin">je</span> __syscall_with_1
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">2</span>
-      <span class="builtin">je</span> __syscall_with_2
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">3</span>
-      <span class="builtin">je</span> __syscall_with_3
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">4</span>
-      <span class="builtin">je</span> __syscall_with_4
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">5</span>
-      <span class="builtin">je</span> __syscall_with_5
-      <span class="builtin">jmp</span> __syscall_with_too_many
-
-   __syscall_with_0:
-      pop_argument_stack linux32_sys_n_eax
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_1:
-      pop_argument_stack linux32_sys_n_eax
-      pop_argument_stack linux32_sys_1_ebx
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_2:
-      pop_argument_stack linux32_sys_n_eax
-      pop_argument_stack linux32_sys_1_ebx
-      pop_argument_stack linux32_sys_2_ecx
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_3:
-      pop_argument_stack linux32_sys_n_eax
-      pop_argument_stack linux32_sys_1_ebx
-      pop_argument_stack linux32_sys_2_ecx
-      pop_argument_stack linux32_sys_3_edx
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_4:
-      pop_argument_stack linux32_sys_n_eax
-      pop_argument_stack linux32_sys_1_ebx
-      pop_argument_stack linux32_sys_2_ecx
-      pop_argument_stack linux32_sys_3_edx
-      pop_argument_stack linux32_sys_4_esi
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_5:
-      pop_argument_stack linux32_sys_n_eax
-      pop_argument_stack linux32_sys_1_ebx
-      pop_argument_stack linux32_sys_2_ecx
-      pop_argument_stack linux32_sys_3_edx
-      pop_argument_stack linux32_sys_4_esi
-      pop_argument_stack linux32_sys_5_edi
-      <span class="builtin">syscall</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   __syscall_with_too_many:
-      <span class="builtin">call</span> __exit_with_six
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* initialization</span>
-<span class="org-level-2">** initialization</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"initialization"</span>, initialization
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> init_system
-      <span class="type">xx</span> init__rule_set__make_jojo
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** initialize-system                  </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux, platform {
-
-   define_function <span class="string">"init-system"</span>, init_system
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> init_operating_system_environment
-      <span class="type">xx</span> init_path__home_directory
-      <span class="type">xx</span> init_path__user_core_file
-      <span class="type">xx</span> init_path__working_directory
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>
@@ -5395,7 +4537,7 @@
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">XIE</span> Yuheng <span class="cicada-nymph-sentence-reader">;</span>
-   <span class="cicada-nymph-number">32</span> string,find-char . <span class="cicada-nymph-comment">&lt;&lt; 1 &gt;&gt;</span>
+   <span class="cicada-nymph-number">32</span> <span class="cicada-nymph-title">string</span>,find-char . <span class="cicada-nymph-comment">&lt;&lt; 1 &gt;&gt;</span>
    fetch-byte . <span class="cicada-nymph-comment">&lt;&lt; 32 &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -5420,7 +4562,7 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"write-number,fill-buffer"</span>, write_number__fill_buffer
-      <span class="comment">;; &lt;&lt; number -- &gt;&gt;
+      <span class="comment">;; &lt;&lt; number -- string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> zero
       <span class="type">xx</span> <span class="keyword">literal</span>, counter$write_number, save
 
@@ -5765,25 +4907,25 @@
    * from the aesthetics point of view
      I do NOT think which of the following is better then the other
      but I choose the second one
-   * first:
+   * first
 <span class="org-block-begin-line">     #+begin_src
 </span><span class="org-block">     define-function factorial
        &lt;&lt; n -- n! &gt;&gt;
        dup one? if
          end
        then
-       dup sub1 factorial *
+       dup sub1 factorial mul
        end
      end
 </span><span class="org-block-end-line">     #+end_src
-</span>   * second:
+</span>   * second
 <span class="org-block-begin-line">     #+begin_src cicada-nymph
 </span>     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial</span>
        <span class="cicada-nymph-comment">&lt;&lt; n -- n! &gt;&gt;</span>
        dup one? <span class="cicada-nymph-syntax-key-word">if</span>
          <span class="cicada-nymph-end">end</span>
        <span class="cicada-nymph-syntax-key-word">then</span>
-       dup sub1 factorial *
+       dup sub1 factorial mul
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">     #+end_src
@@ -5965,55 +5107,55 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">kkk</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &lt;&lt; 989 &gt;&gt;</span> &gt;&gt; <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">.s</span>
    <span class="cicada-nymph-comment">&lt;&lt; kkk &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* jojo-heap</span>
+</span><span class="org-level-1">* jo-area</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * you can see how the naming convention is used
      for functions that create structured data into memory
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$jo_heap = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+</span>   size$jo_area = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
 
-   define_variable <span class="string">"*jo-heap*"</span>, V__jo_heap
-     <span class="type">xx</span> address$jo_heap
+   define_variable <span class="string">"*jo-area*"</span>, V__jo_area
+     <span class="type">xx</span> address$jo_area
 
-   define_variable <span class="string">"*size,jo-heap*"</span>, V__size__jo_heap
-     <span class="type">xx</span> size$jo_heap
+   define_variable <span class="string">"*size,jo-area*"</span>, V__size__jo_area
+     <span class="type">xx</span> size$jo_area
 
 
-   address$jo_heap <span class="keyword">labeling</span>
-      <span class="type">preserve</span> size$jo_heap
+   address$jo_area <span class="keyword">labeling</span>
+      <span class="type">preserve</span> size$jo_area
 
-   define_variable <span class="string">"*current-free-address,jo-heap*"</span>, V__current_free_address__jo_heap
-      <span class="type">xx</span> address$jo_heap
+   define_variable <span class="string">"*current-free-address,jo-area*"</span>, V__current_free_address__jo_area
+      <span class="type">xx</span> address$jo_area
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** save-into,primitive-string-heap</span>
+</span><span class="org-level-2">** save-into,primitive-string-area</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"save-into,primitive-string-heap"</span>, save_into__primitive_string_heap
+</span>   define_function <span class="string">"save-into,primitive-string-area"</span>, save_into__primitive_string_area
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>, V__current_free_address__primitive_string
+</span>      <span class="type">xx</span> <span class="keyword">dup</span>, V__current_free_address__primitive_string_area
       <span class="type">xx</span> save_two_bytes
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string_area
       <span class="type">xx</span> add_save
 
       <span class="type">xx</span> tuck
-      <span class="type">xx</span> V__current_free_address__primitive_string
+      <span class="type">xx</span> V__current_free_address__primitive_string_area
       <span class="type">xx</span> string_to_buffer!
 
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string_area
       <span class="type">xx</span> add_save
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** save-into,jo-heap</span>
+</span><span class="org-level-2">** save-into,jo-area</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"save-into,jo-heap"</span>, save_into__jo_heap
+</span>   define_function <span class="string">"save-into,jo-area"</span>, save_into__jo_area
       <span class="comment">;; &lt;&lt; number -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__jo_heap
+</span>      <span class="type">xx</span> V__current_free_address__jo_area
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_heap
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_area
       <span class="type">xx</span> add_save
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
@@ -6384,9 +5526,9 @@
       <span class="comment">;; &lt;&lt; string[address, length], word[address, length] --
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> string_to_integer
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -6412,12 +5554,12 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">address</span>
-      <span class="type">xx</span> save_into__jo_heap
+      <span class="type">xx</span> save_into__jo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> find, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -6462,12 +5604,12 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span> save_into__jo_heap
+      <span class="type">xx</span> save_into__jo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> find, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -6512,13 +5654,13 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">branch</span>
-      <span class="type">xx</span> save_into__jo_heap
+      <span class="type">xx</span> save_into__jo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   string_to_integer
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -6563,13 +5705,13 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">false?branch</span>
-      <span class="type">xx</span> save_into__jo_heap
+      <span class="type">xx</span> save_into__jo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   string_to_integer
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -6607,7 +5749,7 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** syntax,double-quote,make-jojo</span>
-   * primitive-string-heap is used
+   * primitive-string-area is used
      to allocate string literal in function body
    * in ASCII encode double-quote is 34
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -6624,17 +5766,17 @@
 </span>
       <span class="comment">;; address
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_heap
-      <span class="type">xx</span>   V__current_free_address__primitive_string, add2
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>   V__current_free_address__primitive_string_area, add2
+      <span class="type">xx</span>     save_into__jo_area
       <span class="type">xx</span>   xoverxx, over
-      <span class="type">xx</span>     save_into__primitive_string_heap
+      <span class="type">xx</span>     save_into__primitive_string_area
 
       <span class="comment">;; length
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
       <span class="type">xx</span>   <span class="keyword">dup</span>
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
 
       <span class="type">xx</span>   tuck, subtraction
       <span class="type">xx</span>   xxswapx
@@ -6711,7 +5853,7 @@
       <span class="type">xx</span> dup2
       <span class="type">xx</span> find, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   xxswapx, drop2 <span class="comment">;; drop word
-</span>      <span class="type">xx</span>   save_into__jo_heap
+</span>      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> write_undefined_word_report__for_make_jojo
       <span class="type">xx</span> write_string
@@ -6738,8 +5880,8 @@
 <span class="org-level-2">** !undo-make-jojo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_exception <span class="string">"!undo-make-jojo"</span>, !undo_make_jojo
-      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string
-</span>      <span class="comment">;;    old V__current_free_address__jo_heap
+      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string_area
+</span>      <span class="comment">;;    old V__current_free_address__jo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length]
 </span>      <span class="comment">;;    -- &gt;&gt;
@@ -6755,8 +5897,8 @@
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
 
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary, save
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_heap, save
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_area, save
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string_area
       <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
 
@@ -6771,11 +5913,11 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"define-function"</span>, CICADA__define_function
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__primitive_string, xxswapx
-      <span class="type">xx</span> V__current_free_address__jo_heap, xxswapx
+</span>      <span class="type">xx</span> V__current_free_address__primitive_string_area, xxswapx
+      <span class="type">xx</span> V__current_free_address__jo_area, xxswapx
       <span class="type">xx</span> V__first_jo_in_jotionary, xxswapx
-      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string
-</span>      <span class="comment">;;    old V__current_free_address__jo_heap
+      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string_area
+</span>      <span class="comment">;;    old V__current_free_address__jo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>
@@ -6784,21 +5926,21 @@
       <span class="type">xx</span>   !undo_make_jojo
       <span class="type">xx</span>   <span class="keyword">end</span>
 
-      <span class="type">xx</span> V__current_free_address__primitive_string
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span> V__current_free_address__primitive_string_area
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__primitive_string_heap
+      <span class="type">xx</span>   save_into__primitive_string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
 
-      <span class="type">xx</span> V__current_free_address__jo_heap
+      <span class="type">xx</span> V__current_free_address__jo_area
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$function
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_tail__word
@@ -6811,11 +5953,11 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"define-exception"</span>, CICADA__define_exception
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__primitive_string, xxswapx
-      <span class="type">xx</span> V__current_free_address__jo_heap, xxswapx
+</span>      <span class="type">xx</span> V__current_free_address__primitive_string_area, xxswapx
+      <span class="type">xx</span> V__current_free_address__jo_area, xxswapx
       <span class="type">xx</span> V__first_jo_in_jotionary, xxswapx
-      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string
-</span>      <span class="comment">;;    old V__current_free_address__jo_heap
+      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string_area
+</span>      <span class="comment">;;    old V__current_free_address__jo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>
@@ -6824,21 +5966,21 @@
       <span class="type">xx</span>   !undo_make_jojo
       <span class="type">xx</span>   <span class="keyword">end</span>
 
-      <span class="type">xx</span> V__current_free_address__primitive_string
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span> V__current_free_address__primitive_string_area
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__primitive_string_heap
+      <span class="type">xx</span>   save_into__primitive_string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
 
-      <span class="type">xx</span> V__current_free_address__jo_heap
+      <span class="type">xx</span> V__current_free_address__jo_area
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$exception
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_tail__word
@@ -6852,27 +5994,27 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"define-variable"</span>, CICADA__define_variable
       <span class="comment">;; &lt;&lt; variable, string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__primitive_string
-      <span class="type">xx</span>   save_into__jo_heap
+</span>      <span class="type">xx</span> V__current_free_address__primitive_string_area
+      <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__primitive_string_heap
+      <span class="type">xx</span>   save_into__primitive_string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
 
-      <span class="type">xx</span> V__current_free_address__jo_heap
+      <span class="type">xx</span> V__current_free_address__jo_area
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$variable
-      <span class="type">xx</span>   save_into__jo_heap
+      <span class="type">xx</span>   save_into__jo_area
 
       <span class="comment">;; when debugging
 </span>      <span class="comment">;; instead of drop2
 </span>      <span class="comment">;; one may wish to do some thing to the string
 </span>      <span class="type">xx</span> drop2
-      <span class="type">xx</span> save_into__jo_heap
+      <span class="type">xx</span> save_into__jo_area
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-function</span>
@@ -6900,13 +6042,13 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#26377;&#21517;&#23383;&#30340;&#23616;&#37096;&#35722;&#37327; &#33287; &#35722;&#38263;&#30340;&#23616;&#37096;&#25976;&#25818;</span>
-  * local-data-vector
+  * local-jo
     &#29992;&#20358;&#23526;&#29694; &#26377;&#21517;&#23383;&#30340;&#23616;&#37096;&#35722;&#37327;
     &#22312;&#32232;&#35695;&#26178;&#35336;&#31639; offset
-    &#21040;&#36889;&#20491; local-data-vector &#20013;&#30340; offset &#20570;&#29234;&#35722;&#37327;&#30340;&#20540;
+    &#21040;&#36889;&#20491; local-jo &#20013;&#30340; offset &#20570;&#29234;&#35722;&#37327;&#30340;&#20540;
     &#26377; <span class="bold">*local-variable-table*</span> &#36889;&#20491;&#25976;&#25818;&#32080;&#27083;
     &#24171;&#21161;&#35336;&#31639; offset
-  * local-data-heap
+  * local-byte
     &#29992;&#20358;&#20998;&#37197; &#35722;&#38263;&#30340;&#23616;&#37096;&#25976;&#25818;
     &#22312;&#36939;&#34892;&#26178;&#35336;&#31639; offset
   * &#20841;&#20491;&#27231;&#21046;&#37197;&#21512;&#20351;&#29992;
@@ -6917,24 +6059,24 @@
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length], number, counter
         -- name, true
         -- name, false &gt;&gt;</span>
-     xx|tuck|xx name-hash-table,hash
+     xx|tuck|xx <span class="cicada-nymph-title">name-hash-table</span>,hash
      xx|tuck|x
      <span class="cicada-nymph-comment">&lt;&lt; number, counter, name, string[address, length], name &gt;&gt;</span>
-     name,used? false? <span class="cicada-nymph-syntax-key-word">if</span>
-       x|over|xx name,save-string
+     <span class="cicada-nymph-title">name</span>,used? false? <span class="cicada-nymph-syntax-key-word">if</span>
+       x|over|xx <span class="cicada-nymph-title">name</span>,save-string
          xx|tuck|x <span class="cicada-nymph-comment">&lt;&lt; name as return value &gt;&gt;</span>
        <span class="cicada-nymph-comment">&lt;&lt; name, number, counter, name &gt;&gt;</span>
-       x|over|xx <span class="cicada-nymph-number">0</span> name-hash-table,hash
-       swap name,save-orbiton
+       x|over|xx <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">name-hash-table</span>,hash
+       swap <span class="cicada-nymph-title">name</span>,save-orbiton
        <span class="cicada-nymph-comment">&lt;&lt; name, number, counter &gt;&gt;</span>
-       swap <span class="cicada-nymph-number">0</span> name-hash-table,hash
-       name,save-orbit-length
+       swap <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">name-hash-table</span>,hash
+       <span class="cicada-nymph-title">name</span>,save-orbit-length
        <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*name-hash-table,counter*</span> add-save
        <span class="cicada-nymph-bool">true</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-comment">&lt;&lt; number, counter, name, string[address, length] &gt;&gt;</span>
-     x|over|xx name,fetch-string
+     x|over|xx <span class="cicada-nymph-title">name</span>,fetch-string
      xx|over|xx string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
        drop2 xx|swap|x drop2
        <span class="cicada-nymph-bool">true</span>
@@ -6949,7 +6091,7 @@
      <span class="cicada-nymph-comment">&lt;&lt; number, counter, name, string[address, length] &gt;&gt;</span>
      x|swap|xx drop
      xx|swap|xx add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> name-hash-table,insert,loop
+     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">name-hash-table,insert</span>
@@ -6957,7 +6099,7 @@
         -- name, true
         -- name, false &gt;&gt;</span>
      dup2 string-&gt;finite-carry-sum
-     <span class="cicada-nymph-number">0</span> name-hash-table,insert,loop
+     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -6968,22 +6110,22 @@
         -- name, true
         -- name, false &gt;&gt;</span>
      <span class="cicada-nymph-save-local-variable-1">&gt;:counter</span> <span class="cicada-nymph-save-local-variable-1">&gt;:number</span> <span class="cicada-nymph-save-local-variable-2">&gt;::string</span>
-     <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-fetch-local-variable-1">:counter</span> name-hash-table,hash
+     <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-fetch-local-variable-1">:counter</span> <span class="cicada-nymph-title">name-hash-table</span>,hash
      <span class="cicada-nymph-save-local-variable-1">&gt;:name</span>
-     <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-number">0</span> name-hash-table,hash
+     <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">name-hash-table</span>,hash
      <span class="cicada-nymph-save-local-variable-1">&gt;:orbit</span>
-     <span class="cicada-nymph-fetch-local-variable-1">:name</span> name,used? false? <span class="cicada-nymph-syntax-key-word">if</span>
+     <span class="cicada-nymph-fetch-local-variable-1">:name</span> <span class="cicada-nymph-title">name</span>,used? false? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-fetch-local-variable-2">::string</span> <span class="cicada-nymph-fetch-local-variable-1">:name</span>
-       name,save-string
+       <span class="cicada-nymph-title">name</span>,save-string
        <span class="cicada-nymph-fetch-local-variable-1">:orbit</span> <span class="cicada-nymph-fetch-local-variable-1">:name</span>
-       name,save-orbiton
+       <span class="cicada-nymph-title">name</span>,save-orbiton
        <span class="cicada-nymph-fetch-local-variable-1">:counter</span> <span class="cicada-nymph-fetch-local-variable-1">:orbit</span>
-       name,save-orbit-length
+       <span class="cicada-nymph-title">name</span>,save-orbit-length
        <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*name-hash-table,counter*</span> add-save
        <span class="cicada-nymph-fetch-local-variable-1">:name</span> <span class="cicada-nymph-bool">true</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-fetch-local-variable-1">:name</span> name,fetch-string
+     <span class="cicada-nymph-fetch-local-variable-1">:name</span> <span class="cicada-nymph-title">name</span>,fetch-string
      <span class="cicada-nymph-fetch-local-variable-2">::string</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-fetch-local-variable-1">:name</span> <span class="cicada-nymph-bool">true</span>
        <span class="cicada-nymph-end">end</span>
@@ -6994,7 +6136,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-fetch-local-variable-2">::string</span>
      <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-fetch-local-variable-1">:counter</span> add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> name-hash-table,insert,loop
+     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">name-hash-table,insert</span>
@@ -7002,7 +6144,7 @@
         -- name, true
         -- name, false &gt;&gt;</span>
      dup2 string-&gt;finite-carry-sum
-     <span class="cicada-nymph-number">0</span> name-hash-table,insert,loop
+     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -7012,7 +6154,7 @@
      &#27599;&#27425;&#36914;&#20837;&#19968;&#20491;&#20989;&#25976;&#39636;&#30340;&#22519;&#34892;
      &#21363; &#27599;&#27425;&#23559;&#19968;&#20018;&#29664;&#29664;&#20837;&#26855;&#26178;
      &#21516;&#26178;&#22312;&#36889;&#20018;&#29664;&#23376;&#24213;&#37096;&#21152;&#19978;
-     current_free_address$local_data_vector
+     current_free_address$local_jo
      &#21363; &#22312; explain$function &#20013;&#38656;&#35201;&#20570;&#29305;&#27530;&#34389;&#29702;
      &#27880;&#24847;
      explain$exception
@@ -7022,10 +6164,10 @@
      &#25152;&#20197;&#20063;&#38656;&#35201;&#20570;&#29305;&#27530;&#34389;&#29702;
    * &#36889;&#20491;&#20540;&#22312;&#20989;&#25976;&#36864;&#20986;&#26178;
      [&#21363; &#22312; end &#36889;&#20491;&#20989;&#25976;&#20013;]
-     &#29992;&#20197;&#37325;&#32622; current_free_address$local_data_vector
+     &#29992;&#20197;&#37325;&#32622; current_free_address$local_jo
      &#20063;&#23601;&#26159; &#37323;&#25918;&#22312;&#36889;&#27425;&#20989;&#25976;&#20316;&#29992;&#36942;&#31243;&#20013;&#25152;&#20998;&#37197;&#30340;&#20839;&#23384;
    * &#27599;&#27425; &gt;:name &#30340;&#26178;&#20505;
-     &#37117;&#26356;&#26032; current_free_address$local_data_vector
+     &#37117;&#26356;&#26032; current_free_address$local_jo
      &#20197;&#20998;&#37197;&#20839;&#23384;&#23601;&#34892;&#20102;
    * &#20063;&#23601;&#26159;&#35498;
      return-stack &#20013;&#30340;&#22823;&#22810;&#25976;&#26377;&#25928;&#20540;
@@ -7033,7 +6175,7 @@
    * &#20841;&#20491;&#32080;&#23614;&#35422;&#26159; end &#21644; &lt;&gt;
      &#23565;&#26044; &lt;&gt;
      &#21363; &#23565;&#26044;&#26126;&#39023;&#30340;&#23614;&#36958;&#27512;&#35519;&#29992;
-     &#38656;&#35201;&#21033;&#29992;&#26855;&#20013;&#30340;&#20540;&#37325;&#32622; current_free_address$local_data_vector
+     &#38656;&#35201;&#21033;&#29992;&#26855;&#20013;&#30340;&#20540;&#37325;&#32622; current_free_address$local_jo
      &#20294;&#26159;&#20006;&#19981;&#20837;&#26855;&#26032;&#20540;
 <span class="org-level-2">** &#35486;&#27861;&#25844;&#23637;&#26041;&#38754;&#30340;&#25903;&#25345;</span>
    * &#36889;&#35023;&#38656;&#35201;&#35672;&#21029; &gt;:name &#36996;&#26377; :name &#31561;&#31561;
@@ -7060,7 +6202,7 @@
      &#20351;&#29992; offset &#23601;&#34892;&#20102;
    * &#24213;&#23652;
      local-data-allocate,jo
-     &#36889;&#20491;&#21482;&#35731; current_free_address$local_data_vector &#21069;&#36914;
+     &#36889;&#20491;&#21482;&#35731; current_free_address$local_jo &#21069;&#36914;
      &#32780;&#19981;&#24460;&#36864;
    * &#27880;&#24847;
      &#26368;&#29234;&#37325;&#35201;&#30340;&#29305;&#40670;&#26159;
@@ -7091,28 +6233,28 @@
    * &#25913;&#20195;&#30908;&#20006;&#35519;&#25972;&#23565;&#36628;&#21161;&#20989;&#25976;&#30340;&#20351;&#29992;
      &#23601;&#34987;&#31281;&#20316;&#26159; "re-factoring"
      &#21363; &#20989;&#25976;&#30340;&#22240;&#23376;&#30340;&#37325;&#26032;&#20998;&#35299;
-<span class="org-level-1">* local-data-vector</span>
+<span class="org-level-1">* local-jo</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$local_data_vector = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+</span>   size$local_jo = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
 
-   address$local_data_vector <span class="keyword">labeling</span>
-      <span class="type">preserve</span> size$local_data_vector
+   address$local_jo <span class="keyword">labeling</span>
+      <span class="type">preserve</span> size$local_jo
 
-   <span class="function-name">current_free_address$local_data_vector</span>:
-      <span class="type">xx</span> address$local_data_vector
+   <span class="function-name">current_free_address$local_jo</span>:
+      <span class="type">xx</span> address$local_jo
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#27880;&#24847;&#32080;&#23614;&#35422;&#26371;&#21021;&#22987;&#21270;&#23616;&#37096;&#35722;&#37327;&#25351;&#37341;</span>
    * &#19979;&#38754;&#30340;&#25509;&#21475;&#20989;&#25976;&#24517;&#38920;&#26159; primitive-function
      &#22240;&#29234; &#21542;&#21063; &#36935;&#21040; end &#21644; taca &#30340;&#26178;&#20505;
-     current_free_address$local_data_vector &#23601;&#21448;&#34987;&#21021;&#22987;&#21270;&#20102;
+     current_free_address$local_jo &#23601;&#21448;&#34987;&#21021;&#22987;&#21270;&#20102;
 <span class="org-level-2">** local_data_allocate__jo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_primitive_function <span class="string">"local-data-allocate,jo"</span>, local_data_allocate__jo
       <span class="comment">;; &lt;&lt; number -- &gt;&gt;
 </span>      pop_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">imul</span> <span class="variable-name">rax</span>, jo_size
-      <span class="builtin">add</span> [current_free_address$local_data_vector], <span class="variable-name">rax</span>
+      <span class="builtin">add</span> [current_free_address$local_jo], <span class="variable-name">rax</span>
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> many fetch &amp; save</span>
@@ -7126,7 +6268,7 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =64bit, machine {
 
-   define_primitive_function <span class="string">"n-fetch,local-data-vector"</span>, n_fetch__local_data_vector
+   define_primitive_function <span class="string">"n-fetch,local-jo"</span>, n_fetch__local_jo
       <span class="comment">;; &lt;&lt; offset, n -- value-1, ..., value-n &gt;&gt;
 </span>      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$return_stack - (<span class="constant">2</span> * jo_size)]
 
@@ -7140,7 +6282,7 @@
       <span class="builtin">loop</span> .loop
       next
 
-   define_primitive_function <span class="string">"n-save,local-data-vector"</span>, n_save__local_data_vector
+   define_primitive_function <span class="string">"n-save,local-jo"</span>, n_save__local_jo
       <span class="comment">;; &lt;&lt; value-n, ..., value-1, offset, n -- &gt;&gt;
 </span>      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$return_stack - (<span class="constant">2</span> * jo_size)]
 
@@ -7166,7 +6308,7 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =32bit, machine {
 
-   define_primitive_function <span class="string">"n-fetch,local-data-vector"</span>, n_fetch__local_data_vector
+   define_primitive_function <span class="string">"n-fetch,local-jo"</span>, n_fetch__local_jo
       <span class="comment">;; &lt;&lt; offset, n -- value-1, ..., value-n &gt;&gt;
 </span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [pointer$return_stack]
       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [<span class="variable-name">rax</span> - (<span class="constant">2</span> * jo_size)]
@@ -7181,7 +6323,7 @@
       <span class="builtin">loop</span> .loop
       next
 
-   define_primitive_function <span class="string">"n-save,local-data-vector"</span>, n_save__local_data_vector
+   define_primitive_function <span class="string">"n-save,local-jo"</span>, n_save__local_jo
       <span class="comment">;; &lt;&lt; value-n, ..., value-1, offset, n -- &gt;&gt;
 </span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [pointer$return_stack]
       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [<span class="variable-name">rax</span> - (<span class="constant">2</span> * jo_size)]
@@ -7222,13 +6364,13 @@
 
         <span class="comment">;; &gt;::var2
 </span>        <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>, local_data_allocate__jo
-        <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>, <span class="keyword">literal</span>, <span class="constant">2</span>, n_save__local_data_vector
+        <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>, <span class="keyword">literal</span>, <span class="constant">2</span>, n_save__local_jo
 
         <span class="comment">;; &gt;::var2
-</span>        <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>, <span class="keyword">literal</span>, <span class="constant">2</span>, n_save__local_data_vector
+</span>        <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>, <span class="keyword">literal</span>, <span class="constant">2</span>, n_save__local_jo
 
         <span class="comment">;; ::var2
-</span>        <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>, <span class="keyword">literal</span>, <span class="constant">2</span>, n_fetch__local_data_vector
+</span>        <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>, <span class="keyword">literal</span>, <span class="constant">2</span>, n_fetch__local_jo
 
         <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">     #+end_src
@@ -7244,7 +6386,7 @@
      add
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">4</span> local-variable,test <span class="cicada-nymph-comment">&lt;&lt; 3 &gt;&gt;</span> .
+   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">4</span> <span class="cicada-nymph-title">local-variable</span>,test <span class="cicada-nymph-comment">&lt;&lt; 3 &gt;&gt;</span> .
 
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">local-variable,test,2</span>
@@ -7253,7 +6395,7 @@
      <span class="cicada-nymph-fetch-local-variable-2">::var2</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> local-variable,test,2 <span class="cicada-nymph-comment">&lt;&lt; 1 2 &gt;&gt;</span> . .
+   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-title">local-variable</span>,test,2 <span class="cicada-nymph-comment">&lt;&lt; 1 2 &gt;&gt;</span> . .
 
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">local-variable,test,3</span>
@@ -7264,7 +6406,7 @@
      add
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">4</span> local-variable,test,3 <span class="cicada-nymph-comment">&lt;&lt; 6 &gt;&gt;</span> .
+   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">4</span> <span class="cicada-nymph-title">local-variable</span>,test,3 <span class="cicada-nymph-comment">&lt;&lt; 6 &gt;&gt;</span> .
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> nested</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
@@ -7443,18 +6585,18 @@
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> dup2
       <span class="type">xx</span> local_variable_table__find, <span class="keyword">false?branch</span>, (.not_found-$)/jo_size
-      <span class="comment">;;   literal, &lt;offese&gt;, literal, n, n_fetch__local_data_vector
+      <span class="comment">;;   literal, &lt;offese&gt;, literal, n, n_fetch__local_jo
 </span>      <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_heap
+      <span class="type">xx</span>       save_into__jo_area
       <span class="comment">;;     offset
-</span>      <span class="type">xx</span>       save_into__jo_heap
+</span>      <span class="type">xx</span>       save_into__jo_area
       <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_heap
+      <span class="type">xx</span>       save_into__jo_area
       <span class="comment">;;     n
 </span>      <span class="type">xx</span>     count_front_colon
-      <span class="type">xx</span>       save_into__jo_heap
-      <span class="type">xx</span>     <span class="keyword">literal</span>, n_fetch__local_data_vector
-      <span class="type">xx</span>       save_into__jo_heap
+      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>     <span class="keyword">literal</span>, n_fetch__local_jo
+      <span class="type">xx</span>       save_into__jo_area
       <span class="type">xx</span>   <span class="keyword">end</span>
    <span class="function-name">.not_found</span>:
       <span class="type">xx</span> write_local_variable_not_bound_report
@@ -7513,18 +6655,18 @@
 </span>      <span class="type">xx</span> string_tail__char
       <span class="type">xx</span> dup2
       <span class="type">xx</span> local_variable_table__find, <span class="keyword">false?branch</span>, (.not_found-$)/jo_size
-      <span class="comment">;;   literal, &lt;offese&gt;, literal, n, n_save__local_data_vector
+      <span class="comment">;;   literal, &lt;offese&gt;, literal, n, n_save__local_jo
 </span>      <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_heap
+      <span class="type">xx</span>       save_into__jo_area
       <span class="comment">;;     offset
-</span>      <span class="type">xx</span>       save_into__jo_heap
+</span>      <span class="type">xx</span>       save_into__jo_area
       <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_heap
+      <span class="type">xx</span>       save_into__jo_area
       <span class="comment">;;     n
 </span>      <span class="type">xx</span>     count_front_colon
-      <span class="type">xx</span>       save_into__jo_heap
-      <span class="type">xx</span>     <span class="keyword">literal</span>, n_save__local_data_vector
-      <span class="type">xx</span>       save_into__jo_heap
+      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>     <span class="keyword">literal</span>, n_save__local_jo
+      <span class="type">xx</span>       save_into__jo_area
       <span class="type">xx</span>   <span class="keyword">end</span>
    <span class="function-name">.not_found</span>:
       <span class="type">xx</span> dup2
@@ -7533,33 +6675,33 @@
       <span class="type">xx</span> count_front_colon
       <span class="comment">;; literal, &lt;number&gt;, local_data_allocate__jo
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
       <span class="comment">;;   number of jo
-</span>      <span class="type">xx</span>     <span class="keyword">dup</span>, save_into__jo_heap
+</span>      <span class="type">xx</span>     <span class="keyword">dup</span>, save_into__jo_area
       <span class="type">xx</span>   <span class="keyword">literal</span>, local_data_allocate__jo
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
       <span class="comment">;; literal, &lt;offese&gt;, literal, n, save_local_data
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
       <span class="comment">;;   offset
 </span>      <span class="type">xx</span>   swap
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
       <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_heap
+      <span class="type">xx</span>     save_into__jo_area
       <span class="comment">;;   n
-</span>      <span class="type">xx</span>     save_into__jo_heap
-      <span class="type">xx</span>   <span class="keyword">literal</span>, n_save__local_data_vector
-      <span class="type">xx</span>     save_into__jo_heap
+</span>      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>   <span class="keyword">literal</span>, n_save__local_jo
+      <span class="type">xx</span>     save_into__jo_area
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* local-data-heap</span>
+<span class="org-level-1">* local-byte</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>
    * &#20006;&#19981;&#38656;&#35201;&#32102;&#36889;&#35023;&#30340;&#25509;&#21475;&#35373;&#35336;&#29305;&#27530;&#30340;&#35486;&#27861;&#25844;&#23637;
      &#30452;&#25509;&#20351;&#29992;&#20989;&#25976;&#23601;&#21487;&#20197;&#20102;
    * &#20294;&#26159;&#25509;&#21475;&#24517;&#38920;&#26159; primitive-function
      &#22240;&#29234; &#21542;&#21063; &#36935;&#21040; end &#21644; taca &#30340;&#26178;&#20505;
-     current_free_address$local_data_heap &#23601;&#21448;&#34987;&#21021;&#22987;&#21270;&#20102;
+     current_free_address$local_byte &#23601;&#21448;&#34987;&#21021;&#22987;&#21270;&#20102;
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#20351;&#29992;</span>
    * &#22312;&#19968;&#20491;&#20989;&#25976;&#20839;
      &#29992; allocate-local-memory &#25152;&#30003;&#35531;&#30340;&#23616;&#37096;&#25976;&#25818;&#31354;&#38291;
@@ -7574,22 +6716,22 @@
      &#25152;&#30003;&#35531;&#30340; allocate-local-memory &#26159;&#30456;&#21516;&#30340;
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$local_data_heap = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+</span>   size$local_byte = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
 
-   address$local_data_heap <span class="keyword">labeling</span>
-      <span class="type">preserve</span> size$local_data_heap
+   address$local_byte <span class="keyword">labeling</span>
+      <span class="type">preserve</span> size$local_byte
 
-   <span class="function-name">current_free_address$local_data_heap</span>:
-      <span class="type">xx</span> address$local_data_heap
+   <span class="function-name">current_free_address$local_byte</span>:
+      <span class="type">xx</span> address$local_byte
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** allocate-local-memory</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_primitive_function <span class="string">"allocate-local-memory"</span>, allocate_local_memory
       <span class="comment">;; &lt;&lt; size -- address &gt;&gt;
 </span>      pop_argument_stack <span class="variable-name">rbx</span>
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [current_free_address$local_data_heap]
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [current_free_address$local_byte]
       push_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">add</span> [current_free_address$local_data_heap], <span class="variable-name">rbx</span>
+      <span class="builtin">add</span> [current_free_address$local_byte], <span class="variable-name">rbx</span>
       next
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
@@ -7600,7 +6742,7 @@
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-   test,allocate-local-memory
+   <span class="cicada-nymph-title">test</span>,allocate-local-memory
 
    <span class="cicada-nymph-comment">&lt;&lt;
    40218513
@@ -7610,13 +6752,13 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">test,allocate-local-memory,2</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- address, address &gt;&gt;</span>
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
-     test,allocate-local-memory
+     <span class="cicada-nymph-title">test</span>,allocate-local-memory
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
-     test,allocate-local-memory
+     <span class="cicada-nymph-title">test</span>,allocate-local-memory
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
-   test,allocate-local-memory,2
+   <span class="cicada-nymph-title">test</span>,allocate-local-memory,2
 
    <span class="cicada-nymph-comment">&lt;&lt;
    40218513
@@ -7627,6 +6769,230 @@
      40218561
    40218545
    &gt;&gt;</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* syscall</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span>
+   * there are two ways to treat the syscall
+     1. syscall is NOT expose to cicada-nymph
+        system functions are wraped in assembly code
+        thus
+        make cicada-nymph code be more clean
+     2. syscall is expose to cicada-nymph
+        system functions are wraped in cicada-nymph code
+        thus
+        more easy to wraped more system functions
+        and
+        make assembly code be more clean
+        [only needs some system functions to load core file]
+   * I choose the second way for now
+<span class="org-level-2">** string-&gt;syscall-string</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="function-name">string$string_to_syscall_string</span>:
+      <span class="keyword">times</span> <span class="constant">256</span> <span class="type">db</span> <span class="constant">0</span>
+
+   define_function <span class="string">"string-&gt;syscall-string"</span>, string_to_syscall_string
+      <span class="comment">;; &lt;&lt; string[address, length] -- syscall-string[address] &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">dup</span>
+      <span class="type">xx</span>   <span class="keyword">literal</span>, string$string_to_syscall_string
+      <span class="type">xx</span>   addition
+      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
+      <span class="type">xx</span>   swap, save_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string
+      <span class="type">xx</span> string_to_buffer!
+      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** string-&gt;syscall-string-2</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="function-name">string$string_to_syscall_string_2</span>:
+      <span class="keyword">times</span> <span class="constant">256</span> <span class="type">db</span> <span class="constant">0</span>
+
+   define_function <span class="string">"string-&gt;syscall-string-2"</span>, string_to_syscall_string_2
+      <span class="comment">;; &lt;&lt; string[address, length] -- syscall-string[address] &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">dup</span>
+      <span class="type">xx</span>   <span class="keyword">literal</span>, string$string_to_syscall_string_2
+      <span class="type">xx</span>   addition
+      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
+      <span class="type">xx</span>   swap, save_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string_2
+      <span class="type">xx</span> string_to_buffer!
+      <span class="type">xx</span> <span class="keyword">literal</span>, string$string_to_syscall_string_2
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
+
+   define_primitive_function <span class="string">"syscall"</span>, CICADA__syscall
+      <span class="comment">;; &lt;&lt; ..., argument2, argument1,
+</span>      <span class="comment">;;    syscall-number,
+</span>      <span class="comment">;;    number-of-arguments
+</span>      <span class="comment">;;    -- return-value &gt;&gt;
+</span>      pop_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">0</span>
+      <span class="builtin">je</span> __syscall_with_0
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">1</span>
+      <span class="builtin">je</span> __syscall_with_1
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">2</span>
+      <span class="builtin">je</span> __syscall_with_2
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">3</span>
+      <span class="builtin">je</span> __syscall_with_3
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">4</span>
+      <span class="builtin">je</span> __syscall_with_4
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">5</span>
+      <span class="builtin">je</span> __syscall_with_5
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">6</span>
+      <span class="builtin">je</span> __syscall_with_6
+      <span class="builtin">jmp</span> __syscall_with_too_many
+
+   __syscall_with_0:
+      pop_argument_stack linux64_sys_n_rax
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_1:
+      pop_argument_stack linux64_sys_n_rax
+      pop_argument_stack linux64_sys_1_rdi
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_2:
+      pop_argument_stack linux64_sys_n_rax
+      pop_argument_stack linux64_sys_1_rdi
+      pop_argument_stack linux64_sys_2_rsi
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_3:
+      pop_argument_stack linux64_sys_n_rax
+      pop_argument_stack linux64_sys_1_rdi
+      pop_argument_stack linux64_sys_2_rsi
+      pop_argument_stack linux64_sys_3_rdx
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_4:
+      pop_argument_stack linux64_sys_n_rax
+      pop_argument_stack linux64_sys_1_rdi
+      pop_argument_stack linux64_sys_2_rsi
+      pop_argument_stack linux64_sys_3_rdx
+      pop_argument_stack linux64_sys_4_r10
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_5:
+      pop_argument_stack linux64_sys_n_rax
+      pop_argument_stack linux64_sys_1_rdi
+      pop_argument_stack linux64_sys_2_rsi
+      pop_argument_stack linux64_sys_3_rdx
+      pop_argument_stack linux64_sys_4_r10
+      pop_argument_stack linux64_sys_5_r9
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_6:
+      pop_argument_stack linux64_sys_n_rax
+      pop_argument_stack linux64_sys_1_rdi
+      pop_argument_stack linux64_sys_2_rsi
+      pop_argument_stack linux64_sys_3_rdx
+      pop_argument_stack linux64_sys_4_r10
+      pop_argument_stack linux64_sys_5_r9
+      pop_argument_stack linux64_sys_6_r8
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_too_many:
+      <span class="builtin">call</span> __exit_with_six
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+
+   define_primitive_function <span class="string">"syscall"</span>, CICADA__syscall
+      <span class="comment">;; &lt;&lt; ..., argument2, argument1,
+</span>      <span class="comment">;;    syscall-number,
+</span>      <span class="comment">;;    number-of-arguments
+</span>      <span class="comment">;;    -- return-value &gt;&gt;
+</span>      pop_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">0</span>
+      <span class="builtin">je</span> __syscall_with_0
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">1</span>
+      <span class="builtin">je</span> __syscall_with_1
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">2</span>
+      <span class="builtin">je</span> __syscall_with_2
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">3</span>
+      <span class="builtin">je</span> __syscall_with_3
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">4</span>
+      <span class="builtin">je</span> __syscall_with_4
+      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, <span class="constant">5</span>
+      <span class="builtin">je</span> __syscall_with_5
+      <span class="builtin">jmp</span> __syscall_with_too_many
+
+   __syscall_with_0:
+      pop_argument_stack linux32_sys_n_eax
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_1:
+      pop_argument_stack linux32_sys_n_eax
+      pop_argument_stack linux32_sys_1_ebx
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_2:
+      pop_argument_stack linux32_sys_n_eax
+      pop_argument_stack linux32_sys_1_ebx
+      pop_argument_stack linux32_sys_2_ecx
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_3:
+      pop_argument_stack linux32_sys_n_eax
+      pop_argument_stack linux32_sys_1_ebx
+      pop_argument_stack linux32_sys_2_ecx
+      pop_argument_stack linux32_sys_3_edx
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_4:
+      pop_argument_stack linux32_sys_n_eax
+      pop_argument_stack linux32_sys_1_ebx
+      pop_argument_stack linux32_sys_2_ecx
+      pop_argument_stack linux32_sys_3_edx
+      pop_argument_stack linux32_sys_4_esi
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_5:
+      pop_argument_stack linux32_sys_n_eax
+      pop_argument_stack linux32_sys_1_ebx
+      pop_argument_stack linux32_sys_2_ecx
+      pop_argument_stack linux32_sys_3_edx
+      pop_argument_stack linux32_sys_4_esi
+      pop_argument_stack linux32_sys_5_edi
+      <span class="builtin">syscall</span>
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   __syscall_with_too_many:
+      <span class="builtin">call</span> __exit_with_six
+
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
@@ -7658,12 +7024,12 @@
    define_variable <span class="string">"*current-free-address,un-initialized-memory*"</span>, V__current_free_address__un_initialized_memory
      <span class="type">xx</span> current_free_address$un_initialized_memory
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-heap*</span></span>
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-area*</span></span>
    * the last_primitive_string_in_assembly
-     is just "<span class="bold">*current-free-address,primitive-string-heap*</span>"
+     is just "<span class="bold">*current-free-address,primitive-string-area*</span>"
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*current-free-address,primitive-string-heap*"</span>, V__current_free_address__primitive_string
-      <span class="type">xx</span> current_free_address$primitive_string_heap
+</span>   define_variable <span class="string">"*current-free-address,primitive-string-area*"</span>, V__current_free_address__primitive_string_area
+      <span class="type">xx</span> current_free_address$primitive_string_area
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** last_link</span>
    * this word helps to initialize V__first_jo_in_jotionary
