@@ -178,6 +178,14 @@
         /* font-lock-preprocessor-face */
         color: #a6e22e;
       }
+      .rainbow-delimiters-depth-1 {
+        /* rainbow-delimiters-depth-1-face */
+        color: #8c8c8c;
+      }
+      .rainbow-delimiters-depth-2 {
+        /* rainbow-delimiters-depth-2-face */
+        color: #93a8c6;
+      }
       .return-stack-bar-ket {
         /* return-stack-bar-ket-face */
         color: #dc322f;
@@ -243,6 +251,10 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** find a better way to protect reading-stack</span>
+   * now
+     "1 2 3 add add . jo" eval-string
+     will crush the interpreter
 <span class="org-level-2">** protect on the overloading of a variety of memories</span>
 <span class="org-level-2">** better naming of headings</span>
 <span class="org-level-2">** add more notes about the limitations of the program</span>
@@ -280,7 +292,6 @@
      <span class="org-table">| convention   | jo type  |</span>
      <span class="org-table">|--------------+----------|</span>
      <span class="org-table">| prefix "V__" | variable |</span>
-     <span class="org-table">| prefix "M__" | macro    |</span>
    * but I use
      1. "zero" instead of "V__zero"
      2. "true" instead of "V__true"
@@ -426,9 +437,8 @@
      &#27770;&#23450;&#20102; &#22914;&#20309;&#20837;&#36889;&#20491;&#26855;
    * &#32080;&#23614;&#35422;
      &#27770;&#23450;&#20102; &#22914;&#20309;&#20986;&#36889;&#20491;&#26855;
-<span class="org-level-2">** eval-string-stack</span>
-   * &#20841;&#20491;&#19968;&#23565;
-<span class="org-level-2">** syntax-set</span>
+<span class="org-level-2">** syntax-stack</span>
+<span class="org-level-2">** reading-stack</span>
 <span class="org-level-2">** local-variable-table</span>
    * &#21482;&#26377;&#19968;&#20491; local-variable-table
      &#29992;&#20197;&#22312;&#32232;&#35695;&#26178;&#26399;&#35299;&#27770;&#23616;&#37096;&#35722;&#20803;&#30340;&#21517;&#33287;&#20540;&#30340;&#23565;&#25033;
@@ -1079,10 +1089,14 @@
    * when wish to change a variable's value
      use key_word "address" to get the address of the variable
 <span class="org-level-2">** define_variable</span>
+   * length__#jo = [jo - jo_size * 3]
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">macro</span> <span class="function-name">define_variable</span> string, <span class="builtin">jo</span> {
 
    define_variable__#<span class="builtin">jo</span>:
+
+   length__#<span class="builtin">jo</span>:
+      <span class="type">xx</span> <span class="constant">1</span>
 
    name__#<span class="builtin">jo</span>:
       <span class="type">xx</span> current_free_address$primitive_string_area
@@ -1101,13 +1115,45 @@
 </span>
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** explain$variable</span>
+</span><span class="org-level-2">** explain$variable                   </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+   * in memory
+      <span class="org-table">| value-1 |</span>
+      <span class="org-table">| ...     |</span>
+      <span class="org-table">| value-n |</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">explain$variable</span>:
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   <span class="function-name">explain$variable</span>:
+      <span class="builtin">mov</span> <span class="variable-name">rcx</span>, [<span class="variable-name">rax</span> - (jo_size * <span class="constant">3</span>)]
       <span class="builtin">add</span> <span class="variable-name">rax</span>, jo_size
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [<span class="variable-name">rax</span>]
-      push_argument_stack <span class="variable-name">rbx</span>
+   <span class="function-name">.loop</span>:
+      <span class="builtin">mov</span> <span class="variable-name">rdx</span>, <span class="type">qword</span> [<span class="variable-name">rax</span>]
+      push_argument_stack <span class="variable-name">rdx</span>
+      <span class="builtin">add</span> <span class="variable-name">rax</span>, jo_size
+      <span class="builtin">loop</span> .loop
       next
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** explain$variable                   </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
+   * in memory
+      <span class="org-table">| value-1 |</span>
+      <span class="org-table">| ...     |</span>
+      <span class="org-table">| value-n |</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   <span class="function-name">explain$variable</span>:
+      <span class="builtin">mov</span> <span class="variable-name">rcx</span>, [<span class="variable-name">rax</span> - (jo_size * <span class="constant">3</span>)]
+      <span class="builtin">add</span> <span class="variable-name">rax</span>, jo_size
+   <span class="function-name">.loop</span>:
+      <span class="builtin">mov</span> <span class="variable-name">rdx</span>, <span class="type">dword</span> [<span class="variable-name">rax</span>]
+      push_argument_stack <span class="variable-name">rdx</span>
+      <span class="builtin">add</span> <span class="variable-name">rax</span>, jo_size
+      <span class="builtin">loop</span> .loop
+      next
+
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* exception-jo</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>
@@ -1788,15 +1834,6 @@
 </span>      <span class="type">xx</span> init__rule_set__make_jojo
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** load-core-file</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"load-core-file"</span>, load_core_file
-      <span class="comment">;; &lt;&lt; unknown -- unknown &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, address$core_file
-      <span class="type">xx</span> <span class="keyword">literal</span>, (end$core_file - address$core_file)
-      <span class="type">xx</span> eval_string__ready
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> top-level-REPL</span>
    * a top-level-REPL always lives at the bottom of return-stack
@@ -1989,10 +2026,10 @@
 </span>      <span class="comment">;; xx exit_with_TOS
 </span>      <span class="comment">;;;; 2 1 4 3 2 1
 </span>
-      <span class="comment">;;;; find
+      <span class="comment">;;;; find_jo__through_jo_link
 </span>      <span class="comment">;; xx read_word, string_to_integer ;; number
 </span>      <span class="comment">;; xx read_word, string_to_integer ;; number
-</span>      <span class="comment">;; xx read_word, find ;; add
+</span>      <span class="comment">;; xx read_word, find_jo__through_jo_link ;; add
 </span>      <span class="comment">;; xx drop ;; true
 </span>      <span class="comment">;; xx execute_jo
 </span>      <span class="comment">;; xx write_integer
@@ -2025,10 +2062,6 @@
    * the name of an instruction
      might not be exported to cicada-language as a function
      but as a variable
-   * the name of a special primitive function in assembly code
-     maybe reused as a macro word in cicada-language
-     but the name of the macro in assembly code
-     is prefixed by "M__"
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** literal</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -3278,26 +3311,77 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* memory</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> fetch &amp; save</span>
    * although the following functions are all side-effect
      but I use "save" instead of "save!"
-<span class="org-level-2">** save                               </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+   * (fetch) and (save) default to a jo_size
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> endianness of n-fetch &amp; n-save</span>
+   * big-endian is used
+     in memory
+     <span class="org-table">| value-1 |</span>
+     <span class="org-table">| value-2 |</span>
+     <span class="org-table">| value-3 |</span>
+     on stack
+     &lt;&lt; value-1, value-2, value-3 &gt;&gt;
+   * thus
+     what saved into the address
+     will re-occur when fetching through the address
+   * thus
+     I do not implement n-fetch-byte &amp; n-save-byte
+     for the endianness of machine
+     might not be big-endian
+<span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =64bit, machine {
 
-   <span class="comment">;; "save" and "fetch" default to a jo_size
-</span>   <span class="comment">;; the rule of "fetch2" and so on are:
-</span>   <span class="comment">;;   in memory:
-</span>   <span class="comment">;;     ||  1 : value-1  ||
-</span>   <span class="comment">;;     ||  1 : value-2  ||
-</span>   <span class="comment">;;     ||  1 : value-3  ||
-</span>   <span class="comment">;;     ...
-</span>   <span class="comment">;;   on stack:
-</span>   <span class="comment">;;     &lt;&lt; value-1, value-2, value-3, ... &gt;&gt;
-</span>   <span class="comment">;; of course we have:
-</span>   <span class="comment">;;   fetch2 : memory=copy=&gt;stack
-</span>   <span class="comment">;;   save2  : stack-&gt;memory
-</span>
+   define_primitive_function <span class="string">"fetch"</span>, fetch
+      <span class="comment">;; ( address -- value )
+</span>      pop_argument_stack  <span class="variable-name">rbx</span>
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   define_primitive_function <span class="string">"fetch-byte"</span>, fetch_byte
+      <span class="comment">;; ( address -- value )
+</span>      pop_argument_stack <span class="variable-name">rbx</span>
+      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">al</span>, <span class="type">byte</span>[<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   define_primitive_function <span class="string">"fetch-two-bytes"</span>, fetch_two_bytes
+      <span class="comment">;; ( address -- value )
+</span>      pop_argument_stack <span class="variable-name">rbx</span>
+      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">ax</span>, <span class="type">word</span> [<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   define_primitive_function <span class="string">"fetch-four-bytes"</span>, fetch_four_bytes
+      <span class="comment">;; ( address -- value )
+</span>      pop_argument_stack <span class="variable-name">rbx</span>
+      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">eax</span>, <span class="type">dword</span> [<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   define_primitive_function <span class="string">"n-fetch"</span>, n_fetch
+      <span class="comment">;; &lt;&lt; address, n -- value-1, ..., value-n &gt;&gt;
+</span>      pop_argument_stack  <span class="variable-name">rcx</span>
+      pop_argument_stack  <span class="variable-name">rdx</span>
+   <span class="function-name">.loop</span>:
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">qword</span> [<span class="variable-name">rdx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">add</span> <span class="variable-name">rdx</span>, jo_size
+      <span class="builtin">loop</span> .loop
+      next
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** save                               </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
    define_primitive_function <span class="string">"save"</span>, save
       <span class="comment">;; ( value, address -- )
 </span>      pop_argument_stack <span class="variable-name">rbx</span>
@@ -3343,25 +3427,6 @@
       <span class="builtin">loop</span> .loop
       next
 
-   define_function <span class="string">"save2"</span>, save2
-      <span class="comment">;; &lt;&lt; value-2, value-1, address -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
-      <span class="type">xx</span> n_save
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_primitive_function <span class="string">"n-save-byte"</span>, n_save_byte
-      <span class="comment">;; &lt;&lt; value-n, ..., value-1, address, n -- &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rcx</span>
-      pop_argument_stack <span class="variable-name">rdx</span>
-      <span class="builtin">add</span> <span class="variable-name">rdx</span>, <span class="variable-name">rcx</span>
-      <span class="builtin">dec</span> <span class="variable-name">rdx</span>
-   <span class="function-name">.loop</span>:
-      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdx</span>], <span class="variable-name">al</span>
-      <span class="builtin">dec</span> <span class="variable-name">rdx</span>
-      <span class="builtin">loop</span> .loop
-      next
-
    define_primitive_function <span class="string">"add-save"</span>, add_save
       <span class="comment">;; ( number to add, address -- )
 </span>      pop_argument_stack <span class="variable-name">rbx</span>
@@ -3376,11 +3441,11 @@
       <span class="builtin">sub</span> <span class="type">qword</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
       next
 
-   }
+   <span class="rainbow-delimiters-depth-1">}</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+</span><span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =64bit, machine {
+</span>   <span class="preprocessor">match</span> =32bit, machine {
 
    define_primitive_function <span class="string">"fetch"</span>, fetch
       <span class="comment">;; ( address -- value )
@@ -3413,38 +3478,16 @@
       push_argument_stack <span class="variable-name">rax</span>
       next
 
-   <span class="comment">;;   in memory:
-</span>   <span class="comment">;;     ||  1 : value-1  ||
-</span>   <span class="comment">;;     ...
-</span>   <span class="comment">;;     ||  1 : value-n  ||
-</span>   define_primitive_function <span class="string">"n-fetch"</span>, n_fetch
+   define_primitive_function <span class="string">"n-fetch"</span>, n_fetch
       <span class="comment">;; &lt;&lt; address, n -- value-1, ..., value-n &gt;&gt;
 </span>      pop_argument_stack  <span class="variable-name">rcx</span>
       pop_argument_stack  <span class="variable-name">rdx</span>
    <span class="function-name">.loop</span>:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">qword</span> [<span class="variable-name">rdx</span>]
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">dword</span> [<span class="variable-name">rdx</span>]
       push_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">add</span> <span class="variable-name">rdx</span>, jo_size
       <span class="builtin">loop</span> .loop
       next
-
-   define_primitive_function <span class="string">"n-fetch-byte"</span>, n_fetch_byte
-      <span class="comment">;; &lt;&lt; address, n -- byte-1, ..., byte-n &gt;&gt;
-</span>      pop_argument_stack  <span class="variable-name">rcx</span>
-      pop_argument_stack  <span class="variable-name">rdx</span>
-      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-   <span class="function-name">.loop</span>:
-      <span class="builtin">mov</span> <span class="variable-name">al</span>, <span class="type">byte</span> [<span class="variable-name">rdx</span>]
-      push_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">inc</span> <span class="variable-name">rdx</span>
-      <span class="builtin">loop</span> .loop
-      next
-
-   define_function <span class="string">"fetch2"</span>, fetch2
-      <span class="comment">;; &lt;&lt; address -- value-1, value-2 &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
-      <span class="type">xx</span> n_fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -3452,19 +3495,6 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =32bit, machine {
 
-   <span class="comment">;; "save" and "fetch" default to a jo_size
-</span>   <span class="comment">;; the rule of "fetch2" and so on are:
-</span>   <span class="comment">;;   in memory:
-</span>   <span class="comment">;;     ||  1 : value-1  ||
-</span>   <span class="comment">;;     ||  1 : value-2  ||
-</span>   <span class="comment">;;     ||  1 : value-3  ||
-</span>   <span class="comment">;;     ...
-</span>   <span class="comment">;;   on stack:
-</span>   <span class="comment">;;     &lt;&lt; value-1, value-2, value-3, ... &gt;&gt;
-</span>   <span class="comment">;; of course we have:
-</span>   <span class="comment">;;   fetch2 : memory=copy=&gt;stack
-</span>   <span class="comment">;;   save2  : stack-&gt;memory
-</span>
    define_primitive_function <span class="string">"save"</span>, save
       <span class="comment">;; ( value, address -- )
 </span>      pop_argument_stack <span class="variable-name">rbx</span>
@@ -3510,25 +3540,6 @@
       <span class="builtin">loop</span> .loop
       next
 
-   define_function <span class="string">"save2"</span>, save2
-      <span class="comment">;; &lt;&lt; value-2, value-1, address -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
-      <span class="type">xx</span> n_save
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_primitive_function <span class="string">"n-save-byte"</span>, n_save_byte
-      <span class="comment">;; &lt;&lt; value-n, ..., value-1, address, n -- &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rcx</span>
-      pop_argument_stack <span class="variable-name">rdx</span>
-      <span class="builtin">add</span> <span class="variable-name">rdx</span>, <span class="variable-name">rcx</span>
-      <span class="builtin">dec</span> <span class="variable-name">rdx</span>
-   <span class="function-name">.loop</span>:
-      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="type">byte</span> [<span class="variable-name">rdx</span>], <span class="variable-name">al</span>
-      <span class="builtin">dec</span> <span class="variable-name">rdx</span>
-      <span class="builtin">loop</span> .loop
-      next
-
    define_primitive_function <span class="string">"add-save"</span>, add_save
       <span class="comment">;; ( number to add, address -- )
 </span>      pop_argument_stack <span class="variable-name">rbx</span>
@@ -3543,77 +3554,7 @@
       <span class="builtin">sub</span> <span class="type">dword</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
       next
 
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =32bit, machine {
-
-   define_primitive_function <span class="string">"fetch"</span>, fetch
-      <span class="comment">;; ( address -- value )
-</span>      pop_argument_stack  <span class="variable-name">rbx</span>
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   define_primitive_function <span class="string">"fetch-byte"</span>, fetch_byte
-      <span class="comment">;; ( address -- value )
-</span>      pop_argument_stack <span class="variable-name">rbx</span>
-      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">al</span>, <span class="type">byte</span>[<span class="variable-name">rbx</span>]
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   define_primitive_function <span class="string">"fetch-two-bytes"</span>, fetch_two_bytes
-      <span class="comment">;; ( address -- value )
-</span>      pop_argument_stack <span class="variable-name">rbx</span>
-      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">ax</span>, <span class="type">word</span> [<span class="variable-name">rbx</span>]
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   define_primitive_function <span class="string">"fetch-four-bytes"</span>, fetch_four_bytes
-      <span class="comment">;; ( address -- value )
-</span>      pop_argument_stack <span class="variable-name">rbx</span>
-      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">eax</span>, <span class="type">dword</span> [<span class="variable-name">rbx</span>]
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-
-   <span class="comment">;;   in memory:
-</span>   <span class="comment">;;     ||  1 : value-1  ||
-</span>   <span class="comment">;;     ...
-</span>   <span class="comment">;;     ||  1 : value-n  ||
-</span>   define_primitive_function <span class="string">"n-fetch"</span>, n_fetch
-      <span class="comment">;; &lt;&lt; address, n -- value-1, ..., value-n &gt;&gt;
-</span>      pop_argument_stack  <span class="variable-name">rcx</span>
-      pop_argument_stack  <span class="variable-name">rdx</span>
-   <span class="function-name">.loop</span>:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, <span class="type">dword</span> [<span class="variable-name">rdx</span>]
-      push_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">add</span> <span class="variable-name">rdx</span>, jo_size
-      <span class="builtin">loop</span> .loop
-      next
-
-   define_primitive_function <span class="string">"n-fetch-byte"</span>, n_fetch_byte
-      <span class="comment">;; &lt;&lt; address, n -- byte-1, ..., byte-n &gt;&gt;
-</span>      pop_argument_stack  <span class="variable-name">rcx</span>
-      pop_argument_stack  <span class="variable-name">rdx</span>
-      <span class="builtin">xor</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
-   <span class="function-name">.loop</span>:
-      <span class="builtin">mov</span> <span class="variable-name">al</span>, <span class="type">byte</span> [<span class="variable-name">rdx</span>]
-      push_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">inc</span> <span class="variable-name">rdx</span>
-      <span class="builtin">loop</span> .loop
-      next
-
-   define_function <span class="string">"fetch2"</span>, fetch2
-      <span class="comment">;; &lt;&lt; address -- value-1, value-2 &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
-      <span class="type">xx</span> n_fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   }
+   <span class="rainbow-delimiters-depth-1">}</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** clear</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -3769,7 +3710,7 @@
       push_argument_stack <span class="variable-name">rax</span>
       next
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** find</span>
+</span><span class="org-level-2">** find-[lowest|highest]-set-bit</span>
    * "bsf" "bsr"
      instructions scan a word or double word for first set bit
      and store the index of this bit into destination operand
@@ -3845,11 +3786,7 @@
    <span class="cicada-nymph-number">2</span><span class="cicada-nymph-number-light">#</span><span class="cicada-nymph-number">00000000</span> find-highest-set-bit
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* basic io</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> byte</span>
-   * basic io is about byte
-<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* write-byte</span>
 <span class="org-level-2">** write-byte                         </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
@@ -3895,14 +3832,129 @@
 
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
+</span><span class="org-level-1">* reading-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
+   * for we do not build border-check
+     into the interface of pop and push
+     we allocation some memory below the stacks
+   * (read-byte) only sees the tos of reading-stack
+   * reading-stack helps to implement (eval-string)
+     push and pop of reading-stack happens in the function (eval-string)
+   * the interface action on string
+     i.e. two values
+<span class="org-level-2">** memory allocation</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   size$reading_stack = <span class="constant">1024</span> * jo_size
+
+      <span class="type">preserve</span> <span class="constant">64</span> * jo_size
+   address$reading_stack <span class="keyword">labeling</span>
+      <span class="type">preserve</span> size$reading_stack
+
+   <span class="function-name">pointer$reading_stack</span>:
+      <span class="type">xx</span> address$reading_stack
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** push &amp; pop &amp; drop                  </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   define_primitive_function <span class="string">"push-reading-stack"</span>, push_reading_stack
+      <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
+</span>      pop_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
+      <span class="builtin">add</span> <span class="type">qword</span> [pointer$reading_stack], jo_size
+      pop_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
+      <span class="builtin">add</span> <span class="type">qword</span> [pointer$reading_stack], jo_size
+      next
+
+   define_primitive_function <span class="string">"pop-reading-stack"</span>, pop_reading_stack
+      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
+</span>      <span class="builtin">sub</span> <span class="type">qword</span> [pointer$reading_stack], jo_size
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">sub</span> <span class="type">qword</span> [pointer$reading_stack], jo_size
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   define_primitive_function <span class="string">"drop-reading-stack"</span>, drop_reading_stack
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">sub</span> <span class="type">qword</span> [pointer$reading_stack], (jo_size * <span class="constant">2</span><span class="rainbow-delimiters-depth-2">)</span>
+      next
+
+   <span class="rainbow-delimiters-depth-1">}</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** push &amp; pop &amp; drop                  </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   define_primitive_function <span class="string">"push-reading-stack"</span>, push_reading_stack
+      <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
+</span>      pop_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">rsi</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">rsi</span>], <span class="variable-name">rax</span>
+      <span class="builtin">add</span> <span class="type">dword</span> [pointer$reading_stack], jo_size
+      pop_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">rsi</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> [<span class="variable-name">rsi</span>], <span class="variable-name">rax</span>
+      <span class="builtin">add</span> <span class="type">dword</span> [pointer$reading_stack], jo_size
+      next
+
+   define_primitive_function <span class="string">"pop-reading-stack"</span>, pop_reading_stack
+      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
+</span>      <span class="builtin">sub</span> <span class="type">dword</span> [pointer$reading_stack], jo_size
+      <span class="builtin">mov</span> <span class="variable-name">rsi</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rsi</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">sub</span> <span class="type">dword</span> [pointer$reading_stack], jo_size
+      <span class="builtin">mov</span> <span class="variable-name">rsi</span>, [pointer$reading_stack]
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rsi</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+
+   define_primitive_function <span class="string">"drop-reading-stack"</span>, drop_reading_stack
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">sub</span> <span class="type">dword</span> [pointer$reading_stack], (jo_size * <span class="constant">2</span><span class="rainbow-delimiters-depth-2">)</span>
+      next
+
+   <span class="rainbow-delimiters-depth-1">}</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** tos</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_primitive_function <span class="string">"tos-reading-stack"</span>, tos_reading_stack
+      <span class="comment">;; &lt;&lt; -- string[address, length] &gt;&gt;
+</span>      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$reading_stack]
+      <span class="builtin">sub</span> <span class="variable-name">rbx</span>, jo_size
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$reading_stack]
+      <span class="builtin">sub</span> <span class="variable-name">rbx</span>, jo_size
+      <span class="builtin">sub</span> <span class="variable-name">rbx</span>, jo_size
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+      push_argument_stack <span class="variable-name">rax</span>
+      next
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** reading-stack-empty?</span>
+   * only one string is in reading-stack and it length is zero
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"reading-stack-empty?"</span>, reading_stack_empty?
+      <span class="comment">;; &lt;&lt; -- bool &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, pointer$reading_stack, fetch
+      <span class="type">xx</span> <span class="keyword">literal</span>, address$reading_stack
+      <span class="type">xx</span> equal?
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* read-byte</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> end of file</span>
    * do not exit the program
      when meeting &lt;end-of-file&gt;
      so
      when you hit &lt;C-d&gt;
      some you will not exit the interpreter
-   * add the feature to unread one ket-char
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> factoring</span>
    * reading from file of stdin is slow
      thus
@@ -3917,14 +3969,7 @@
    * by factoring out the low-level calls
      that read a line from stdin
      we are able to implement eval-string easily
-<span class="org-level-2">** memory allocation</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   max_input_length = <span class="constant">1024</span> * <span class="constant">1024</span>
-
-   buffer$read_byte <span class="keyword">labeling</span>
-      <span class="type">preserve</span> max_input_length
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** read-line-from-stdin               </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
+<span class="org-level-2">** read-line-from-stdin               </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
@@ -3963,11 +4008,11 @@
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> read-line-from-stdin</span>
 <span class="org-block-begin-line">   #+begin_src fasm
 </span>   define_function <span class="string">""</span>, test__read_line_from_stdin
-      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$reading
       <span class="type">xx</span> <span class="keyword">literal</span>, max_input_length
       <span class="type">xx</span> read_line_from_stdin
       <span class="type">xx</span> pretty_write_integer
-      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_byte
+      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$reading
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>
       <span class="type">xx</span> write_string
       <span class="type">xx</span> exit_with_TOS
@@ -3975,195 +4020,71 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-byte</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"read-byte"</span>, read_byte
-      <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
-</span>      <span class="type">xx</span> have_unreaded_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">9</span>
-      <span class="type">xx</span>   <span class="keyword">literal</span>, char$unreaded_ket_char, fetch_byte
-      <span class="type">xx</span>   zero, <span class="keyword">literal</span>, flag$unreaded_ket_char
-      <span class="type">xx</span>   save
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> read_byte__without_unread
-      <span class="type">xx</span> <span class="keyword">end</span>
+</span>   max_input_length = <span class="constant">64</span> * <span class="constant">1024</span>
 
-   define_function <span class="string">"read-byte,without-unread"</span>, read_byte__without_unread
+   buffer$reading <span class="keyword">labeling</span>
+      <span class="type">preserve</span> max_input_length
+
+   replace$reading <span class="keyword">labeling</span>
+      <span class="type">preserve</span> <span class="constant">1024</span>
+
+   define_function <span class="string">"read-byte"</span>, read_byte
       <span class="comment">;; &lt;&lt; -- byte &gt;&gt;
-</span>      <span class="type">xx</span> eval_string_stack_empty?, <span class="keyword">false?branch</span>, (.not_empty-$)/jo_size
-      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$read_byte
+</span>      <span class="type">xx</span> pop_reading_stack
+      <span class="type">xx</span> dup2, empty_string?, CICADA__not, <span class="keyword">false?branch</span>, (.bad_tos-$)/jo_size
+      <span class="type">xx</span>   sub1, swap
+      <span class="type">xx</span>   tuck
+      <span class="type">xx</span>   add1, swap
+      <span class="type">xx</span>   push_reading_stack
+      <span class="type">xx</span>   fetch_byte
+      <span class="type">xx</span>   <span class="keyword">end</span>
+   <span class="function-name">.bad_tos</span>:
+      <span class="type">xx</span> reading_stack_empty?, <span class="keyword">false?branch</span>, (.not_empty-$)/jo_size
+      <span class="type">xx</span>   drop2
+      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$reading
       <span class="type">xx</span>   <span class="keyword">literal</span>, max_input_length
       <span class="type">xx</span>   read_line_from_stdin
-      <span class="type">xx</span>     <span class="keyword">dup</span>, positive?, false?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="comment">;;     ignore &lt;end-of-file&gt;
-</span>      <span class="comment">;;     ignore reading error
-</span>      <span class="type">xx</span>     drop
-      <span class="type">xx</span>     <span class="keyword">taca</span>, read_byte__without_unread
-      <span class="type">xx</span>   push_eval_string_stack
-      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$read_byte
-      <span class="type">xx</span>   push_eval_string_stack
-      <span class="type">xx</span>   <span class="keyword">taca</span>, read_byte__without_unread
-      <span class="function-name">.not_empty</span>:
-      <span class="type">xx</span> pop_eval_string_stack
-      <span class="type">xx</span> pop_eval_string_stack
-      <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   drop2
-      <span class="type">xx</span>   <span class="keyword">taca</span>, read_byte__without_unread
-      <span class="type">xx</span> sub1, push_eval_string_stack
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> add1, push_eval_string_stack
-      <span class="type">xx</span> fetch_byte
-      <span class="type">xx</span> <span class="keyword">end</span>
+      <span class="type">xx</span>   <span class="keyword">dup</span>, positive?, <span class="keyword">false?branch</span>, (.read_error-$)/jo_size
+      <span class="type">xx</span>     <span class="keyword">literal</span>, buffer$reading
+      <span class="type">xx</span>     swap
+      <span class="type">xx</span>     push_reading_stack
+      <span class="type">xx</span>     <span class="keyword">taca</span>, read_byte
+   <span class="function-name">.read_error</span>:
+      <span class="comment">;;   ignore &lt;end-of-file&gt;
+</span>      <span class="comment">;;   ignore reading error
+</span>      <span class="type">xx</span>   drop
+      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$reading
+      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
+      <span class="type">xx</span>   push_reading_stack
+      <span class="type">xx</span>   <span class="keyword">taca</span>, read_byte
+   <span class="function-name">.not_empty</span>:
+      <span class="type">xx</span>   <span class="keyword">literal</span>, error$read_byte
+      <span class="type">xx</span>   <span class="keyword">literal</span>, length$read_byte
+      <span class="type">xx</span>   write_string
+      <span class="type">xx</span>   <span class="keyword">literal</span>, replace$reading
+      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">1024</span>
+      <span class="type">xx</span>   read_line_from_stdin
+      <span class="type">xx</span>   <span class="keyword">literal</span>, replace$reading
+      <span class="type">xx</span>   swap
+      <span class="type">xx</span>   push_reading_stack
+      <span class="type">xx</span>   <span class="keyword">taca</span>, read_byte
+
+   <span class="function-name">error$read_byte</span>:
+      <span class="type">db</span> <span class="string">"* (read-byte) meets empty-string in reading-stack"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  and this empty-stack is not at the bottom of the reading-stack"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  you can type a line to replace this empty string"</span>, <span class="constant">10</span>
+   <span class="function-name">.end</span>:
+   length$read_byte = <span class="rainbow-delimiters-depth-1">(</span>.end - error$read_byte<span class="rainbow-delimiters-depth-1">)</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** unread-ket-char</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">flag$unreaded_ket_char</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   <span class="function-name">char$unreaded_ket_char</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"have-unreaded-ket-char?"</span>, have_unreaded_ket_char?
-      <span class="comment">;; &lt;&lt; -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, flag$unreaded_ket_char
-      <span class="type">xx</span> fetch
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"unread-ket-char"</span>, unread_ket_char
-      <span class="comment">;; &lt;&lt; char -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, char$unreaded_ket_char, save
-      <span class="type">xx</span> true, <span class="keyword">literal</span>, flag$unreaded_ket_char
-      <span class="type">xx</span> save
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* eval-string</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>
-   * for we do not build border-check
-     into the interface of pop and push
-     we allocation some memory below the stacks
-   * the size$eval_string_stack
-     defines the max depth
-     of nested call to eval string
-   * cursor and border of a evaled string
-     can be stored in eval_string_stack
-     so
-     when evaling a string
-     the eval_string_stack will be
-     &lt;&lt; counter, cursor &gt;&gt;
-     when evaling is nested depth is 2
-     &lt;&lt; counter, cursor, counter, cursor &gt;&gt;
-   * interface to eval-string-stack
-     <span class="org-table">| eval-string | push |</span>
-     <span class="org-table">| read-byte   | pop  |</span>
-<span class="org-level-2">** memory allocation</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$eval_string_stack = <span class="constant">1024</span> * jo_size
-
-      <span class="type">preserve</span> <span class="constant">64</span> * jo_size
-   address$eval_string_stack <span class="keyword">labeling</span>
-      <span class="type">preserve</span> size$eval_string_stack
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** pointer</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">pointer$eval_string_stack</span>:
-      <span class="type">xx</span> address$eval_string_stack
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** push &amp; pop                         </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =64bit, machine {
-
-    define_primitive_function <span class="string">"push-eval-string-stack"</span>, push_eval_string_stack
-       <span class="comment">;; argument-stack -&gt; eval-string-stack
-</span>       pop_argument_stack <span class="variable-name">rax</span>
-       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$eval_string_stack]
-       <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
-       <span class="builtin">add</span> <span class="type">qword</span> [pointer$eval_string_stack], jo_size
-       next
-
-    define_primitive_function <span class="string">"pop-eval-string-stack"</span>, pop_eval_string_stack
-       <span class="comment">;; eval-string-stack -&gt; argument-stack
-</span>       <span class="builtin">sub</span> <span class="type">qword</span> [pointer$eval_string_stack], jo_size
-       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [pointer$eval_string_stack]
-       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
-       push_argument_stack <span class="variable-name">rax</span>
-       next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** push &amp; pop                         </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =32bit, machine {
-
-    define_primitive_function <span class="string">"push-eval-string-stack"</span>, push_eval_string_stack
-       <span class="comment">;; argument-stack -&gt; eval-string-stack
-</span>       pop_argument_stack <span class="variable-name">rax</span>
-       <span class="builtin">mov</span> <span class="variable-name">rsi</span>, [pointer$eval_string_stack]
-       <span class="builtin">mov</span> [<span class="variable-name">rsi</span>], <span class="variable-name">rax</span>
-       <span class="builtin">add</span> <span class="type">dword</span> [pointer$eval_string_stack], jo_size
-       next
-
-    define_primitive_function <span class="string">"pop-eval-string-stack"</span>, pop_eval_string_stack
-       <span class="comment">;; eval-string-stack -&gt; argument-stack
-</span>       <span class="builtin">sub</span> <span class="type">dword</span> [pointer$eval_string_stack], jo_size
-       <span class="builtin">mov</span> <span class="variable-name">rsi</span>, [pointer$eval_string_stack]
-       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rsi</span>]
-       push_argument_stack <span class="variable-name">rax</span>
-       next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** clear                              </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =64bit, machine {
-
-   define_primitive_function <span class="string">"clear-eval-string-stack"</span>, clear_eval_string_stack
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="builtin">mov</span> <span class="type">qword</span> [pointer$eval_string_stack], address$eval_string_stack
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** clear                              </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =32bit, machine {
-
-   define_primitive_function <span class="string">"clear-eval-string-stack"</span>, clear_eval_string_stack
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="builtin">mov</span> <span class="variable-name">eax</span>, address$eval_string_stack
-      <span class="builtin">mov</span> <span class="type">dword</span> [pointer$eval_string_stack], <span class="variable-name">eax</span><span class="comment">;address$eval_string_stack
-</span>      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** empty?</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_primitive_function <span class="string">"eval-string-stack-empty?"</span>, eval_string_stack_empty?
-      <span class="comment">;; &lt;&lt; -- bool &gt;&gt;
-</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [pointer$eval_string_stack]
-      <span class="builtin">cmp</span> <span class="variable-name">rax</span>, address$eval_string_stack
-      <span class="comment">;; less-than is treated as equal
-</span>      <span class="builtin">setle</span> <span class="variable-name">al</span>
-      <span class="builtin">movzx</span> <span class="variable-name">rax</span>, <span class="variable-name">al</span>
-      push_argument_stack <span class="variable-name">rax</span>
-      next
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> nested call of eval-string</span>
-   * nested call of eval-string is handled
-     by using a eval_string_stack
-     to remember the old string
-   * but
-     in my view
-     meta-programming should NOT
-     be achieved by editing string
-   * note that
-     this point of view
-     is not conflict with my macro system
-<span class="org-level-2">** eval-string,ready</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"eval-string,ready"</span>, eval_string__ready
-      <span class="comment">;; &lt;&lt; string[address, length] -- unknown &gt;&gt;
-</span>      <span class="type">xx</span> push_eval_string_stack
-      <span class="type">xx</span> push_eval_string_stack
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* load-core-file</span>
+<span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
+</span>  define_function <span class="string">"load-core-file"</span>, load_core_file
+     <span class="comment">;; &lt;&lt; unknown -- unknown &gt;&gt;
+</span>     <span class="type">xx</span> <span class="keyword">literal</span>, address$core_file
+     <span class="type">xx</span> <span class="keyword">literal</span>, (end$core_file - address$core_file)
+     <span class="type">xx</span> push_reading_stack
+     <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>
 <span class="org-level-2">** space-char?</span>
@@ -4302,7 +4223,15 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** string-equal?</span>
+<span class="org-level-2">** empty-string?</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"empty-string?"</span>, empty_string?
+     <span class="comment">;; &lt;&lt; string[address, length] -- bool &gt;&gt;
+</span>     <span class="type">xx</span> swap, drop
+     <span class="type">xx</span> zero?
+     <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** string-equal?</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"string-equal?"</span>, string_equal?
       <span class="comment">;; &lt;&lt; string[address, length], string[address, length] -- bool &gt;&gt;
@@ -4541,7 +4470,7 @@
    fetch-byte . <span class="cicada-nymph-comment">&lt;&lt; 32 &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* io about number</span>
+<span class="org-level-1">* write number</span>
 <span class="org-level-2">** write-number</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="comment">;; 2 ^ 64 = 18446744073709551616
@@ -4619,15 +4548,27 @@
 </span>      <span class="type">xx</span> pretty_write_integer
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* word</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> io about word</span>
+</span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> word</span>
+<span class="org-level-2">** io about word</span>
    * words are separated by spaces
    * a bar-ket is a word
      even when there are no spaces around it
+<span class="org-level-2">** bar-ket</span>
+   * (read-word) is not implemented by (read-byte)
+     instead it is implemented directly by side-effect on reading-stack
+     [just like (read-byte)]
+     thus
+     we can implement bar-ket as word easily
+     and nothing like un-read is needed
+     and
+     it is (string-head,word) and (string-tail,word)
+     these two functions are maintaining the "bar-ket as word" feature
+   * otherwise
+     the implementation of (eval-string) will meet problems
+<span class="org-level-1">* read-word-&gt;buffer &amp; read-word &amp; read-word-for-REPL</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   max_word_length = <span class="constant">1024</span>
+</span>   max_word_length = <span class="constant">512</span>
 
    buffer$read_word <span class="keyword">labeling</span>
       <span class="type">preserve</span> max_word_length
@@ -4647,53 +4588,55 @@
       <span class="type">xx</span> <span class="keyword">taca</span>, read_word_begin_char
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-word-&gt;buffer</span>
-   1. skip any space-char (whitespace newline)
-   2. call read_char to read characters into buffer
-      until it hits a blank
-   3. return the address of buffer and length to argument_stack
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"read-word-&gt;buffer"</span>, read_word_to_buffer
       <span class="comment">;; &lt;&lt; buffer -- word[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> read_word_begin_char
-      <span class="comment">;; no metter what the begin char is
-</span>      <span class="comment">;; save it into buffer
-</span>      <span class="type">xx</span> dup2, swap, save_byte
-      <span class="type">xx</span> swap, add1, swap
-      <span class="type">xx</span> one, swap <span class="comment">;; leave length counter
-</span>      <span class="comment">;; &lt;&lt; cursor[address in buffer], counter, begin char &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>, bar_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   drop
-      <span class="type">xx</span>   help__read_word_to_buffer__bar_ket
+</span>      <span class="type">xx</span> pop_reading_stack
+      <span class="type">xx</span> dup2, space_string?, CICADA__not, <span class="keyword">false?branch</span>, (.bad_tos-$)/jo_size
+      <span class="type">xx</span>   dup2, string_tail__word, push_reading_stack
+      <span class="type">xx</span>   string_head__word
+      <span class="type">xx</span>   xoverxx, xxoverx
+      <span class="type">xx</span>   xswapxx
+      <span class="type">xx</span>   string_to_buffer!
+      <span class="type">xx</span>   swap, drop
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="comment">;; maybe add other type of chars
-</span>      <span class="type">xx</span> drop
-      <span class="type">xx</span> help__read_word_to_buffer__regular
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"help,read-word-&gt;buffer,bar-ket"</span>, help__read_word_to_buffer__bar_ket
-      <span class="comment">;; &lt;&lt; cursor[address in buffer], counter -- word[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> tuck, subtraction
-      <span class="type">xx</span> swap
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-
-   define_function <span class="string">"help,read-word-&gt;buffer,regular"</span>, help__read_word_to_buffer__regular
-      <span class="comment">;; &lt;&lt; cursor[address in buffer], counter -- word[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> read_byte
-      <span class="type">xx</span> <span class="keyword">dup</span>, bar_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">6</span>
-      <span class="type">xx</span>   unread_ket_char
-      <span class="type">xx</span>   tuck, subtraction
+   <span class="function-name">.bad_tos</span>:
+      <span class="type">xx</span> reading_stack_empty?, <span class="keyword">false?branch</span>, (.not_empty-$)/jo_size
+      <span class="type">xx</span>   drop2
+      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$reading
+      <span class="type">xx</span>   <span class="keyword">literal</span>, max_input_length
+      <span class="type">xx</span>   read_line_from_stdin
+      <span class="type">xx</span>   <span class="keyword">dup</span>, positive?, <span class="keyword">false?branch</span>, (.read_error-$)/jo_size
+      <span class="type">xx</span>     <span class="keyword">literal</span>, buffer$reading
+      <span class="type">xx</span>     swap
+      <span class="type">xx</span>     push_reading_stack
+      <span class="type">xx</span>     <span class="keyword">taca</span>, read_word_to_buffer
+   <span class="function-name">.read_error</span>:
+      <span class="comment">;;   ignore &lt;end-of-file&gt;
+</span>      <span class="comment">;;   ignore reading error
+</span>      <span class="type">xx</span>   drop
+      <span class="type">xx</span>   <span class="keyword">literal</span>, buffer$reading
+      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">0</span>
+      <span class="type">xx</span>   push_reading_stack
+      <span class="type">xx</span>   <span class="keyword">taca</span>, read_word_to_buffer
+   <span class="function-name">.not_empty</span>:
+      <span class="type">xx</span>   <span class="keyword">literal</span>, error$read_word_to_buffer
+      <span class="type">xx</span>   <span class="keyword">literal</span>, length$read_word_to_buffer
+      <span class="type">xx</span>   write_string
+      <span class="type">xx</span>   <span class="keyword">literal</span>, replace$reading
+      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">1024</span>
+      <span class="type">xx</span>   read_line_from_stdin
+      <span class="type">xx</span>   <span class="keyword">literal</span>, replace$reading
       <span class="type">xx</span>   swap
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> <span class="keyword">dup</span>, space_char?, <span class="keyword">false?branch</span>, <span class="constant">6</span>
-      <span class="type">xx</span>   drop
-      <span class="type">xx</span>   tuck, subtraction
-      <span class="type">xx</span>   swap
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> xoverxx, save_byte
-      <span class="type">xx</span> add1
-      <span class="type">xx</span> swap, add1, swap
-      <span class="type">xx</span> <span class="keyword">taca</span>, help__read_word_to_buffer__regular
+      <span class="type">xx</span>   push_reading_stack
+      <span class="type">xx</span>   <span class="keyword">taca</span>, read_word_to_buffer
+
+   <span class="function-name">error$read_word_to_buffer</span>:
+      <span class="type">db</span> <span class="string">"* (read-word-&gt;buffer) meets empty-string in reading-stack"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  and this empty-stack is not at the bottom of the reading-stack"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  you can type a line to replace this empty string"</span>, <span class="constant">10</span>
+   <span class="function-name">.end</span>:
+   length$read_word_to_buffer = <span class="rainbow-delimiters-depth-1">(</span>.end - error$read_word_to_buffer<span class="rainbow-delimiters-depth-1">)</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-word</span>
    * read-word will override the word readed before
@@ -4710,7 +4653,7 @@
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$read_word_for_REPL, read_word_to_buffer
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
+</span><span class="org-level-1">* string-[head|tail],word</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * one should use space-string? to make sure
      that the string is not space-string
@@ -4790,8 +4733,7 @@
       <span class="type">xx</span> string_to_word_end
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* jotionary</span>
+</span><span class="org-level-1">* jotionary</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * the jotionary is a single-linked-list
      of word-jo-jojo
@@ -4807,32 +4749,39 @@
      from source code
      it defines new function into jotionary
      by creating new structured data into memory
-<span class="org-level-2">** find</span>
-   * as find
-   * find jo in jotionary by word
-     but I simply call it "find"
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> about find</span>
    * a function whoes name is prefixed by "find"
      maybe fail to find
      and maybe returns a signal
      to inform the function who calls it
+<span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#36941;&#27511;&#37832;&#34920;&#30340;&#26041;&#24335;</span>
+   * &#24490;&#29872;&#36914;&#34892;&#30340;&#26041;&#24335;&#26159;
+     1. &#20445;&#35657;&#24490;&#29872;&#38283;&#22987;&#26178; &#25152;&#24471;&#21040;&#30340; jo &#19981;&#26159;&#26368;&#24460;&#19968;&#20491;
+     2. &#34389;&#29702;&#36889;&#20491; jo
+     3. &#30475;&#30475;&#36889;&#20491; jo &#26159;&#21542;&#26159;&#26368;&#24460;&#19968;&#20491;
+        * &#22914;&#26524;&#26159;
+          &#36864;&#20986;
+        * &#22914;&#26524;&#19981;&#26159;
+          &#21462;&#19979;&#19968;&#20491; jo &#20197;&#24490;&#29872;
+<span class="org-level-2">** find-jo,through-jo-link</span>
+   * find jo in jotionary by word
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_variable <span class="string">"*first-jo-in-jotionary*"</span>, V__first_jo_in_jotionary
       <span class="type">xx</span> (last_link + jo_size)
 
-   define_function <span class="string">"find"</span>, find
+   define_function <span class="string">"find-jo,through-jo-link"</span>, find_jo__through_jo_link
       <span class="comment">;; &lt;&lt; word[address, length]
 </span>      <span class="comment">;;    -- jo, true
 </span>      <span class="comment">;;    -- false &gt;&gt;
 </span>      <span class="type">xx</span> V__first_jo_in_jotionary
-      <span class="type">xx</span> help__find
+      <span class="type">xx</span> find_jo__through_jo_link__loop
       <span class="type">xx</span> <span class="keyword">end</span>
 
-   define_function <span class="string">"help,find"</span>, help__find
+   define_function <span class="string">"find-jo,through-jo-link,loop"</span>, find_jo__through_jo_link__loop
       <span class="comment">;; &lt;&lt; word[address, length], jo
 </span>      <span class="comment">;;    -- jo, true
 </span>      <span class="comment">;;    -- false &gt;&gt;
 </span>      <span class="type">xx</span> xxtuckx
-
 
       <span class="type">xx</span> jo_to_name, xxoverxx
 
@@ -4846,7 +4795,6 @@
 </span>      <span class="comment">;; xx   dup, write_integer, literal, 32, write_byte
 </span>      <span class="comment">;; xx   write_string, literal, 10, write_byte
 </span>
-
       <span class="type">xx</span> string_equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop2, true
       <span class="type">xx</span>   <span class="keyword">end</span>
@@ -4856,7 +4804,7 @@
       <span class="type">xx</span>   false
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> jo_to_pre_jo
-      <span class="type">xx</span> <span class="keyword">taca</span>, help__find
+      <span class="type">xx</span> <span class="keyword">taca</span>, find_jo__through_jo_link__loop
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** execute-word</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -4869,7 +4817,7 @@
 </span>
       <span class="type">xx</span> dup2 <span class="comment">;; for to report undefined word
 </span>
-      <span class="type">xx</span> find, <span class="keyword">false?branch</span>, <span class="constant">5</span>
+      <span class="type">xx</span> find_jo__through_jo_link, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   xxswapx, drop2
       <span class="type">xx</span>   execute_jo
       <span class="type">xx</span>   <span class="keyword">end</span>
@@ -5088,7 +5036,7 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"&lt;&lt;"</span>, ignore_comment
       <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> read_word
+</span>      <span class="type">xx</span> read_word_for_REPL
       <span class="type">xx</span> dup2, comment_begin_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   drop2
       <span class="type">xx</span>     ignore_comment <span class="comment">;; for the new nested-comment
@@ -5104,7 +5052,7 @@
 </span>   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &gt;&gt;</span> <span class="cicada-nymph-number">64</span> add .
    <span class="cicada-nymph-comment">&lt;&lt; 65 &gt;&gt;</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">kkk</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &lt;&lt; 989 &gt;&gt;</span> &gt;&gt; <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">.s</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">kkk</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &lt;&lt; 989 &gt;&gt;</span> &gt;&gt; <span class="cicada-nymph-sentence-reader">;</span> .s
    <span class="cicada-nymph-comment">&lt;&lt; kkk &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* jo-area</span>
@@ -5148,17 +5096,7 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** save-into,jo-area</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"save-into,jo-area"</span>, save_into__jo_area
-      <span class="comment">;; &lt;&lt; number -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__jo_area
-      <span class="type">xx</span> save
-
-      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_area
-      <span class="type">xx</span> add_save
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm...</span><span class="org-block-end-line">
 </span><span class="org-level-1">* syntax-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>
    * &#29992; <span class="bold">*syntax-stack*</span> &#20358;&#36914;&#34892;&#35486;&#22659;&#36681;&#25563;
@@ -5240,7 +5178,8 @@
 </span><span class="org-level-1">* rule-set</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#25509;&#21475;</span>
    * &#22312; rule-set &#20013; &#19968;&#20491; rule &#30340;&#23384;&#22312;&#26159;
-     <span class="org-table">| function | predicate |</span>
+     <span class="org-table">| predicate |</span>
+     <span class="org-table">| function  |</span>
    * &#22312;&#26855;&#20013; &#19968;&#20491; rule &#30340;&#23384;&#22312;&#26159;
      &lt;&lt; rule[predicate, function] &gt;&gt;
    * set is an ordered set
@@ -5254,6 +5193,7 @@
         do nothing
      3. (find-rule)
         find a function from a word
+     4. (list-rule)
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#20351;&#29992;</span>
    * rule-set,make-jojo &#26159;
      &#35486;&#27861;&#35586;&#35422; &#36996;&#26377; &#35486;&#27861;&#20989;&#25976; &#36889;&#31278;&#23565;&#23376;
@@ -5274,61 +5214,23 @@
         &lt;&lt; word[address, length] -- integer &gt;&gt;
      &#25152;&#20197;&#22312;&#20351;&#29992;&#26178;
      &#19968;&#23450;&#35201;&#27880;&#24847;&#32173;&#35703;&#26855;&#20013;&#30340;&#20540;&#30340;&#33391;&#22909;&#24615;
-<span class="org-level-2">** rule-set,fetch-cursor</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> border</span>
+   * border is current-free-address of rule-set
+<span class="org-level-2">** rule-set,fetch-border</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"rule-set,fetch-cursor"</span>, rule_set__fetch_cursor
-      <span class="comment">;; &lt;&lt; rule-set -- address &gt;&gt;
+</span>   define_function <span class="string">"rule-set,fetch-border"</span>, rule_set__fetch_border
+      <span class="comment">;; &lt;&lt; rule-set -- border &gt;&gt;
 </span>      <span class="type">xx</span> V__jo_size, subtraction
       <span class="type">xx</span> fetch
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** rule-set,save-cursor</span>
+</span><span class="org-level-2">** rule-set,save-border</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"rule-set,save-cursor"</span>, rule_set__save_cursor
-      <span class="comment">;; &lt;&lt; address, rule-set -- &gt;&gt;
+</span>   define_function <span class="string">"rule-set,save-border"</span>, rule_set__save_border
+      <span class="comment">;; &lt;&lt; border, rule-set -- &gt;&gt;
 </span>      <span class="type">xx</span> V__jo_size, subtraction
       <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** add-rule                           </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =64bit, machine {
-
-   define_primitive_function <span class="string">"add-rule"</span>, add_rule
-      <span class="comment">;; &lt;&lt; rule[predicate, function], rule-set -- &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rdx</span>
-      <span class="builtin">sub</span> <span class="variable-name">rdx</span>, jo_size <span class="comment">;; cursor$rule_set
-</span>      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [<span class="variable-name">rdx</span>]
-      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
-      <span class="builtin">add</span> <span class="type">qword</span> [<span class="variable-name">rdx</span>], jo_size
-      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [<span class="variable-name">rdx</span>]
-      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
-      <span class="builtin">add</span> <span class="type">qword</span> [<span class="variable-name">rdx</span>], jo_size
-      next
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** add-rule                           </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =32bit, machine {
-
-   define_primitive_function <span class="string">"add-rule"</span>, add_rule
-      <span class="comment">;; &lt;&lt; rule[predicate, function], rule-set -- &gt;&gt;
-</span>      pop_argument_stack <span class="variable-name">rdx</span>
-      <span class="builtin">sub</span> <span class="variable-name">rdx</span>, jo_size <span class="comment">;; cursor$rule_set
-</span>      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [<span class="variable-name">rdx</span>]
-      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
-      <span class="builtin">add</span> <span class="type">dword</span> [<span class="variable-name">rdx</span>], jo_size
-      pop_argument_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [<span class="variable-name">rdx</span>]
-      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
-      <span class="builtin">add</span> <span class="type">dword</span> [<span class="variable-name">rdx</span>], jo_size
-      next
-
-   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** cursor-&gt;[rule|function|predicate]</span>
    * note that here needs two subtractions
@@ -5336,88 +5238,38 @@
 </span>   define_function <span class="string">"cursor-&gt;rule"</span>, cursor_to_rule
       <span class="comment">;; &lt;&lt; cursor -- rule[predicate, function] &gt;&gt;
 </span>      <span class="type">xx</span> V__jo_size, subtraction
-      <span class="type">xx</span> <span class="keyword">dup</span>, fetch, swap
       <span class="type">xx</span> V__jo_size, subtraction
-      <span class="type">xx</span> fetch
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
+      <span class="type">xx</span> n_fetch
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"cursor-&gt;predicate"</span>, cursor_to_predicate
       <span class="comment">;; &lt;&lt; cursor -- predicate &gt;&gt;
 </span>      <span class="type">xx</span> V__jo_size, subtraction
+      <span class="type">xx</span> V__jo_size, subtraction
       <span class="type">xx</span> fetch
       <span class="type">xx</span> <span class="keyword">end</span>
 
    define_function <span class="string">"cursor-&gt;function"</span>, cursor_to_function
       <span class="comment">;; &lt;&lt; cursor -- function &gt;&gt;
 </span>      <span class="type">xx</span> V__jo_size, subtraction
-      <span class="type">xx</span> V__jo_size, subtraction
       <span class="type">xx</span> fetch
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** sub-rule</span>
+</span><span class="org-level-2">** add-rule</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">cursor$sub_rule</span>:
-      <span class="type">xx</span> <span class="constant">0</span>
-
-   define_function <span class="string">"sub-rule"</span>, sub_rule
+</span>   define_function <span class="string">"add-rule"</span>, add_rule
       <span class="comment">;; &lt;&lt; rule[predicate, function], rule-set -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>, rule_set__fetch_cursor
-      <span class="type">xx</span> <span class="keyword">literal</span>, cursor$sub_rule, save
-      <span class="type">xx</span> sub_rule__loop
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"sub-rule,loop"</span>, sub_rule__loop
-      <span class="comment">;; &lt;&lt; rule[predicate, function], rule-set -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, cursor$sub_rule, fetch
-      <span class="type">xx</span> over, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   drop, drop2
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> xxoverx
-      <span class="comment">;; &lt;&lt; predicate, function, rule-set
-</span>      <span class="comment">;;    predicate, function &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, cursor$sub_rule, fetch
-      <span class="type">xx</span> cursor_to_rule
-      <span class="comment">;; &lt;&lt; predicate, function, rule-set
-</span>      <span class="comment">;;    predicate, function, predicate, function &gt;&gt;
-</span>      <span class="type">xx</span> equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">9</span>
-      <span class="type">xx</span>   V__jo_size
-      <span class="type">xx</span>   V__jo_size, addition
-      <span class="type">xx</span>   <span class="keyword">literal</span>, cursor$sub_rule, sub_save
-      <span class="type">xx</span>   <span class="keyword">taca</span>, sub_rule__loop
+</span>      <span class="type">xx</span> xxtuckx
+      <span class="type">xx</span> rule_set__fetch_border
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
+      <span class="type">xx</span> n_save
       <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> <span class="keyword">literal</span>, cursor$sub_rule, fetch
-      <span class="type">xx</span> sub_rule__move
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   define_function <span class="string">"sub-rule,move"</span>, sub_rule__move
-      <span class="comment">;; &lt;&lt; rule-set, cursor -- &gt;&gt;
-</span>      <span class="type">xx</span> dup2
-      <span class="type">xx</span> equal?, <span class="keyword">false?branch</span>, (.more_to_move-$)/jo_size
-      <span class="type">xx</span>   drop
-      <span class="type">xx</span>   <span class="keyword">dup</span>, rule_set__fetch_cursor
-      <span class="type">xx</span>   V__jo_size, subtraction
-      <span class="type">xx</span>   V__jo_size, subtraction
-      <span class="type">xx</span>   swap
-      <span class="type">xx</span>   rule_set__save_cursor
-      <span class="type">xx</span>   <span class="keyword">end</span>
-   <span class="function-name">.more_to_move</span>:
-      <span class="type">xx</span> sub_rule__move_one
-      <span class="type">xx</span> <span class="keyword">taca</span>, sub_rule__move
-
-   define_function <span class="string">"sub-rule,move_one"</span>, sub_rule__move_one
-      <span class="comment">;; &lt;&lt; cursor -- cursor + element-size &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> fetch
-      <span class="type">xx</span> over, V__jo_size, subtraction, V__jo_size, subtraction
-      <span class="type">xx</span> save
-
-      <span class="type">xx</span> <span class="keyword">dup</span>
-      <span class="type">xx</span> V__jo_size, addition, fetch
-      <span class="type">xx</span> over, V__jo_size, subtraction
-      <span class="type">xx</span> save
-
+      <span class="type">xx</span> rule_set__fetch_border
       <span class="type">xx</span> V__jo_size, addition
       <span class="type">xx</span> V__jo_size, addition
+      <span class="type">xx</span> swap
+      <span class="type">xx</span> rule_set__save_border
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** find-rule</span>
@@ -5429,7 +5281,7 @@
       <span class="comment">;; &lt;&lt; word[address, length], rule-set
 </span>      <span class="comment">;;    -- function, true
 </span>      <span class="comment">;;    -- false &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>, rule_set__fetch_cursor
+</span>      <span class="type">xx</span> <span class="keyword">dup</span>, rule_set__fetch_border
       <span class="type">xx</span> <span class="keyword">literal</span>, cursor$find_rule, save
       <span class="type">xx</span> find_rule__loop
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -5558,7 +5410,7 @@
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
-      <span class="type">xx</span> find, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="type">xx</span> find_jo__through_jo_link, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
@@ -5608,7 +5460,7 @@
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
-      <span class="type">xx</span> find, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="type">xx</span> find_jo__through_jo_link, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
@@ -5754,7 +5606,7 @@
    * in ASCII encode double-quote is 34
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"syntax,double-quote,make-jojo"</span>, syntax__double_quote__make_jojo
-      <span class="comment">;; &lt;&lt; string[address, length], word:jo --
+      <span class="comment">;; &lt;&lt; string[address, length], word:double-quote --
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> drop2
 
@@ -5814,11 +5666,38 @@
      make-jojo can be viewed as the "compiler" of the cicada-nymph
      it does NOT (can not) compile file to file
      but creates structured data directly into memory
-<span class="org-level-2">** make-jojo</span>
-   * &#36889;&#35023;&#21448;&#29986;&#29983;&#20102;&#29305;&#27530;&#30340;&#19968;&#39006;&#29664;
-     &#23427;&#38614;&#28982;&#20197; "M__" &#29234;&#21069;&#32180;
-     &#20294;&#26159;&#27794;&#26377;&#20316;&#29234;&#23383;&#31526;&#20018;&#30340;&#21517;&#23383;
-     &#27599;&#20491;&#36889;&#31278;&#29664;&#37117;&#33287;&#19968;&#20491;&#35586;&#35422;&#30456;&#23565;
+<span class="org-level-2">** make-jojo,dispatch-syntax-word</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"make-jojo,dispatch-syntax-word"</span>, make_jojo__dispatch_syntax_word
+      <span class="comment">;; &lt;&lt; string[address, length], word[address, length] --
+</span>      <span class="comment">;;    string[address, length] &gt;&gt;
+</span>      <span class="type">xx</span> dup2
+      <span class="type">xx</span> find_syntax, <span class="keyword">false?branch</span>, <span class="constant">3</span>
+      <span class="type">xx</span>   execute_jo
+      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span> dup2
+      <span class="type">xx</span> find_jo__through_jo_link, <span class="keyword">false?branch</span>, <span class="constant">5</span>
+      <span class="type">xx</span>   xxswapx, drop2 <span class="comment">;; drop word
+</span>      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   <span class="keyword">end</span>
+      <span class="type">xx</span> write_undefined_word_report__for_make_jojo
+      <span class="type">xx</span> write_string
+      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
+      <span class="type">xx</span> !undo_make_jojo
+
+   define_function <span class="string">"write-undefined-word-report,for-make-jojo"</span>, write_undefined_word_report__for_make_jojo
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$undefined_word_report__for_make_jojo
+      <span class="type">xx</span> <span class="keyword">literal</span>, length$undefined_word_report__for_make_jojo
+      <span class="type">xx</span> write_string
+      <span class="type">xx</span> <span class="keyword">end</span>
+
+   <span class="function-name">string$undefined_word_report__for_make_jojo</span>:
+      <span class="type">db</span> <span class="string">"* (make-jojo) meets undefined word : "</span>
+   <span class="function-name">.end</span>:
+   length$undefined_word_report__for_make_jojo = (.end - string$undefined_word_report__for_make_jojo)
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** make-jojo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"make-jojo"</span>, make_jojo
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
@@ -5840,37 +5719,6 @@
       <span class="comment">;; &lt;&lt; tail[address, length], head[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> make_jojo__dispatch_syntax_word
       <span class="type">xx</span> <span class="keyword">taca</span>, make_jojo__loop
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** make-jojo,dispatch-syntax-word</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"make-jojo,dispatch-syntax-word"</span>, make_jojo__dispatch_syntax_word
-      <span class="comment">;; &lt;&lt; string[address, length], word[address, length] --
-</span>      <span class="comment">;;    string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> dup2
-      <span class="type">xx</span> find_syntax, <span class="keyword">false?branch</span>, <span class="constant">3</span>
-      <span class="type">xx</span>   execute_jo
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2
-      <span class="type">xx</span> find, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-      <span class="type">xx</span>   xxswapx, drop2 <span class="comment">;; drop word
-</span>      <span class="type">xx</span>   save_into__jo_area
-      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> write_undefined_word_report__for_make_jojo
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
-      <span class="type">xx</span> !undo_make_jojo
-
-   define_function <span class="string">"write-undefined-word-report,for-make-jojo"</span>, write_undefined_word_report__for_make_jojo
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$undefined_word_report__for_make_jojo
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$undefined_word_report__for_make_jojo
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$undefined_word_report__for_make_jojo</span>:
-      <span class="type">db</span> <span class="string">"* (make-jojo) meets undefined word : "</span>
-   <span class="function-name">.end</span>:
-   length$undefined_word_report__for_make_jojo = (.end - string$undefined_word_report__for_make_jojo)
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* define-[function|exception|variable]</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
@@ -5945,8 +5793,11 @@
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_tail__word
       <span class="type">xx</span> make_jojo
+
       <span class="type">xx</span> drop2
-      <span class="type">xx</span> drop, drop, drop
+      <span class="type">xx</span> drop
+      <span class="type">xx</span> drop
+      <span class="type">xx</span> drop
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** define-exception</span>
@@ -5985,16 +5836,22 @@
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_tail__word
       <span class="type">xx</span> make_jojo
+
       <span class="type">xx</span> drop2
-      <span class="type">xx</span> drop, drop, drop
+      <span class="type">xx</span> drop
+      <span class="type">xx</span> drop
+      <span class="type">xx</span> drop
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** define-variable</span>
-   * not undo is needed for define-variable
+</span><span class="org-level-2">** define-variable,with-tos</span>
+   * not undo is needed for define-variable,with-tos
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"define-variable"</span>, CICADA__define_variable
+</span>   define_function <span class="string">"define-variable,with-tos"</span>, CICADA__define_variable__with_tos
       <span class="comment">;; &lt;&lt; variable, string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__primitive_string_area
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">1</span>
+      <span class="type">xx</span>   save_into__jo_area
+
+      <span class="type">xx</span> V__current_free_address__primitive_string_area
       <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> dup2, string_head__word
       <span class="type">xx</span>   save_into__primitive_string_area
@@ -6010,10 +5867,7 @@
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$variable
       <span class="type">xx</span>   save_into__jo_area
 
-      <span class="comment">;; when debugging
-</span>      <span class="comment">;; instead of drop2
-</span>      <span class="comment">;; one may wish to do some thing to the string
-</span>      <span class="type">xx</span> drop2
+      <span class="type">xx</span> drop2
       <span class="type">xx</span> save_into__jo_area
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
@@ -6028,9 +5882,9 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">negate</span> <span class="cicada-nymph-number">0</span> swap sub <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
    <span class="cicada-nymph-number">1</span> negate . <span class="cicada-nymph-comment">&lt;&lt; -1 &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-variable</span>
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-variable,with-tos</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-number">233</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">*three*</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable</span>
+</span>   <span class="cicada-nymph-number">233</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">*three*</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable,with-tos</span>
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">add-three</span> <span class="cicada-nymph-variable">*three*</span> add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
    <span class="cicada-nymph-number">1</span> add-three . <span class="cicada-nymph-comment">&lt;&lt; 234 &gt;&gt;</span>
 
@@ -6433,7 +6287,7 @@
    address$local_variable_table <span class="keyword">labeling</span>
       <span class="type">preserve</span> size$local_variable_table
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** clear</span>
+</span><span class="org-level-2">** local-variable-table,clear</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="function-name">border$local_variable_table</span>:
       <span class="type">xx</span> address$local_variable_table
@@ -6449,7 +6303,7 @@
       <span class="type">xx</span> <span class="keyword">literal</span>, offset$local_variable_table, save
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** insert</span>
+</span><span class="org-level-2">** local-variable-table,insert</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"local-variable-table,insert"</span>, local_variable_table__insert
       <span class="comment">;; &lt;&lt; string[address, length] -- offset &gt;&gt;
@@ -6484,7 +6338,7 @@
 
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** find</span>
+</span><span class="org-level-2">** local-variable-table,find</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="function-name">cursor$local_variable_table</span>:
       <span class="type">xx</span> address$local_variable_table
@@ -6996,7 +6850,18 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
-<span class="org-level-2">** platform</span>
+<span class="org-level-2">** constant</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_variable <span class="string">"*explainer,function*"</span>, CICADA__explain$function
+      <span class="type">xx</span> explain$function
+
+   define_variable <span class="string">"*explainer,exception*"</span>, CICADA__explain$exception
+      <span class="type">xx</span> explain$exception
+
+   define_variable <span class="string">"*explainer,variable*"</span>, CICADA__explain$variable
+      <span class="type">xx</span> explain$variable
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** platform</span>
    * this word is implemented as a function
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"platform"</span>, the_platform
@@ -7038,7 +6903,7 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** un_initialized_memory              </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$un_initialized_memory = <span class="constant">64</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
+</span>   size$un_initialized_memory = <span class="constant">88</span> * <span class="constant">1024</span> * <span class="constant">1024</span> <span class="comment">;; (byte)
 </span>
    <span class="preprocessor">match</span> =linux, platform {
 

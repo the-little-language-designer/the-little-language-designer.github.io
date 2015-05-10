@@ -178,6 +178,14 @@
         /* font-lock-preprocessor-face */
         color: #a6e22e;
       }
+      .rainbow-delimiters-depth-1 {
+        /* rainbow-delimiters-depth-1-face */
+        color: #8c8c8c;
+      }
+      .rainbow-delimiters-depth-2 {
+        /* rainbow-delimiters-depth-2-face */
+        color: #93a8c6;
+      }
       .return-stack-bar-ket {
         /* return-stack-bar-ket-face */
         color: #dc322f;
@@ -243,6 +251,7 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
+<span class="org-level-2">** find a better way to protect reading-stack</span>...
 <span class="org-level-2">** protect on the overloading of a variety of memories</span>
 <span class="org-level-2">** better naming of headings</span>
 <span class="org-level-2">** add more notes about the limitations of the program</span>
@@ -273,8 +282,8 @@
 <span class="org-level-2">** primitive-string</span>
 <span class="org-level-2">** argument-stack</span>
 <span class="org-level-2">** return-stack</span>...
-<span class="org-level-2">** eval-string-stack</span>...
-<span class="org-level-2">** syntax-set</span>
+<span class="org-level-2">** syntax-stack</span>
+<span class="org-level-2">** reading-stack</span>
 <span class="org-level-2">** local-variable-table</span>...
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#24615;&#29376;&#32317;&#32080;</span>
 <span class="org-level-2">** &#33258;&#21205;&#31649;&#29702;&#21152;&#36617;&#25991;&#20214;&#26178;&#25152;&#20351;&#29992;&#30340;&#25628;&#32034;&#36335;&#24465;&#21015;&#34920;</span>...
@@ -345,7 +354,8 @@
 </span><span class="org-level-1">* variable-jo</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** define_variable</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** explain$variable</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** explain$variable                   </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** explain$variable                   </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* exception-jo</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>...
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
@@ -406,7 +416,6 @@
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#21295;&#32232;&#20195;&#30908;&#20013;&#30340;&#21021;&#22987;&#21270;</span>...
 <span class="org-level-2">** begin_to_interpret_threaded_code   </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** initialization</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** load-core-file</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> top-level-REPL</span>...
 <span class="org-level-2">** report-return-stack-is-empty-and-exit</span>...<span class="org-block-end-line">
@@ -475,11 +484,12 @@
 </span><span class="org-level-2">** negative? &amp; positive?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* memory</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** save                               </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** save                               </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> fetch &amp; save</span>...
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> endianness of n-fetch &amp; n-save</span>...
+<span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** save                               </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** save                               </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** clear</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* bit</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
@@ -487,36 +497,27 @@
 </span><span class="org-level-2">** or &amp; and &amp; xor &amp; invert            </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** left &amp; right[,sign]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** get &amp; set &amp; clear &amp; invert</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** find</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** find-[lowest|highest]-set-bit</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* basic io</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> byte</span>...
-<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-1">* write-byte</span>
 <span class="org-level-2">** write-byte                         </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** write-byte                         </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
+</span><span class="org-level-1">* reading-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> factoring</span>...
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** read-line-from-stdin               </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** push &amp; pop &amp; drop                  </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** push &amp; pop &amp; drop                  </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** tos</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** reading-stack-empty?</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* read-byte</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> end of file</span>...
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> factoring</span>...
+<span class="org-level-2">** read-line-from-stdin               </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-line-from-stdin               </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> read-line-from-stdin</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-byte</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** unread-ket-char</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* eval-string</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** pointer</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** push &amp; pop                         </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** push &amp; pop                         </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** clear                              </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** clear                              </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** empty?</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> nested call of eval-string</span>...
-<span class="org-level-2">** eval-string,ready</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* load-core-file</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* char</span>
 <span class="org-level-2">** space-char?</span>...<span class="org-block-end-line">
@@ -533,7 +534,8 @@
 <span class="org-level-2">** write-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** pretty_write_string</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** string-equal?</span>...<span class="org-block-end-line">
+<span class="org-level-2">** empty-string?</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** string-equal?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-[head|tail],char</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-&gt;buffer!</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-reverse!                    </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
@@ -548,27 +550,29 @@
 <span class="org-level-2">** string,find-char</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* io about number</span>
+<span class="org-level-1">* write number</span>
 <span class="org-level-2">** write-number</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** write-integer</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** pretty_write_integer</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* word</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> io about word</span>...
+</span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> word</span>
+<span class="org-level-2">** io about word</span>...
+<span class="org-level-2">** bar-ket</span>...
+<span class="org-level-1">* read-word-&gt;buffer &amp; read-word &amp; read-word-for-REPL</span>
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-word-begin-char</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-word-&gt;buffer</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-word</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** read-word-for-REPL</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
+</span><span class="org-level-1">* string-[head|tail],word</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** space-string?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-&gt;word-[begin|end]</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-[head|tail],word</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* jotionary</span>
+</span><span class="org-level-1">* jotionary</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** find</span>...<span class="org-block-end-line">
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> about find</span>...
+<span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#36941;&#27511;&#37832;&#34920;&#30340;&#26041;&#24335;</span>...
+<span class="org-level-2">** find-jo,through-jo-link</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** execute-word</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* basic-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
@@ -596,12 +600,11 @@
 </span><span class="org-level-1">* rule-set</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#25509;&#21475;</span>...
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#20351;&#29992;</span>...
-<span class="org-level-2">** rule-set,fetch-cursor</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** rule-set,save-cursor</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** add-rule                           </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** add-rule                           </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> border</span>...
+<span class="org-level-2">** rule-set,fetch-border</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** rule-set,save-border</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** cursor-&gt;[rule|function|predicate]</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** sub-rule</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** add-rule</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** find-rule</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* rule-set,make-jojo</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -629,16 +632,16 @@
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* make-jojo</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-2">** make-jojo</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** make-jojo,dispatch-syntax-word</span>...<span class="org-block-end-line">
+<span class="org-level-2">** make-jojo,dispatch-syntax-word</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** make-jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* define-[function|exception|variable]</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** !undo-make-jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** define-function</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** define-exception</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** define-variable</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** define-variable,with-tos</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-function</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-variable</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-variable,with-tos</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#26377;&#21517;&#23383;&#30340;&#23616;&#37096;&#35722;&#37327; &#33287; &#35722;&#38263;&#30340;&#23616;&#37096;&#25976;&#25818;</span>...
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> </span><span class="org-level-1"><span class="bold">*to compare readability*</span></span>
@@ -664,9 +667,9 @@
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> nested</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* local-variable-table</span>
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** clear</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** insert</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** find</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** local-variable-table,clear</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** local-variable-table,insert</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** local-variable-table,find</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** count-front-colon</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* two syntaxes</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -691,7 +694,8 @@
 </span><span class="org-level-2">** syscall                            </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* epilog</span>
-<span class="org-level-2">** platform</span>...<span class="org-block-end-line">
+<span class="org-level-2">** constant</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** platform</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*un-initialized-memory*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-area*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** last_link</span>...<span class="org-block-end-line">
