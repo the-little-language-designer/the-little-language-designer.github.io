@@ -33,6 +33,16 @@
         /* cicada-nymph-comment-face */
         color: #FF8888;
       }
+      .cicada-nymph-define-function {
+        /* cicada-nymph-define-function-face */
+        color: #ae81ff;
+        font-weight: bold;
+      }
+      .cicada-nymph-define-variable {
+        /* cicada-nymph-define-variable-face */
+        color: #a1ab3a;
+        font-weight: bold;
+      }
       .cicada-nymph-end {
         /* cicada-nymph-end-face */
         color: #00ffff;
@@ -48,9 +58,9 @@
         color: #5CDD5C;
         font-weight: bold;
       }
-      .cicada-nymph-lexicographer {
-        /* cicada-nymph-lexicographer-face */
-        color: #ae81ff;
+      .cicada-nymph-function-to-define {
+        /* cicada-nymph-function-to-define-face */
+        color: #ef5939;
         font-weight: bold;
       }
       .cicada-nymph-number {
@@ -90,10 +100,6 @@
       .cicada-nymph-variable {
         /* cicada-nymph-variable-face */
         color: #fd971f;
-      }
-      .cicada-nymph-word-to-define {
-        /* cicada-nymph-word-to-define-face */
-        color: #ef5939;
         font-weight: bold;
       }
       .comment {
@@ -178,14 +184,6 @@
         /* font-lock-preprocessor-face */
         color: #a6e22e;
       }
-      .rainbow-delimiters-depth-1 {
-        /* rainbow-delimiters-depth-1-face */
-        color: #8c8c8c;
-      }
-      .rainbow-delimiters-depth-2 {
-        /* rainbow-delimiters-depth-2-face */
-        color: #93a8c6;
-      }
       .return-stack-bar-ket {
         /* return-stack-bar-ket-face */
         color: #dc322f;
@@ -251,19 +249,9 @@
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** find a better way to protect reading-stack</span>
-   * now
-     "1 2 3 add add . jo" eval-string
-     will crush the interpreter
-<span class="org-level-2">** protect on the overloading of a variety of memories</span>
-<span class="org-level-2">** better naming of headings</span>
-<span class="org-level-2">** add more notes about the limitations of the program</span>
-<span class="org-level-2">** add more notes about exception handling on io functions</span>
-<span class="org-level-2">** optimize local-variable by new instruction</span>
+<span class="org-level-2">** optimize local-variable by new instruction </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
    * too many literal is too waste of memory
-<span class="org-level-2">** bare-metal version of cicada-nymph for x86 </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
-<span class="org-level-2">** make instruction a type of jo      </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
-   this is needed when doing report of the jotionary
+<span class="org-level-2">** change the interface of </span><span class="org-level-2"><span class="bold">*name-string-area*</span></span><span class="org-level-2"> </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
 <span class="org-level-2">** notation</span>
@@ -284,6 +272,7 @@
      "string-reverse"
      "string-equal?"
    * side-effect of structured data is postfixed by "!"
+   * exception is prefix be "!"
 <span class="org-level-2">** convention in assembly code</span>
    * using underline to compose big word from small words
    * using "$" as prefix and postfix separator
@@ -366,141 +355,30 @@
     * about comment
       * the comment of the argument &amp; return value of function
         is allowed to be written in free style normal comment
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> instar</span>
-<span class="org-level-2">** 1st-instar</span>
-   * indirect-threaded-code interpreter
-     1. macro about argument_stack &amp; return_stack
-     2. macro about jo &amp; jojo
-     3. macro about next
-     4. the way to do memory allocation
-     5. begin_to_interpret_threaded_code
-     6. little_test
-<span class="org-level-2">** 2ed-instar</span>
-   * instruction as special primitive function
-     1. literal
-     2. address
-   * and primitive functions about
-     1. the stack
-     2. bool
-     3. fixnum
-     4. memory
-   * and taca for explicit tail-call
-   * false?branch and taca are needed for "power"
-<span class="org-level-2">** 3rd-instar</span>
-   * primitive function about io
-     1. write_byte
-     2. read_byte
-<span class="org-level-2">** 4th-instar</span>
-   * more function about io
-     1. about word
-     2. about string
-     3. about number
-   * more function
-     1. jo
-     2. char
-     3. buffer
-   * more in epilog
-     1. last_link
-   * function about jotionary
-     1. find
-     2. execute-word
-   * basic-REPL as postfix-notation function executer
-     1. basic-REPL
-<span class="org-level-2">** 5th-instar</span>
-   * type of jo
-   * more in epilog
-     1. <span class="bold">*current-free-address,primitive-string-area*</span>
-   * colon semicolon
-     1. ":" and ";" are used to read a string of words for compiler
-        [looks like bar-ket but special]
-     2. comment is handled here
-        "&lt;&lt; &gt;&gt;" as the only way to do comment
-   * compiler
-     * make-jojo
-       and macro for make-jojo
-       1. macro system
-       2. exception handling system
-     * function about definition
-       which leave data into memory
-<span class="org-level-2">** 6th-instar</span>
-   * local-variable
-<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#25976;&#25818;&#32080;&#27083;&#33287;&#21475;&#32317;&#32080;</span>
-<span class="org-level-2">** jojo</span>
-   * jo &#30340;&#25976;&#32068;
-     &#27599;&#20491;&#25976;&#32068;&#22806;&#21152;&#19968;&#20123;&#20803;&#25976;&#25818;
-<span class="org-level-2">** jotionary of jojo</span>
-   * &#21934;&#38917;&#37832;&#25509;&#30340;&#37832;&#34920;
-<span class="org-level-2">** primitive-string</span>
-<span class="org-level-2">** argument-stack</span>
-<span class="org-level-2">** return-stack</span>
-   * jo &#30340;&#35438;&#37323;&#32773;
-     &#27770;&#23450;&#20102; &#22914;&#20309;&#20837;&#36889;&#20491;&#26855;
-   * &#32080;&#23614;&#35422;
-     &#27770;&#23450;&#20102; &#22914;&#20309;&#20986;&#36889;&#20491;&#26855;
-<span class="org-level-2">** syntax-stack</span>
-<span class="org-level-2">** reading-stack</span>
-<span class="org-level-2">** local-variable-table</span>
-   * &#21482;&#26377;&#19968;&#20491; local-variable-table
-     &#29992;&#20197;&#22312;&#32232;&#35695;&#26178;&#26399;&#35299;&#27770;&#23616;&#37096;&#35722;&#20803;&#30340;&#21517;&#33287;&#20540;&#30340;&#23565;&#25033;
-     &#36889;&#20491;&#25976;&#25818;&#32080;&#27083;&#34987; syntax__local_variable_save__make_jojo
-     &#21644; syntax__local_variable_fetch__make_jojo &#25152;&#20351;&#29992;
-   * &#20854;&#20013;&#20445;&#23384;
-     * offset-in-local-jo
-     * length-of-string
-     * address-of-string
-   * &#20006;&#19988;&#27599;&#27425;&#22312;&#23450;&#32681;&#19968;&#20491;&#26032;&#30340;&#20989;&#25976;&#39636;&#30340;&#26178;&#20505;
-     &#36889;&#20491; local-variable-table &#26371;&#34987;&#21021;&#22987;&#21270;
-   * &#22522;&#26412;&#30340;&#25509;&#21475;&#26159;
-     * clear
-       &#28165;&#31354; offset &#21644; border
-     * insert
-       &#25554;&#20837;&#23383;&#31526;&#20018; &#21644; offset-in-local-jo
-     * find
-       &#36890;&#36942;&#23383;&#31526;&#20018;&#23563;&#25214; offset-in-local-jo
-     &#26377;&#20841;&#20491;&#20840;&#23616;&#35722;&#37327;&#24171;&#21161;&#23526;&#29694;&#36889;&#20123;&#25509;&#21475;
-     * cursor
-       &#27599;&#27425; find &#30340;&#26178;&#20505;&#20351;&#29992;&#19968;&#20491;&#26032;&#30340; cursor &#20358;&#20570;&#24490;&#29872;
-     * border
-       insert &#26371;&#25844;&#22823; border
-       find &#20197; border &#29234;&#37002;&#30028;
-     &#21478;&#22806; &#36996;&#26377;&#19968;&#20491;&#20840;&#23616;&#35722;&#37327;
-     * offset
-       &#29992;&#20197;&#35336;&#31639; offset-in-local-jo
-<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#24615;&#29376;&#32317;&#32080;</span>
-<span class="org-level-2">** &#33258;&#21205;&#31649;&#29702;&#21152;&#36617;&#25991;&#20214;&#26178;&#25152;&#20351;&#29992;&#30340;&#25628;&#32034;&#36335;&#24465;&#21015;&#34920;</span>
-   * &#21407;&#29702;&#22914;&#19979;
-     * &#22312; cicada-nymph &#20013; load &#19968;&#20491; file &#30340;&#26178;&#20505;
-       &#38656;&#35201;&#25351;&#23450;&#20986;&#36889;&#20491; &#34987; load &#30340; file &#30340;&#36335;&#24465;
-     * &#32173;&#35703;&#19968;&#20491;&#38656;&#35201;&#34987;&#25628;&#32034;&#30340;&#36335;&#24465;&#30340;&#21015;&#34920;
-       &#20197;&#20351;&#24471; load &#30340; file &#30340;&#26178;&#20505;
-       &#19981;&#24517;&#20351;&#29992;&#23436;&#25972;&#30340;&#36335;&#24465;
-     * &#25552;&#20379;&#33258;&#21205;&#31649;&#29702;&#25628;&#32034;&#36335;&#24465;&#30340;&#27231;&#21046;
-   * &#32173;&#35703;&#25628;&#32034;&#36335;&#24465;&#30340;&#21015;&#34920;&#30340;&#26041;&#24335;&#26159;
-     &#21033;&#29992;&#25991;&#20214;&#31995;&#32113;&#20013;&#30340;&#19968;&#20491;&#26576;&#20491;&#22266;&#23450;&#36335;&#24465;
-     &#20063;&#23601;&#26159;&#35498; &#21482;&#26377;&#21807;&#19968;&#30340;&#19968;&#20491;&#38656;&#35201;&#34987;&#25214;&#21040;&#30340;&#36335;&#24465;
-     &#32780;&#20854;&#20182;&#30340;&#36335;&#24465;&#37117;&#26159;&#34987;&#33258;&#21205;&#31649;&#29702;&#30340;
-     &#36889;&#20491;&#36335;&#24465;&#23559;&#26377;&#19968;&#20491;&#40664;&#35469;&#20540;
-     &#20006;&#19988;&#21487;&#20197;&#34987;&#29872;&#22659;&#35722;&#37327;&#35206;&#33995;
-   * &#38480;&#21046;&#21152;&#36617;&#25991;&#20214;&#30340;&#26041;&#24335;
-     &#20351;&#24471;&#21482;&#33021;&#20351;&#29992;&#25152;&#25552;&#20379;&#30340;&#21205;&#24907;&#31649;&#29702;&#27231;&#21046;&#20358;&#21152;&#36617;&#25991;&#20214;
-     &#36889;&#27171;&#23601;&#21487;&#20197;&#28187;&#36629;&#29702;&#35299;&#36889;&#20491;&#31995;&#32113;&#30340;&#22256;&#38627;
-<span class="org-level-2">** </span><span class="org-todo">&gt;&lt;</span><span class="org-level-2"> &#23616;&#37096;&#35722;&#20803;</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>
-<span class="org-level-2">** about div                          </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
+<span class="org-level-2">** memory                             </span><span class="org-level-2"><span class="org-tag">:limit:</span></span>
+   * need to protect the overloading of a variety of memories
+<span class="org-level-2">** reading-stack                      </span><span class="org-level-2"><span class="org-tag">:limit:</span></span>
+   * need to find a better way to protect reading-stack
+   * now
+     "1 2 3 add add . jo" eval-string
+     will crush the interpreter
+<span class="org-level-2">** div                                </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
    * div can not handle the following
      -8 2 div .
-<span class="org-level-2">** about inline comment               </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
+<span class="org-level-2">** inline comment                     </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
    * inline comment such as
      add1 &lt;&lt; dup . &gt;&gt; swap
      will be viewed as
      add1swap
-<span class="org-level-2">** about comment in string            </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
+<span class="org-level-2">** comment in string                  </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
    * &lt;&lt; &gt;&gt; can not be in ""
-<span class="org-level-2">** about stack                        </span><span class="org-level-2"><span class="org-tag">:limit:</span></span>
+<span class="org-level-2">** stack                              </span><span class="org-level-2"><span class="org-tag">:limit:</span></span>
    * there are 64 positions below the all those stacks
      when you are belowing-stack so much
      bad things happen
-<span class="org-level-2">** string-reverse! can not apply on empty-string </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
+<span class="org-level-2">** string-reverse!                    </span><span class="org-level-2"><span class="org-tag">:bug:</span></span>
+   * string-reverse! can not apply on empty-string
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* prolog</span>
 <span class="org-level-2">** ----------------------------------</span>
@@ -752,7 +630,11 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* return_stack</span>
-<span class="org-level-2">** ----------------------------------</span>
+<span class="org-level-2">** </span><span class="org-todo">&#35352;</span>
+   * jo &#30340;&#35438;&#37323;&#32773;
+     &#27770;&#23450;&#20102; &#22914;&#20309;&#20837;&#36889;&#20491;&#26855;
+   * &#32080;&#23614;&#35422;
+     &#27770;&#23450;&#20102; &#22914;&#20309;&#20986;&#36889;&#20491;&#26855;
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   size$return_stack = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
@@ -761,8 +643,7 @@
    address$return_stack <span class="keyword">labeling</span>
       <span class="type">preserve</span> size$return_stack
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** pointer                            </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+</span><span class="org-level-2">** pointer                            </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =64bit, machine {
 
@@ -789,8 +670,7 @@
 
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** pointer                            </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
+</span><span class="org-level-2">** pointer                            </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =32bit, machine {
 
@@ -837,8 +717,7 @@
 
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* -----------------------------------</span>
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* next</span>
 <span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
 </span>  <span class="preprocessor">match</span> =64bit, machine {
@@ -958,26 +837,26 @@
 </span>  <span class="comment">;; initial link to point to 0 (as null)
 </span>  link = <span class="constant">0</span>
 <span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* primitive_string_area</span>
+</span><span class="org-level-1">* name_string_area</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">address$primitive_string_area</span>:
+</span>   <span class="function-name">address$name_string_area</span>:
       <span class="keyword">times</span> <span class="constant">64</span> * <span class="constant">1024</span> <span class="type">db</span> <span class="constant">0</span>
 
    <span class="function-name">address$core_file</span>:
       <span class="keyword">file</span> <span class="string">"core/core.cn"</span>
    <span class="function-name">end$core_file</span>:
 
-   <span class="function-name">end$primitive_string_area</span>:
+   <span class="function-name">end$name_string_area</span>:
 
-   current_free_address$primitive_string_area = address$primitive_string_area
+   current_free_address$name_string_area = address$name_string_area
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** make_primitive_string</span>
+</span><span class="org-level-2">** make_name_string</span>
    * 2 bytes for length of name_string
    * note that
      the following is using local label
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">macro</span> <span class="function-name">make_primitive_string</span> string {
+</span>   <span class="preprocessor">macro</span> <span class="function-name">make_name_string</span> string {
 
    <span class="keyword">virtual</span> <span class="keyword">at</span> <span class="constant">0</span>
    <span class="function-name">.start$string</span>:
@@ -986,17 +865,17 @@
       <span class="type">dw</span> (.end$string - .start$string)
       <span class="keyword">load</span> .length <span class="type">word</span> <span class="keyword">from</span> (.end$string)
    <span class="keyword">finish</span> <span class="keyword">virtual</span>
-   <span class="keyword">store</span> <span class="type">word</span> .length <span class="keyword">at</span> (current_free_address$primitive_string_area)
+   <span class="keyword">store</span> <span class="type">word</span> .length <span class="keyword">at</span> (current_free_address$name_string_area)
 
-   current_free_address$primitive_string_area = current_free_address$primitive_string_area + <span class="constant">2</span>
+   current_free_address$name_string_area = current_free_address$name_string_area + <span class="constant">2</span>
 
    <span class="keyword">repeat</span> .length
       <span class="keyword">virtual</span> <span class="keyword">at</span> <span class="constant">0</span>
          <span class="type">db</span> string
          <span class="keyword">load</span> .char <span class="type">byte</span> <span class="keyword">from</span> (% - <span class="constant">1</span>)
       <span class="keyword">finish</span> <span class="keyword">virtual</span>
-      <span class="keyword">store</span> <span class="type">byte</span> .char <span class="keyword">at</span> (current_free_address$primitive_string_area)
-      current_free_address$primitive_string_area = current_free_address$primitive_string_area + <span class="constant">1</span>
+      <span class="keyword">store</span> <span class="type">byte</span> .char <span class="keyword">at</span> (current_free_address$name_string_area)
+      current_free_address$name_string_area = current_free_address$name_string_area + <span class="constant">1</span>
    <span class="keyword">finish</span> <span class="keyword">repeat</span>
 
    }
@@ -1019,9 +898,9 @@
    define_function__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_area
+      <span class="type">xx</span> current_free_address$name_string_area
 
-      make_primitive_string string
+      make_name_string string
 
    link__#<span class="builtin">jo</span>:
       <span class="type">xx</span> link
@@ -1062,9 +941,9 @@
    define_primitive_function__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_area
+      <span class="type">xx</span> current_free_address$name_string_area
 
-      make_primitive_string string
+      make_name_string string
 
    link__#<span class="builtin">jo</span>:
       <span class="type">xx</span> link
@@ -1099,9 +978,9 @@
       <span class="type">xx</span> <span class="constant">1</span>
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_area
+      <span class="type">xx</span> current_free_address$name_string_area
 
-      make_primitive_string string
+      make_name_string string
 
    link__#<span class="builtin">jo</span>:
       <span class="type">xx</span> link
@@ -1162,9 +1041,18 @@
    * (!exception)
      &#20854; jo &#26412;&#36523;&#29992;&#20197;&#25628;&#32034;&#21040;&#20301;&#32622;
      &#32780; &#23450;&#32681;&#20854; jo &#30340; jojo &#34987;&#26893;&#20837;&#21040;&#25152;&#25628;&#32034;&#21040;&#30340;&#20301;&#32622;
-   * &#35373;&#35336;&#30340;&#19981;&#36275;&#20043;&#34389;&#22312;&#26044;
-     &#22312;&#35519;&#29992; (!exception) &#30340;&#26178;&#20505;
-     &#35519;&#29992;&#23427;&#30340;&#20989;&#25976;&#19981;&#33021;&#20659;&#36958;&#32102; (!exception) &#19968;&#20123;&#21443;&#25976;
+   * &#25552;&#20379;&#19968;&#20491;&#20989;&#25976;
+     &#20351;&#24471; &#27599;&#20491; (!exception) &#21487;&#20197;
+     &#20197;&#26126;&#39023;&#30340;&#26041;&#24335; &#22312;&#38656;&#35201;&#30340;&#26178;&#20505; &#37325;&#32622;&#21443;&#25976;&#26855;
+     &#36889;&#27171;&#27599;&#20491; (!exception) &#20351;&#29992;&#21443;&#25976;&#30340;&#26041;&#24335;&#23601;&#26159;
+     1. &#20808;&#20197;&#26410;&#34987;&#37325;&#32622;&#26178;&#30340;&#21443;&#25976;&#26855;&#20013;&#30340;&#20540;&#29234;&#21443;&#25976;
+        &#36889;&#20123;&#21443;&#25976;&#21487;&#20197;&#26159;&#35519;&#29992;&#36889;&#20491; (!exception) &#30340;&#20989;&#20659;&#36958;&#32102; (!exception) &#30340;
+     2. &#20043;&#24460;&#20877;&#20197;&#37325;&#32622;&#20043;&#24460;&#30340;&#21443;&#25976;&#26855;&#20013;&#30340;&#20540;&#29234;&#21443;&#25976;
+        &#36889;&#20123;&#21443;&#25976;&#26159;&#31561;&#24453; (!exception) &#30340;&#20989;&#29234; (!exception) &#25152;&#28310;&#20633;&#30340;
+<span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#25214;&#19981;&#21040;&#26178;</span>
+   * &#29992;&#19968;&#20491;&#20840;&#23616;&#35722;&#37327;&#35352;&#37636;&#19968;&#20491;&#20989;&#25976; &#22312;&#25214;&#19981;&#21040;&#30340;&#26178;&#20505;&#35519;&#29992;
+     &#36889;&#27171; &#20877;&#35299;&#37323;&#22120;&#20013;&#23526;&#29694;&#20102; debug-REPL &#26178;
+     &#23601;&#21487;&#20197;&#22312;&#27492;&#35519;&#29992; debug-REPL
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * explain$exception will
      1. search the return-stack for that exception
@@ -1176,10 +1064,12 @@
 
    define_exception__#<span class="builtin">jo</span>:
 
-   name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$primitive_string_area
+      <span class="type">xx</span> <span class="constant">0</span>
 
-      make_primitive_string string
+   name__#<span class="builtin">jo</span>:
+      <span class="type">xx</span> current_free_address$name_string_area
+
+      make_name_string string
 
    link__#<span class="builtin">jo</span>:
       <span class="type">xx</span> link
@@ -1243,7 +1133,57 @@
      but
      we still can use argument-stack
      to pass arguments
-<span class="org-level-2">** explain$exception                  </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> reset stack</span>
+   * this instruction shoud be should followed by an exception-jo
+   * an extra field in exception-jo
+     is dedicated to instruction,reset-stack,exception
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*lost-exception-REPL*</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_variable <span class="string">"*lost-exception-REPL*"</span>, V__lost_exception_REPL
+      <span class="type">xx</span> basic_REPL
+
+   <span class="function-name">string$lost_exception_REPL</span>:
+      <span class="type">db</span> <span class="string">"* an exception has lost itself"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  the function-jo stored in *lost-exception-REPL*"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  is reseted to"</span>, <span class="constant">10</span>
+      <span class="type">db</span> <span class="string">"  as a top-level-REPL"</span>, <span class="constant">10</span>
+   <span class="function-name">.end</span>:
+   length$lost_exception_REPL = (.end - string$lost_exception_REPL)
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** instruction,exception-reset-stack  </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =64bit, machine {
+
+   define_primitive_function <span class="string">"instruction,exception-reset-stack"</span>, exception_reset_stack
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      pop_return_stack <span class="variable-name">rbx</span>
+        <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+        <span class="builtin">sub</span> <span class="variable-name">rax</span>, (jo_size * <span class="constant">3</span>)
+        <span class="builtin">mov</span> pointer$argument_stack, [<span class="variable-name">rax</span>]
+      <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
+      push_return_stack <span class="variable-name">rbx</span>
+      next
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** instruction,exception-reset-stack  </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   <span class="preprocessor">match</span> =32bit, machine {
+
+   define_primitive_function <span class="string">"instruction,exception-reset-stack"</span>, exception_reset_stack
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      pop_return_stack <span class="variable-name">rbx</span>
+        <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
+        <span class="builtin">sub</span> <span class="variable-name">rax</span>, (jo_size * <span class="constant">3</span>)
+        <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rax</span>]
+        <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">rax</span>
+      <span class="builtin">add</span> <span class="variable-name">rbx</span>, jo_size
+      push_return_stack <span class="variable-name">rbx</span>
+      next
+
+   }
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** explain$exception                  </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>
    * no error handling for now
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =64bit, machine {
@@ -1279,7 +1219,10 @@
 </span>      <span class="comment">;;   pointer$return_stack
 </span>      <span class="comment">;;   rsi jo
 </span>      pop_return_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> pointer$argument_stack, <span class="variable-name">rax</span>
+      <span class="comment">;; mov pointer$argument_stack, rax
+</span>      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="variable-name">rsi</span>
+      <span class="builtin">sub</span> <span class="variable-name">rbx</span>, (jo_size * <span class="constant">3</span>)
+      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
 
       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_jo]
       push_return_stack <span class="variable-name">rbx</span>
@@ -1292,7 +1235,15 @@
       next
 
    <span class="function-name">.not_found</span>:
-      <span class="builtin">call</span> __exit_with_six
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, string$lost_exception_REPL
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, length$lost_exception_REPL
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">call</span> __write_string
+
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [V__lost_exception_REPL + jo_size]
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">call</span> (reset_top_level_REPL + jo_size)
 
    }
 <span class="org-block-end-line">   #+end_src
@@ -1333,7 +1284,10 @@
 </span>      <span class="comment">;;   pointer$return_stack
 </span>      <span class="comment">;;   rsi jo
 </span>      pop_return_stack <span class="variable-name">rax</span>
-      <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">rax</span>
+      <span class="comment">;; mov [pointer$argument_stack], rax
+</span>      <span class="builtin">mov</span> <span class="variable-name">rbx</span>, <span class="variable-name">rsi</span>
+      <span class="builtin">sub</span> <span class="variable-name">rbx</span>, (jo_size * <span class="constant">3</span>)
+      <span class="builtin">mov</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
 
       <span class="builtin">mov</span> <span class="variable-name">rbx</span>, [current_free_address$local_jo]
       push_return_stack <span class="variable-name">rbx</span>
@@ -1346,7 +1300,15 @@
       next
 
    <span class="function-name">.not_found</span>:
-      <span class="builtin">call</span> __exit_with_six
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, string$lost_exception_REPL
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, length$lost_exception_REPL
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">call</span> __write_string
+
+      <span class="builtin">mov</span> <span class="variable-name">rax</span>, [V__lost_exception_REPL + jo_size]
+      push_argument_stack <span class="variable-name">rax</span>
+      <span class="builtin">call</span> (reset_top_level_REPL + jo_size)
 
       }
 <span class="org-block-end-line">   #+end_src
@@ -1387,7 +1349,7 @@
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, subtraction
       <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, subtraction
       <span class="type">xx</span> fetch
-      <span class="type">xx</span> address_to_primitive_string
+      <span class="type">xx</span> address_to_name_string
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** jo-&gt;link</span>
@@ -1442,21 +1404,25 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* primitive-string-area</span>
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*primitive-string-area*</span></span>
+<span class="org-level-1">* name-string-area</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> interface</span>
+   * the interface of name-string-area is not good
+     one can NOT use n-fetch and n-save
+     to fetch and save value from the address
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*name-string-area*</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*primitive-string-area*"</span>, V__primitive_string_area
-      <span class="type">xx</span> address$primitive_string_area
+</span>   define_variable <span class="string">"*name-string-area*"</span>, V__name_string_area
+      <span class="type">xx</span> address$name_string_area
 
-   define_variable <span class="string">"*size,primitive-string-area*"</span>, V__size__primitive_string_area
-      <span class="type">xx</span> (end$primitive_string_area - address$primitive_string_area)
+   define_variable <span class="string">"*size,name-string-area*"</span>, V__size__name_string_area
+      <span class="type">xx</span> (end$name_string_area - address$name_string_area)
 
-   <span class="comment">;; *current-free-address,primitive-string-area*
+   <span class="comment">;; *current-free-address,name-string-area*
 </span>   <span class="comment">;; is at epilog
 </span><span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** address-&gt;primitive-string</span>
+</span><span class="org-level-2">** address-&gt;name-string</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"address-&gt;primitive-string"</span>, address_to_primitive_string
+</span>   define_function <span class="string">"address-&gt;name-string"</span>, address_to_name_string
       <span class="comment">;; &lt;&lt; address -- string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>, addition  <span class="comment">;; address
@@ -1627,49 +1593,79 @@
       it is clear how the example function
       is actually a loop now
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* helper function in assembly</span>
-<span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __exit_with_TOS                    </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
+<span class="org-level-1">* helper function in assembly code</span>
+<span class="org-level-2">** __exit_with_tos                    </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
-   __exit_with_TOS:
-      pop_argument_stack linux64_sys_1_rdi
+   __exit_with_tos:
+      <span class="comment">;; &lt;&lt; exit-code -- &gt;&gt;
+</span>      pop_argument_stack linux64_sys_1_rdi
       <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_exit
       <span class="builtin">syscall</span>
 
    }
+
+   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+
+   __exit_with_tos:
+      <span class="comment">;; &lt;&lt; exit-code -- &gt;&gt;
+</span>      pop_argument_stack linux32_sys_1_ebx
+      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_exit
+      <span class="builtin">syscall</span>
+
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_zero                   </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
+</span><span class="org-level-2">** __exit_with_zero                   </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    __exit_with_zero:
-      <span class="builtin">xor</span> linux64_sys_1_rdi, linux64_sys_1_rdi
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">xor</span> linux64_sys_1_rdi, linux64_sys_1_rdi
       <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_exit
       <span class="builtin">syscall</span>
 
    }
+
+   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+
+   __exit_with_zero:
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">xor</span> linux32_sys_1_ebx, linux32_sys_1_ebx
+      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_exit
+      <span class="builtin">syscall</span>
+
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_six                    </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
+</span><span class="org-level-2">** __exit_with_six                    </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    __exit_with_six:
-      <span class="builtin">mov</span> linux64_sys_1_rdi, <span class="constant">6</span>
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> linux64_sys_1_rdi, <span class="constant">6</span>
       <span class="builtin">mov</span> linux64_sys_n_rax, linux64_syscall_exit
       <span class="builtin">syscall</span>
 
    }
+
+   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+
+   __exit_with_six:
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> linux32_sys_1_ebx, <span class="constant">6</span>
+      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_exit
+      <span class="builtin">syscall</span>
+
+   }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __print_string                     </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
+</span><span class="org-level-2">** __write_string                     </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
-   __print_string:
+   __write_string:
       <span class="comment">;; &lt;&lt; address, length -- &gt;&gt;
-</span>      <span class="comment">;; write can not just write the char in al to stdout
-</span>      <span class="comment">;; write needs the address of the byte to write
 </span>      pop_argument_stack linux64_sys_3_rdx     <span class="comment">;; max length to be write
 </span>      pop_argument_stack linux64_sys_2_rsi     <span class="comment">;; address
 </span>      <span class="builtin">mov</span> linux64_sys_1_rdi, <span class="constant">1</span>                 <span class="comment">;; stdout
@@ -1678,69 +1674,11 @@
       <span class="builtin">ret</span>
 
    }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __reset_argument_stack             </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
-   __reset_argument_stack:
-      <span class="builtin">mov</span> pointer$argument_stack,  address$argument_stack
-      <span class="builtin">ret</span>
+   <span class="preprocessor">match</span> =linux =32bit, platform machine {
 
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __reset_return_stack               </span><span class="org-level-2"><span class="org-tag">:64bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
-
-   __reset_return_stack:
-      <span class="builtin">mov</span> pointer$return_stack,    address$return_stack
-      <span class="builtin">ret</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __exit_with_TOS                    </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   __exit_with_TOS:
-      pop_argument_stack linux32_sys_1_ebx
-      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_exit
-      <span class="builtin">syscall</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_zero                   </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   __exit_with_zero:
-      <span class="builtin">xor</span> linux32_sys_1_ebx, linux32_sys_1_ebx
-      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_exit
-      <span class="builtin">syscall</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __exit_with_six                    </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   __exit_with_six:
-      <span class="builtin">mov</span> linux32_sys_1_ebx, <span class="constant">6</span>
-      <span class="builtin">mov</span> linux32_sys_n_eax, linux32_syscall_exit
-      <span class="builtin">syscall</span>
-
-   }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __print_string                     </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
-
-   __print_string:
+   __write_string:
       <span class="comment">;; &lt;&lt; address, length -- &gt;&gt;
-</span>      <span class="comment">;; write can not just write the char in al to stdout
-</span>      <span class="comment">;; write needs the address of the byte to write
 </span>      pop_argument_stack linux32_sys_3_edx     <span class="comment">;; max length to be write
 </span>      pop_argument_stack linux32_sys_2_ecx     <span class="comment">;; address
 </span>      <span class="builtin">mov</span> linux32_sys_1_ebx, <span class="constant">1</span>                 <span class="comment">;; stdout
@@ -1750,45 +1688,65 @@
 
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __reset_argument_stack             </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
+</span><span class="org-level-2">** __reset_argument_stack             </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    __reset_argument_stack:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$argument_stack
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> pointer$argument_stack,  address$argument_stack
+      <span class="builtin">ret</span>
+
+   }
+
+   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+
+   __reset_argument_stack:
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$argument_stack
       <span class="builtin">mov</span> [pointer$argument_stack], <span class="variable-name">rax</span>
       <span class="builtin">ret</span>
 
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** __reset_return_stack               </span><span class="org-level-2"><span class="org-tag">:32bit:linux:</span></span>
+</span><span class="org-level-2">** __reset_return_stack               </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+</span>   <span class="preprocessor">match</span> =linux =64bit, platform machine {
 
    __reset_return_stack:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$return_stack
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> pointer$return_stack,    address$return_stack
+      <span class="builtin">ret</span>
+
+   }
+
+   <span class="preprocessor">match</span> =linux =32bit, platform machine {
+
+   __reset_return_stack:
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$return_stack
       <span class="builtin">mov</span> [pointer$return_stack], <span class="variable-name">rax</span>
       <span class="builtin">ret</span>
 
    }
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** __reset_local_jo</span>
+</span><span class="org-level-2">** __reset_local_jo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   __reset_local_jo:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_jo
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_jo
       <span class="builtin">mov</span> [current_free_address$local_jo], <span class="variable-name">rax</span>
       <span class="builtin">ret</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** __reset_local_byte</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   __reset_local_byte:
-      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_byte
+      <span class="comment">;; &lt;&lt; -- &gt;&gt;
+</span>      <span class="builtin">mov</span> <span class="variable-name">rax</span>, address$local_byte
       <span class="builtin">mov</span> [current_free_address$local_byte], <span class="variable-name">rax</span>
       <span class="builtin">ret</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* -----------------------------------</span>
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the-story-begin*</span></span>
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#21295;&#32232;&#20195;&#30908;&#20013;&#30340;&#21021;&#22987;&#21270;</span>
@@ -1868,7 +1826,7 @@
       <span class="builtin">mov</span> <span class="variable-name">rcx</span>, length$report_return_stack_is_empty_and_exit
       push_argument_stack <span class="variable-name">rax</span>
       push_argument_stack <span class="variable-name">rcx</span>
-      <span class="builtin">call</span> __print_string
+      <span class="builtin">call</span> __write_string
       <span class="builtin">call</span> __exit_with_zero
 
    <span class="function-name">jojo_for__report_return_stack_is_empty_and_exit</span>:
@@ -1906,7 +1864,7 @@
 <span class="org-level-2">** exit_with_TOS a.k.a. bye</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_primitive_function <span class="string">"bye"</span>, exit_with_TOS
-      <span class="builtin">call</span> __exit_with_TOS
+      <span class="builtin">call</span> __exit_with_tos
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** little_test</span>
@@ -2000,7 +1958,7 @@
 </span>      <span class="comment">;;;; type 123
 </span>      <span class="comment">;;;; exit code 123
 </span>
-      <span class="comment">;;;; use jo_to_name to test the macro make_primitive_string
+      <span class="comment">;;;; use jo_to_name to test the macro make_name_string
 </span>      <span class="comment">;; xx literal, jo_to_name, jo_to_name, write_string
 </span>      <span class="comment">;; xx literal, 10, write_byte
 </span>      <span class="comment">;; xx literal, addition, jo_to_name, write_string
@@ -2059,16 +2017,10 @@
    * the naming convention in assembly code
      of instruction
      is the same as it of jo
-   * the name of an instruction
-     might not be exported to cicada-language as a function
-     but as a variable
 <span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** literal</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*literal*"</span>, V__literal
-      <span class="type">xx</span> <span class="keyword">literal</span>
-
-   define_primitive_function <span class="string">""</span>, <span class="keyword">literal</span>
+</span>   define_primitive_function <span class="string">"instruction,literal"</span>, <span class="keyword">literal</span>
       <span class="comment">;; &lt;&lt; -- fixnum &gt;&gt;
 </span>      pop_return_stack <span class="variable-name">rbx</span>
         <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
@@ -2079,10 +2031,7 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** address</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*address*"</span>, V__address
-      <span class="type">xx</span> <span class="keyword">address</span>
-
-   define_primitive_function <span class="string">""</span>, <span class="keyword">address</span>
+</span>   define_primitive_function <span class="string">"instruction,address"</span>, <span class="keyword">address</span>
       <span class="comment">;; &lt;&lt; -- address &gt;&gt;
 </span>      pop_return_stack <span class="variable-name">rbx</span>
         <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
@@ -2095,10 +2044,7 @@
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** branch</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*branch*"</span>, V__branch
-      <span class="type">xx</span> <span class="keyword">branch</span>
-
-   define_primitive_function <span class="string">""</span>, <span class="keyword">branch</span>
+</span>   define_primitive_function <span class="string">"instruction,branch"</span>, <span class="keyword">branch</span>
       pop_return_stack <span class="variable-name">rbx</span>
       <span class="builtin">mov</span> <span class="variable-name">rax</span>, [<span class="variable-name">rbx</span>]
       <span class="builtin">imul</span> <span class="variable-name">rax</span>, jo_size
@@ -2108,10 +2054,7 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** false?branch</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*false?branch*"</span>, V__false?branch
-      <span class="type">xx</span> <span class="keyword">false?branch</span>
-
-   define_primitive_function <span class="string">""</span>, <span class="keyword">false?branch</span>
+</span>   define_primitive_function <span class="string">"instruction,false?branch"</span>, <span class="keyword">false?branch</span>
       <span class="comment">;; &lt;&lt; true of false -- &gt;&gt;
 </span>      pop_argument_stack <span class="variable-name">rax</span>
       <span class="builtin">test</span> <span class="variable-name">rax</span>, <span class="variable-name">rax</span>
@@ -2193,7 +2136,7 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =64bit, machine {
 
-   define_primitive_function <span class="string">""</span>, prepare_for
+   define_primitive_function <span class="string">"instruction,prepare-for"</span>, prepare_for
       <span class="comment">;; &lt;&lt; -- &gt;&gt;
 </span>      pop_return_stack <span class="variable-name">rbx</span>
 
@@ -2224,7 +2167,7 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   <span class="preprocessor">match</span> =32bit, machine {
 
-   define_primitive_function <span class="string">""</span>, prepare_for
+   define_primitive_function <span class="string">"instruction,prepare-for"</span>, prepare_for
       <span class="comment">;; &lt;&lt; -- &gt;&gt;
 </span>      pop_return_stack <span class="variable-name">ebx</span>
 
@@ -2250,11 +2193,6 @@
       next
 
    }
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*prepare-for*</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*prepare-for*"</span>, V__prepare_for
-      <span class="type">xx</span> prepare_for
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> action of exception_head</span>
    * return-stack
@@ -2296,16 +2234,11 @@
      it pops the argument-stack pointer after it
    * and "explain$exception" will search for them
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_primitive_function <span class="string">""</span>, exception_head
+</span>   define_primitive_function <span class="string">"instruction,exception-head"</span>, exception_head
       <span class="comment">;; &lt;&lt; -- &gt;&gt;
 </span>      pop_return_stack <span class="variable-name">rax</span>
       pop_return_stack <span class="variable-name">rax</span>
       next
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*exception-head*</span></span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*exception-head*"</span>, V__exception_head
-      <span class="type">xx</span> exception_head
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-1">* -----------------------------------</span>
@@ -3441,7 +3374,7 @@
       <span class="builtin">sub</span> <span class="type">qword</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
       next
 
-   <span class="rainbow-delimiters-depth-1">}</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** fetch                              </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -3554,7 +3487,7 @@
       <span class="builtin">sub</span> <span class="type">dword</span> [<span class="variable-name">rbx</span>], <span class="variable-name">rax</span>
       next
 
-   <span class="rainbow-delimiters-depth-1">}</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** clear</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -3883,10 +3816,10 @@
 
    define_primitive_function <span class="string">"drop-reading-stack"</span>, drop_reading_stack
       <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="builtin">sub</span> <span class="type">qword</span> [pointer$reading_stack], (jo_size * <span class="constant">2</span><span class="rainbow-delimiters-depth-2">)</span>
+</span>      <span class="builtin">sub</span> <span class="type">qword</span> [pointer$reading_stack], (jo_size * <span class="constant">2</span>)
       next
 
-   <span class="rainbow-delimiters-depth-1">}</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** push &amp; pop &amp; drop                  </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -3918,10 +3851,10 @@
 
    define_primitive_function <span class="string">"drop-reading-stack"</span>, drop_reading_stack
       <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="builtin">sub</span> <span class="type">dword</span> [pointer$reading_stack], (jo_size * <span class="constant">2</span><span class="rainbow-delimiters-depth-2">)</span>
+</span>      <span class="builtin">sub</span> <span class="type">dword</span> [pointer$reading_stack], (jo_size * <span class="constant">2</span>)
       next
 
-   <span class="rainbow-delimiters-depth-1">}</span>
+   }
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** tos</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -4074,7 +4007,7 @@
       <span class="type">db</span> <span class="string">"  and this empty-stack is not at the bottom of the reading-stack"</span>, <span class="constant">10</span>
       <span class="type">db</span> <span class="string">"  you can type a line to replace this empty string"</span>, <span class="constant">10</span>
    <span class="function-name">.end</span>:
-   length$read_byte = <span class="rainbow-delimiters-depth-1">(</span>.end - error$read_byte<span class="rainbow-delimiters-depth-1">)</span>
+   length$read_byte = (.end - error$read_byte)
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* load-core-file</span>
 <span class="org-block-begin-line">  #+begin_src fasm :tangle cicada-nymph.fasm
@@ -4465,7 +4398,7 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">XIE</span> Yuheng <span class="cicada-nymph-sentence-reader">;</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">XIE</span> Yuheng <span class="cicada-nymph-sentence-reader">;</span>
    <span class="cicada-nymph-number">32</span> <span class="cicada-nymph-title">string</span>,find-char . <span class="cicada-nymph-comment">&lt;&lt; 1 &gt;&gt;</span>
    fetch-byte . <span class="cicada-nymph-comment">&lt;&lt; 32 &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
@@ -4636,7 +4569,7 @@
       <span class="type">db</span> <span class="string">"  and this empty-stack is not at the bottom of the reading-stack"</span>, <span class="constant">10</span>
       <span class="type">db</span> <span class="string">"  you can type a line to replace this empty string"</span>, <span class="constant">10</span>
    <span class="function-name">.end</span>:
-   length$read_word_to_buffer = <span class="rainbow-delimiters-depth-1">(</span>.end - error$read_word_to_buffer<span class="rainbow-delimiters-depth-1">)</span>
+   length$read_word_to_buffer = (.end - error$read_word_to_buffer)
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** read-word</span>
    * read-word will override the word readed before
@@ -4868,15 +4801,36 @@
 </span><span class="org-block-end-line">     #+end_src
 </span>   * second
 <span class="org-block-begin-line">     #+begin_src cicada-nymph
-</span>     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial</span>
+</span>     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial</span>
        <span class="cicada-nymph-comment">&lt;&lt; n -- n! &gt;&gt;</span>
        dup one? <span class="cicada-nymph-syntax-key-word">if</span>
          <span class="cicada-nymph-end">end</span>
        <span class="cicada-nymph-syntax-key-word">then</span>
        dup sub1 factorial mul
        <span class="cicada-nymph-end">end</span>
-     <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+     <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">     #+end_src
+</span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> buffer$colon</span>
+   * the fact that
+     there is only one buffer dedicated to colon
+     is used to implement (current-defining-word)
+     and (current-defining-body)
+<span class="org-level-2">** current-defining-[word|body]</span>
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"current-defining-word"</span>, current_defining_word
+      <span class="comment">;; &lt;&lt; -- word[address, length] &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$colon
+      <span class="type">xx</span> <span class="keyword">literal</span>, length$colon, fetch
+      <span class="type">xx</span> string_head__word
+      <span class="type">xx</span> <span class="keyword">end</span>
+
+   define_function <span class="string">"current-defining-body"</span>, current_defining_body
+      <span class="comment">;; &lt;&lt; -- word[address, length] &gt;&gt;
+</span>      <span class="type">xx</span> <span class="keyword">literal</span>, buffer$colon
+      <span class="type">xx</span> <span class="keyword">literal</span>, length$colon, fetch
+      <span class="type">xx</span> string_tail__word
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** [colon|semicolon]-string?</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"colon-string?"</span>, colon_string?
@@ -4935,6 +4889,9 @@
    <span class="function-name">cursor$colon</span>:
       <span class="type">xx</span> <span class="constant">0</span>
 
+   <span class="function-name">length$colon</span>:
+      <span class="type">xx</span> <span class="constant">0</span>
+
 
    define_function <span class="string">":"</span>, colon
       <span class="comment">;; &lt;&lt; -- string[address of buffer$colon, length] &gt;&gt;
@@ -4947,6 +4904,7 @@
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, cursor$colon, fetch
       <span class="type">xx</span> <span class="keyword">literal</span>, buffer$colon
       <span class="type">xx</span> subtraction
+      <span class="type">xx</span> <span class="keyword">dup</span>, <span class="keyword">literal</span>, length$colon, save
       <span class="type">xx</span> <span class="keyword">end</span>
 
 
@@ -5052,7 +5010,7 @@
 </span>   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &gt;&gt;</span> <span class="cicada-nymph-number">64</span> add .
    <span class="cicada-nymph-comment">&lt;&lt; 65 &gt;&gt;</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">kkk</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &lt;&lt; 989 &gt;&gt;</span> &gt;&gt; <span class="cicada-nymph-sentence-reader">;</span> .s
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">kkk</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &lt;&lt; 989 &gt;&gt;</span> &gt;&gt; <span class="cicada-nymph-sentence-reader">;</span> .s
    <span class="cicada-nymph-comment">&lt;&lt; kkk &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* jo-area</span>
@@ -5076,27 +5034,37 @@
    define_variable <span class="string">"*current-free-address,jo-area*"</span>, V__current_free_address__jo_area
       <span class="type">xx</span> address$jo_area
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** save-into,primitive-string-area</span>
+</span><span class="org-level-2">** save-into,name-string-area</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"save-into,primitive-string-area"</span>, save_into__primitive_string_area
+</span>   define_function <span class="string">"save-into,name-string-area"</span>, save_into__name_string_area
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>, V__current_free_address__primitive_string_area
+</span>      <span class="type">xx</span> <span class="keyword">dup</span>, V__current_free_address__name_string_area
       <span class="type">xx</span> save_two_bytes
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string_area
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__name_string_area
       <span class="type">xx</span> add_save
 
       <span class="type">xx</span> tuck
-      <span class="type">xx</span> V__current_free_address__primitive_string_area
+      <span class="type">xx</span> V__current_free_address__name_string_area
       <span class="type">xx</span> string_to_buffer!
 
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string_area
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__name_string_area
       <span class="type">xx</span> add_save
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** save-into,jo-area</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm...</span><span class="org-block-end-line">
+<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
+</span>   define_function <span class="string">"save-into,jo-area"</span>, save_into__jo_area
+      <span class="comment">;; &lt;&lt; number -- &gt;&gt;
+</span>      <span class="type">xx</span> V__current_free_address__jo_area
+      <span class="type">xx</span> save
+
+      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_area
+      <span class="type">xx</span> add_save
+      <span class="type">xx</span> <span class="keyword">end</span>
+<span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* syntax-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>
    * &#29992; <span class="bold">*syntax-stack*</span> &#20358;&#36914;&#34892;&#35486;&#22659;&#36681;&#25563;
@@ -5601,7 +5569,7 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** syntax,double-quote,make-jojo</span>
-   * primitive-string-area is used
+   * name-string-area is used
      to allocate string literal in function body
    * in ASCII encode double-quote is 34
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -5619,10 +5587,10 @@
       <span class="comment">;; address
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
       <span class="type">xx</span>     save_into__jo_area
-      <span class="type">xx</span>   V__current_free_address__primitive_string_area, add2
+      <span class="type">xx</span>   V__current_free_address__name_string_area, add2
       <span class="type">xx</span>     save_into__jo_area
       <span class="type">xx</span>   xoverxx, over
-      <span class="type">xx</span>     save_into__primitive_string_area
+      <span class="type">xx</span>     save_into__name_string_area
 
       <span class="comment">;; length
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
@@ -5728,12 +5696,14 @@
 <span class="org-level-2">** !undo-make-jojo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_exception <span class="string">"!undo-make-jojo"</span>, !undo_make_jojo
-      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string_area
+      <span class="comment">;; &lt;&lt; old V__current_free_address__name_string_area
 </span>      <span class="comment">;;    old V__current_free_address__jo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length]
 </span>      <span class="comment">;;    -- &gt;&gt;
-</span>      <span class="type">xx</span> drop_syntax_stack
+</span>      <span class="type">xx</span> exception_reset_stack, !undo_make_jojo
+
+      <span class="type">xx</span> drop_syntax_stack
 
       <span class="type">xx</span> <span class="keyword">literal</span>, string$undo_make_jojo_report
       <span class="type">xx</span> <span class="keyword">literal</span>, length$undo_make_jojo_report
@@ -5746,7 +5716,7 @@
 
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary, save
       <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_area, save
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__primitive_string_area
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__name_string_area
       <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
 
@@ -5761,10 +5731,10 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"define-function"</span>, CICADA__define_function
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__primitive_string_area, xxswapx
+</span>      <span class="type">xx</span> V__current_free_address__name_string_area, xxswapx
       <span class="type">xx</span> V__current_free_address__jo_area, xxswapx
       <span class="type">xx</span> V__first_jo_in_jotionary, xxswapx
-      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string_area
+      <span class="comment">;; &lt;&lt; old V__current_free_address__name_string_area
 </span>      <span class="comment">;;    old V__current_free_address__jo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
@@ -5774,10 +5744,10 @@
       <span class="type">xx</span>   !undo_make_jojo
       <span class="type">xx</span>   <span class="keyword">end</span>
 
-      <span class="type">xx</span> V__current_free_address__primitive_string_area
+      <span class="type">xx</span> V__current_free_address__name_string_area
       <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__primitive_string_area
+      <span class="type">xx</span>   save_into__name_string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
@@ -5804,10 +5774,10 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"define-exception"</span>, CICADA__define_exception
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__primitive_string_area, xxswapx
+</span>      <span class="type">xx</span> V__current_free_address__name_string_area, xxswapx
       <span class="type">xx</span> V__current_free_address__jo_area, xxswapx
       <span class="type">xx</span> V__first_jo_in_jotionary, xxswapx
-      <span class="comment">;; &lt;&lt; old V__current_free_address__primitive_string_area
+      <span class="comment">;; &lt;&lt; old V__current_free_address__name_string_area
 </span>      <span class="comment">;;    old V__current_free_address__jo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
@@ -5817,10 +5787,10 @@
       <span class="type">xx</span>   !undo_make_jojo
       <span class="type">xx</span>   <span class="keyword">end</span>
 
-      <span class="type">xx</span> V__current_free_address__primitive_string_area
+      <span class="type">xx</span> V__current_free_address__name_string_area
       <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__primitive_string_area
+      <span class="type">xx</span>   save_into__name_string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
@@ -5851,10 +5821,10 @@
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">1</span>
       <span class="type">xx</span>   save_into__jo_area
 
-      <span class="type">xx</span> V__current_free_address__primitive_string_area
+      <span class="type">xx</span> V__current_free_address__name_string_area
       <span class="type">xx</span>   save_into__jo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__primitive_string_area
+      <span class="type">xx</span>   save_into__name_string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
@@ -5873,24 +5843,24 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-function</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">addadd</span> add add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">addadd</span> add add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">3</span> addadd . <span class="cicada-nymph-comment">&lt;&lt; 6 &gt;&gt;</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">add1</span> <span class="cicada-nymph-number">1</span> add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">add1</span> <span class="cicada-nymph-number">1</span> add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> add1 . <span class="cicada-nymph-comment">&lt;&lt; 2 &gt;&gt;</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">negate</span> <span class="cicada-nymph-number">0</span> swap sub <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">negate</span> <span class="cicada-nymph-number">0</span> swap sub <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> negate . <span class="cicada-nymph-comment">&lt;&lt; -1 &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-variable,with-tos</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-number">233</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">*three*</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-variable,with-tos</span>
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">add-three</span> <span class="cicada-nymph-variable">*three*</span> add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+</span>   <span class="cicada-nymph-number">233</span> <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-variable">*three*</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-variable">define-variable,with-tos</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">add-three</span> <span class="cicada-nymph-variable">*three*</span> add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> add-three . <span class="cicada-nymph-comment">&lt;&lt; 234 &gt;&gt;</span>
 
    <span class="cicada-nymph-comment">&lt;&lt; you get the address of the variable *three*
       by add "address" in front of it &gt;&gt;</span>
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">fix-*three*</span> <span class="cicada-nymph-number">3</span> <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*three*</span> save <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">fix-*three*</span> <span class="cicada-nymph-number">3</span> <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*three*</span> save <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    fix-*three*
    <span class="cicada-nymph-number">1</span> add-three . <span class="cicada-nymph-comment">&lt;&lt; 4 &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
@@ -5909,7 +5879,7 @@
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> </span><span class="org-level-1"><span class="bold">*to compare readability*</span></span>
 <span class="org-level-2">** example code without local-variable</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">name-hash-table,insert,loop</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,insert,loop</span>
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length], number, counter
         -- name, true
         -- name, false &gt;&gt;</span>
@@ -5946,20 +5916,20 @@
      x|swap|xx drop
      xx|swap|xx add1
      <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">name-hash-table,insert</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,insert</span>
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length]
         -- name, true
         -- name, false &gt;&gt;</span>
      dup2 string-&gt;finite-carry-sum
      <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** example code with local-variable</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">name-hash-table,insert,loop</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,insert,loop</span>
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length], number, counter
         -- name, true
         -- name, false &gt;&gt;</span>
@@ -5991,16 +5961,16 @@
      <span class="cicada-nymph-fetch-local-variable-2">::string</span>
      <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-fetch-local-variable-1">:counter</span> add1
      <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">name-hash-table,insert</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,insert</span>
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length]
         -- name, true
         -- name, false &gt;&gt;</span>
      dup2 string-&gt;finite-carry-sum
      <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#20877;&#22686;&#21152;&#23616;&#37096;&#35722;&#20803;&#25903;&#25345;&#20043;&#24460; &#38656;&#35201;&#37325;&#23531;&#30340;&#37096;&#20998;</span>
 <span class="org-level-2">** &#35438;&#37323;&#32773; &#33287; &#25910;&#23614;&#35422;</span>
@@ -6087,6 +6057,17 @@
    * &#25913;&#20195;&#30908;&#20006;&#35519;&#25972;&#23565;&#36628;&#21161;&#20989;&#25976;&#30340;&#20351;&#29992;
      &#23601;&#34987;&#31281;&#20316;&#26159; "re-factoring"
      &#21363; &#20989;&#25976;&#30340;&#22240;&#23376;&#30340;&#37325;&#26032;&#20998;&#35299;
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#38364;&#26044;&#20998;&#25903;&#32080;&#27083;</span>
+  * &#23565; &#21253;&#21547; &gt;:name &#30340;&#20989;&#25976;&#39636;&#30340;&#34389;&#29702;&#26159;&#32020;&#32218;&#24615;&#30340;
+    &#26681;&#26412;&#27794;&#26377;&#32771;&#24942;&#21040; &#20989;&#25976;&#39636;&#20013; &#22240; if else then &#32780;&#29986;&#29983;&#30340;&#20998;&#25903;&#32080;&#27083;
+    &#20294;&#26159;&#36889;&#20006;&#19981;&#26371;&#24341;&#36215;&#37679;&#35492;
+    &#21407;&#22240;&#22914;&#19979;
+  * &#23565; &gt;:name &#21644; :name &#30340;&#34389;&#29702;&#26159;&#32020;&#31929;&#22312;&#32232;&#35695;&#26178;&#26399;&#36914;&#34892;&#30340;
+  * &#25152;&#20445;&#35657;&#30340;&#29305;&#24615;&#26159;
+    1. &#27599;&#19968;&#20491; name &#22312; &#19968;&#20491;&#20989;&#25976;&#39636;&#20013;&#30340;&#20986;&#29694;
+       &#37117;&#26159;&#22312;&#32232;&#35695;&#26178;&#26399;&#23565; local-jo &#30340; &#19968;&#20491; offset &#30340;&#20998;&#37197;
+    2. &#21516;&#19968;&#20491; name &#22312; &#19968;&#20491;&#20989;&#25976;&#39636;&#20013;&#30340;&#20986;&#29694;
+       &#26371;&#24471;&#21040;&#30456;&#21516;&#30340; offset
 <span class="org-level-1">* local-jo</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -6203,14 +6184,14 @@
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> example result</span>
    * with &gt;::name
 <span class="org-block-begin-line">     #+begin_src cicada-nymph
-</span>     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">example</span>
+</span>     <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">example</span>
        <span class="cicada-nymph-comment">&lt;&lt; number1, number2, number3, number4
           -- number1, number2 &gt;&gt;</span>
        <span class="cicada-nymph-save-local-variable-2">&gt;::var2</span>
        <span class="cicada-nymph-save-local-variable-2">&gt;::var2</span>
        <span class="cicada-nymph-fetch-local-variable-2">::var2</span>
        <span class="cicada-nymph-end">end</span>
-     <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+     <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">     #+end_src
 </span>     ----------------
 <span class="org-block-begin-line">     #+begin_src fasm
@@ -6230,7 +6211,7 @@
 <span class="org-block-end-line">     #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">local-variable,test</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">local-variable,test</span>
      <span class="cicada-nymph-comment">&lt;&lt; number1, number2, number3 -- number1 + number2 &gt;&gt;</span>
      <span class="cicada-nymph-save-local-variable-1">&gt;:var2</span>
      <span class="cicada-nymph-save-local-variable-1">&gt;:var2</span>
@@ -6239,47 +6220,74 @@
      <span class="cicada-nymph-fetch-local-variable-1">:var2</span>
      add
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">4</span> <span class="cicada-nymph-title">local-variable</span>,test <span class="cicada-nymph-comment">&lt;&lt; 3 &gt;&gt;</span> .
 
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">local-variable,test,2</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">local-variable,test,2</span>
      <span class="cicada-nymph-comment">&lt;&lt; number1, number2 -- number2 + number3 &gt;&gt;</span>
      <span class="cicada-nymph-save-local-variable-2">&gt;::var2</span>
      <span class="cicada-nymph-fetch-local-variable-2">::var2</span>
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-title">local-variable</span>,test,2 <span class="cicada-nymph-comment">&lt;&lt; 1 2 &gt;&gt;</span> . .
 
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">local-variable,test,3</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">local-variable,test,3</span>
      <span class="cicada-nymph-comment">&lt;&lt; number1, number2, number3 -- number2 + number3 &gt;&gt;</span>
      <span class="cicada-nymph-save-local-variable-2">&gt;::var2</span>
      <span class="cicada-nymph-save-local-variable-1">&gt;:var1</span>
      <span class="cicada-nymph-fetch-local-variable-2">::var2</span>
      add
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">4</span> <span class="cicada-nymph-title">local-variable</span>,test,3 <span class="cicada-nymph-comment">&lt;&lt; 6 &gt;&gt;</span> .
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> nested</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">k1</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">k1</span>
      <span class="cicada-nymph-number">9</span> <span class="cicada-nymph-save-local-variable-1">&gt;:k</span>
      <span class="cicada-nymph-fetch-local-variable-1">:k</span> .
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    k1 <span class="cicada-nymph-comment">&lt;&lt; 9 &gt;&gt;</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">k2</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">k2</span>
      <span class="cicada-nymph-number">10</span> <span class="cicada-nymph-save-local-variable-1">&gt;:k</span>
      k1
      <span class="cicada-nymph-fetch-local-variable-1">:k</span> .
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    k2 <span class="cicada-nymph-comment">&lt;&lt; 9 10 &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* local-variable-table</span>
+<span class="org-level-2">** </span><span class="org-todo">&#35352;</span>
+   * &#21482;&#26377;&#19968;&#20491; local-variable-table
+     &#29992;&#20197;&#22312;&#32232;&#35695;&#26178;&#26399;&#35299;&#27770;&#23616;&#37096;&#35722;&#20803;&#30340;&#21517;&#33287;&#20540;&#30340;&#23565;&#25033;
+     &#36889;&#20491;&#25976;&#25818;&#32080;&#27083;&#34987; syntax__local_variable_save__make_jojo
+     &#21644; syntax__local_variable_fetch__make_jojo &#25152;&#20351;&#29992;
+   * &#20854;&#20013;&#20445;&#23384;
+     * offset-in-local-jo
+     * length-of-string
+     * address-of-string
+   * &#20006;&#19988;&#27599;&#27425;&#22312;&#23450;&#32681;&#19968;&#20491;&#26032;&#30340;&#20989;&#25976;&#39636;&#30340;&#26178;&#20505;
+     &#36889;&#20491; local-variable-table &#26371;&#34987;&#21021;&#22987;&#21270;
+   * &#22522;&#26412;&#30340;&#25509;&#21475;&#26159;
+     * clear
+       &#28165;&#31354; offset &#21644; border
+     * insert
+       &#25554;&#20837;&#23383;&#31526;&#20018; &#21644; offset-in-local-jo
+     * find
+       &#36890;&#36942;&#23383;&#31526;&#20018;&#23563;&#25214; offset-in-local-jo
+     &#26377;&#20841;&#20491;&#20840;&#23616;&#35722;&#37327;&#24171;&#21161;&#23526;&#29694;&#36889;&#20123;&#25509;&#21475;
+     * cursor
+       &#27599;&#27425; find &#30340;&#26178;&#20505;&#20351;&#29992;&#19968;&#20491;&#26032;&#30340; cursor &#20358;&#20570;&#24490;&#29872;
+     * border
+       insert &#26371;&#25844;&#22823; border
+       find &#20197; border &#29234;&#37002;&#30028;
+     &#21478;&#22806; &#36996;&#26377;&#19968;&#20491;&#20840;&#23616;&#35722;&#37327;
+     * offset
+       &#29992;&#20197;&#35336;&#31639; offset-in-local-jo
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   size$local_variable_table = <span class="constant">100</span> * <span class="constant">1024</span>
@@ -6590,12 +6598,12 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">test,allocate-local-memory</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">test,allocate-local-memory</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- address, address &gt;&gt;</span>
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-title">test</span>,allocate-local-memory
 
    <span class="cicada-nymph-comment">&lt;&lt;
@@ -6603,7 +6611,7 @@
    40218529
    &gt;&gt;</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">test,allocate-local-memory,2</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">test,allocate-local-memory,2</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- address, address &gt;&gt;</span>
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
      <span class="cicada-nymph-title">test</span>,allocate-local-memory
@@ -6611,7 +6619,7 @@
      <span class="cicada-nymph-title">test</span>,allocate-local-memory
      <span class="cicada-nymph-number">16</span> <span class="cicada-nymph-allocate">allocate-local-memory</span>
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-title">test</span>,allocate-local-memory,2
 
    <span class="cicada-nymph-comment">&lt;&lt;
@@ -6889,12 +6897,12 @@
    define_variable <span class="string">"*current-free-address,un-initialized-memory*"</span>, V__current_free_address__un_initialized_memory
      <span class="type">xx</span> current_free_address$un_initialized_memory
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,primitive-string-area*</span></span>
-   * the last_primitive_string_in_assembly
-     is just "<span class="bold">*current-free-address,primitive-string-area*</span>"
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,name-string-area*</span></span>
+   * the last_name_string_in_assembly
+     is just "<span class="bold">*current-free-address,name-string-area*</span>"
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*current-free-address,primitive-string-area*"</span>, V__current_free_address__primitive_string_area
-      <span class="type">xx</span> current_free_address$primitive_string_area
+</span>   define_variable <span class="string">"*current-free-address,name-string-area*"</span>, V__current_free_address__name_string_area
+      <span class="type">xx</span> current_free_address$name_string_area
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** last_link</span>
    * this word helps to initialize V__first_jo_in_jotionary
