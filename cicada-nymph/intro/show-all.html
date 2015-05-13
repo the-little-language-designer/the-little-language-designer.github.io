@@ -15,14 +15,19 @@
         /* cicada-nymph-comment-face */
         color: #FF8888;
       }
+      .cicada-nymph-define-function {
+        /* cicada-nymph-define-function-face */
+        color: #ae81ff;
+        font-weight: bold;
+      }
       .cicada-nymph-end {
         /* cicada-nymph-end-face */
         color: #00ffff;
         font-weight: bold;
       }
-      .cicada-nymph-lexicographer {
-        /* cicada-nymph-lexicographer-face */
-        color: #ae81ff;
+      .cicada-nymph-function-to-define {
+        /* cicada-nymph-function-to-define-face */
+        color: #ef5939;
         font-weight: bold;
       }
       .cicada-nymph-number {
@@ -38,11 +43,6 @@
       .cicada-nymph-syntax-key-word {
         /* cicada-nymph-syntax-key-word-face */
         color: #f92672;
-        font-weight: bold;
-      }
-      .cicada-nymph-word-to-define {
-        /* cicada-nymph-word-to-define-face */
-        color: #ef5939;
         font-weight: bold;
       }
       .org-block-begin-line {
@@ -104,8 +104,12 @@
 <span class="org-level-1">* &#28304;&#30908;</span>
   * <span class="org-link"><a href="https://github.com/the-little-language-designer/cicada">&#35351;&#31649;&#22312; github &#19978;&#30340; &#20027;&#35201;&#20195;&#30908;&#24235;</a></span>
   * &#22312;&#32178;&#38913;&#19978;&#28687;&#35261;&#28304;&#20195;&#30908;
-    1. &#21295;&#32232;&#20195;&#30908; : <span class="org-link"><a href="../overview.html">cicada-nymph.org</a></span>
-    2. &#23567;&#34796;&#35486;&#20195;&#30908; : <span class="org-link"><a href="../core/overview.html">core.org</a></span>
+    1. &#21295;&#32232;&#20195;&#30908;
+       <span class="org-link"><a href="../show-all.html">cicada-nymph.org</a></span>
+       <span class="org-link"><a href="../tangled/show-all.html">cicada-nymph.cn</a></span>
+    2. &#23567;&#34796;&#35486;&#20195;&#30908;
+       <span class="org-link"><a href="../core/show-all.html">core.org</a></span>
+       <span class="org-link"><a href="../core/tangled/show-all.html">core.cn</a></span>
 <span class="org-level-1">* &#38988;&#35299;</span>
   * &#21517;&#29234;&#23567;&#34796;&#35486;
     &#26159;&#22240;&#29234;
@@ -177,7 +181,7 @@
 </span><span class="org-level-2">** &#23450;&#32681;&#20989;&#25976;</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
 </span>   <span class="cicada-nymph-comment">&lt;&lt; &#23450;&#32681;&#19968;&#20491;&#20989;&#25976; &#20197;&#35336;&#31639;&#24179;&#26041; &gt;&gt;</span>
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">square</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">square</span>
      <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
      <span class="cicada-nymph-comment">&lt;&lt; &#19978;&#38754;&#30340;&#19968;&#34892;&#35387;&#37323;&#20195;&#34920;
         &#36889;&#20491;&#20989;&#25976;
@@ -185,7 +189,7 @@
         &#20006;&#36820;&#22238;&#19968;&#20491;&#25976;&#21040;&#26855;&#20013; &gt;&gt;</span>
      dup mul
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-comment">&lt;&lt; &#35336;&#31639; 4 &#30340;&#24179;&#26041; &#20006;&#25171;&#21360;&#20986;&#32080;&#26524; &gt;&gt;</span>
    <span class="cicada-nymph-number">4</span> square .
@@ -193,7 +197,7 @@
 </span><span class="org-level-2">** &#36958;&#27512;&#20989;&#25976;</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
 </span>   <span class="cicada-nymph-comment">&lt;&lt; &#23450;&#32681;&#38542;&#20056;&#20989;&#25976; &gt;&gt;</span>
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial</span>
      <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
      dup one? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-end">end</span>
@@ -201,7 +205,7 @@
      dup sub1 factorial
      mul
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-comment">&lt;&lt; &#35336;&#31639; 4 &#30340;&#38542;&#20056; &#20006;&#25171;&#21360;&#20986;&#32080;&#26524; &gt;&gt;</span>
    <span class="cicada-nymph-number">4</span> factorial .
@@ -213,8 +217,12 @@
 <span class="org-level-1">* source code</span>
   * <span class="org-link"><a href="https://github.com/the-little-language-designer/cicada">main repo of cicada language on github</a></span>
   * view the source code on web
-    1. assembly code : <span class="org-link"><a href="../overview.html">cicada-nymph.org</a></span>
-    2. cicada-nymph code : <span class="org-link"><a href="../core/overview.html">core.org</a></span>
+    1. assembly code
+       <span class="org-link"><a href="../show-all.html">cicada-nymph.org</a></span>
+       <span class="org-link"><a href="../tangled/show-all.html">cicada-nymph.cn</a></span>
+    2. cicada-nymph code
+       <span class="org-link"><a href="../core/show-all.html">core.org</a></span>
+       <span class="org-link"><a href="../core/tangled/show-all.html">core.cn</a></span>
 <span class="org-level-1">* to explain the title</span>
   * the name of the language is cicada-nymph
     because it is implemented for teaching purpose at first
@@ -286,7 +294,7 @@
 </span><span class="org-level-2">** function definition</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
 </span>   <span class="cicada-nymph-comment">&lt;&lt; define a function to calculate square &gt;&gt;</span>
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">square</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">square</span>
      <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
      <span class="cicada-nymph-comment">&lt;&lt; the above comment denotes that
         the function defined here will
@@ -294,14 +302,14 @@
         return one number as return value back to the stack &gt;&gt;</span>
      dup mul
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-comment">&lt;&lt; calculate the sum of 3 &amp; 4 and print the result &gt;&gt;</span>
    <span class="cicada-nymph-number">4</span> square .
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** recursive function</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-word-to-define">factorial</span>
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial</span>
      <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
      dup one? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-end">end</span>
@@ -309,7 +317,7 @@
      dup sub1 factorial
      mul
      <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-lexicographer">define-function</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-comment">&lt;&lt; calculate the factorial of 4 and print the result &gt;&gt;</span>
    <span class="cicada-nymph-number">4</span> factorial .

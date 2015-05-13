@@ -6,8 +6,12 @@
 * 源碼
   * [[https://github.com/the-little-language-designer/cicada][託管在 github 上的 主要代碼庫]]
   * 在網頁上瀏覽源代碼
-    1. 匯編代碼 : [[../overview.html][cicada-nymph.org]]
-    2. 小蟬語代碼 : [[../core/overview.html][core.org]]
+    1. 匯編代碼
+       [[../show-all.html][cicada-nymph.org]]
+       [[../tangled/show-all.html][cicada-nymph.cn]]
+    2. 小蟬語代碼
+       [[../core/show-all.html][core.org]]
+       [[../core/tangled/show-all.html][core.cn]]
 * 題解
   * 名爲小蟬語
     是因爲
@@ -115,8 +119,12 @@
 * source code
   * [[https://github.com/the-little-language-designer/cicada][main repo of cicada language on github]]
   * view the source code on web
-    1. assembly code : [[../overview.html][cicada-nymph.org]]
-    2. cicada-nymph code : [[../core/overview.html][core.org]]
+    1. assembly code
+       [[../show-all.html][cicada-nymph.org]]
+       [[../tangled/show-all.html][cicada-nymph.cn]]
+    2. cicada-nymph code
+       [[../core/show-all.html][core.org]]
+       [[../core/tangled/show-all.html][core.cn]]
 * to explain the title
   * the name of the language is cicada-nymph
     because it is implemented for teaching purpose at first
