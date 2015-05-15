@@ -244,13 +244,13 @@
   <body>
     {% include before-pre.html %}
 <pre>
-<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#35486; / cicada-nymph
+<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796; / cicada-nymph
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
 <span class="org-level-2">** optimize local-variable by new instruction </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>...
-<span class="org-level-2">** change the interface of </span><span class="org-level-2"><span class="bold">*name-string-area*</span></span><span class="org-level-2"> </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
+<span class="org-level-2">** change the interface of </span><span class="org-level-2"><span class="bold">*string-area*</span></span><span class="org-level-2"> </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
 <span class="org-level-2">** notation</span>...
@@ -260,7 +260,6 @@
 <span class="org-level-2">** convention in cicada-nymph code</span>...
 <span class="org-level-2">** syntax of cicada-nymph</span>...
 <span class="org-level-2">** unique id</span>...
-<span class="org-level-2">** different from the re-designed cicada-language</span>...
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>
 <span class="org-level-2">** memory                             </span><span class="org-level-2"><span class="org-tag">:limit:</span></span>...
 <span class="org-level-2">** reading-stack                      </span><span class="org-level-2"><span class="org-tag">:limit:</span></span>...
@@ -313,7 +312,7 @@
 </span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>...
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* link</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* name_string_area</span>
+</span><span class="org-level-1">* string_area</span>
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** make_name_string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* function-jo</span>
@@ -353,10 +352,10 @@
 </span><span class="org-level-2">** jo-&gt;pre-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** jo-&gt;type</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* name-string-area</span>
+<span class="org-level-1">* string-area</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> interface</span>...
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*name-string-area*</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** address-&gt;name-string</span>...<span class="org-block-end-line">
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*string-area*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** address-&gt;string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* type of jo</span>
 <span class="org-level-2">** primitive-function-jo?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** function-jo?</span>...<span class="org-block-end-line">
@@ -502,7 +501,7 @@
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** empty-string?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-equal?</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** string-[head|tail],char</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** string-[head|tail],byte</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-&gt;buffer!</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-reverse!                    </span><span class="org-level-2"><span class="org-tag">:64bit:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** string-reverse!                    </span><span class="org-level-2"><span class="org-tag">:32bit:</span></span>...<span class="org-block-end-line">
@@ -551,11 +550,11 @@
 </span><span class="org-level-2">** colon &amp; semicolon</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** ignore-comment</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* jo-area</span>
+</span><span class="org-level-1">* jojo-area</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** memory allocation</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** save-into,name-string-area</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** save-into,jo-area</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** save-into,string-area</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** save-into,jojo-area</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* syntax-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span>...
 <span class="org-level-2">** memory allocate</span>...<span class="org-block-end-line">
@@ -667,7 +666,7 @@
 <span class="org-level-2">** constant</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** platform</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*un-initialized-memory*</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,name-string-area*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,string-area*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** last_link</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** un_initialized_memory              </span><span class="org-level-2"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* ===================================</span>

@@ -194,12 +194,17 @@
   <body>
     {% include before-pre.html %}
 <pre>
-<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#35486;&#26680; / core of cicada-nymph
+<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#26680; / core of cicada-nymph
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
+<span class="org-level-1">* let functions about (poi) to use predicate [as I promised]</span>...
+<span class="org-level-1">* (poi,help)</span>
+<span class="org-level-1">* better design of the command-line-interface</span>
+<span class="org-level-1">* un-named function</span>...
+<span class="org-level-1">* better syntax for low-level structure [C structure]</span>
+<span class="org-level-1">* loading-stack</span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** better design of the command-line-interface</span>
 <span class="org-level-2">** little-tester [&#26044;&#21629;&#20196;&#34892;&#24037;&#20855;&#36996;&#26377; load &#30456;&#32080;&#21512;] </span><span class="org-level-2"><span class="org-tag">:needed:</span></span>
 <span class="org-level-2">** design a way to remove magic numbers [not variable, but file by file like erlang ?]</span>
 <span class="org-level-2">** need more lib functions about string processing and better factoring for string processing</span>
@@ -210,26 +215,37 @@
 <span class="org-level-1">* </span><span class="org-todo">note</span>
 <span class="org-level-2">** &#27880;&#24847; &#30446;&#21069;&#20760;&#37327;&#21482;&#23531; &#23601;&#23526;&#29694; cicada-language &#32780;&#35328;&#26377;&#29992;&#30340;&#20989;&#25976;[&#29305;&#24615;]</span>...
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>
-<span class="org-level-2">** &#22312; name-string-area &#20013;&#20989;&#25976;&#30340;&#22995;&#21517;&#22312;&#34987;&#21152;&#36617;&#21040; name-hash-table &#26178; &#34987;&#37325;&#26032;&#35079;&#35069;&#20102;&#19968;&#36941;</span>
+<span class="org-level-2">** &#22312; string-area &#20013;&#20989;&#25976;&#30340;&#22995;&#21517;&#22312;&#34987;&#21152;&#36617;&#21040; name-hash-table &#26178; &#34987;&#37325;&#26032;&#35079;&#35069;&#20102;&#19968;&#36941;</span>
 <span class="org-level-2">** only one error-code-&gt;string is not enough</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* writers</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> name of writers</span>...
 <span class="org-level-2">** .l .i .b</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : if &amp; else &amp; then</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#26781;&#20214;&#36681;&#36339;</span>...
 <span class="org-level-2">** word:[if|else|then]?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** syntax,[if|else|then],make-jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> if &amp; else &amp; then</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** more,rule-set,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> if &amp; else &amp; then [by factorial]</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : prepare-for &amp; exception-reset-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#30064;&#24120;&#34389;&#29702;</span>...
 <span class="org-level-2">** word:prepare-for?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** syntax,prepare-for,make-jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** word:exception-reset-stack?</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** syntax,exception-reset-stack,make-jojo</span>...<span class="org-block-end-line">
-</span><span class="org-level-2">** more,rule-set,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : save-to</span>
+<span class="org-level-2">** word:save-to?</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** syntax,save-to,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : loop</span>
+<span class="org-level-2">** word:loop?</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** syntax,loop,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : recur</span>
+<span class="org-level-2">** word:recur?</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** syntax,recur,make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> recur [by factorial]</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* more,rule-set,make-jojo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* allocate</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
@@ -347,6 +363,10 @@
 <span class="org-level-2">** syntax,address,basic-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** add-rule to </span><span class="org-level-2"><span class="bold">*rule-set,basic-REPL*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : save-to</span>
+<span class="org-level-2">** syntax,save-to,basic-REPL</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** add-rule to </span><span class="org-level-2"><span class="bold">*rule-set,basic-REPL*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* stack-REPL</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>...
 <span class="org-level-2">** print-argument-stack</span>...<span class="org-block-end-line">
@@ -367,6 +387,7 @@
 <span class="org-level-2">** eval-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* define-variable</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> string allocation</span>...
 <span class="org-level-2">** syntax,double-quote,define-variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** define-variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
@@ -470,9 +491,12 @@
 </span><span class="org-level-2">** syntax,path:,basic-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** add-rule to </span><span class="org-level-2"><span class="bold">*rule-set,basic-REPL*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** </span><span class="org-done">test</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> load &amp; need</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>...
-<span class="org-level-1">* -----------------------------------</span>
+</span><span class="org-level-1">* load &amp; need</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> usage</span>...
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> loading-stack</span>...
+<span class="org-level-2">** load</span>...<span class="org-block-end-line">
+</span><span class="org-level-2">** need</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* report</span>
 <span class="org-level-2">** report-memory</span>...<span class="org-block-end-line">
 </span><span class="org-level-2">** report-platform</span>...<span class="org-block-end-line">

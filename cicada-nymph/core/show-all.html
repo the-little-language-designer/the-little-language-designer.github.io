@@ -194,12 +194,45 @@
   <body>
     {% include before-pre.html %}
 <pre>
-<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#35486;&#26680; / core of cicada-nymph
+<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#26680; / core of cicada-nymph
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
+<span class="org-level-1">* let functions about (poi) to use predicate [as I promised]</span>
+  * thus better info can be printed in the command-line-interface
+<span class="org-level-1">* (poi,help)</span>
+<span class="org-level-1">* better design of the command-line-interface</span>
+<span class="org-level-1">* un-named function</span>
+  * &#25105;&#30332;&#29694;&#25105;&#24050;&#32147;&#21487;&#20197;&#20351;&#29992; map &#20102;
+    &#29234;&#20102;&#23526;&#29694; un-named function
+    &#26377;&#19968;&#19979;&#20841;&#31278;&#26041;&#27861;
+    1. &#21435;&#23526;&#29694; GC
+       &#21516;&#26178; &#36996;&#33021;&#20572;&#27490;&#20351;&#29992; <span class="bold">*circular-string-area*</span>
+       * &#35201;&#30693;&#36947;&#19981;&#35542;&#22914;&#20309; &#29234;&#20102;&#23526;&#29694; cicada-language GC &#37117;&#26159;&#38656;&#35201;&#30340;
+         &#32780;
+         &#23601;&#20687; &#29694;&#22312; <span class="bold">*name-hash-table*</span>
+         &#34987; cicada-language &#21644; cicada-nymph &#20849;&#29992;&#19968;&#27171;
+         GC &#20063;&#26159;&#21487;&#20197;&#34987;&#20849;&#29992;&#30340;
+       * &#20294;&#26159;&#36889;&#20854;&#23526;&#26159;&#19981;&#21487;&#33021;&#30340;
+         &#22240;&#29234; cicada-nymph &#26159;&#27794;&#26377;&#25976;&#25818;&#39006;&#22411;&#30340;
+    2. &#20351;&#29992; <span class="bold">*circular-jojo-area*</span>
+       &#35201;&#30693;&#36947;&#29694;&#22312;&#30340;&#25928;&#26524;&#26159;
+       string &#22312; REPL &#20013;&#20986;&#29694;&#26178; &#23601;&#29992; <span class="bold">*circular-string-area*</span>
+       string &#22312; make-jojo &#20013;&#20986;&#29694;&#26178; &#23601;&#29992; <span class="bold">*string-area*</span>
+       &#36889;&#31278;&#35373;&#35336;&#23565;&#26044;&#20989;&#25976;&#21487;&#33021;&#20063;&#21516;&#27171;&#36969;&#29992;
+  * &#25105;&#20351;&#29992;&#31532;&#20108;&#31278;&#26041;&#24335;&#20358;&#23526;&#29694;&#25105;&#38656;&#35201;&#30340;&#24615;&#29376;
+    &#36889;&#27171;&#25105;&#23601;&#33021;&#22312; cicada-nymph &#20013;&#23526;&#39511; joy &#20013;&#30340;&#32068;&#21512;&#37007;&#36655;&#35486;&#32681;&#20102;
+  * &#38364;&#26044;&#20855;&#39636;&#23526;&#29694;&#26377;&#20197;&#19979;&#21839;&#38988;&#38656;&#35201;&#27880;&#24847;
+    &#21363;
+    &#23616;&#37096;&#35722;&#37327;&#19968;&#23450;&#35201;&#33021;&#22816;&#22312; &#21311;&#21517;&#30340; jojo &#20013;&#34987;&#20351;&#29992;
+  * (loop) &#21644; (recur) &#20063;&#35201;&#33021;&#22816;&#22312; &#21311;&#21517;&#30340; jojo &#20013;&#34987;&#20351;&#29992;
+  * cicada-language &#36996;&#26159;&#24517;&#35201;&#30340;&#22043; ?
+    cicada-nymph &#23601;&#36275;&#22816;&#20102; ?
+    &#38656;&#35201;&#22238;&#39015;&#19968;&#19979; cicada-language &#30340;&#31558;&#35352;
+    &#35519;&#21644;&#19968;&#19979;&#20841;&#20491;&#35486;&#32681;&#30340;&#24046;&#30064;
+<span class="org-level-1">* better syntax for low-level structure [C structure]</span>
+<span class="org-level-1">* loading-stack</span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
-<span class="org-level-2">** better design of the command-line-interface</span>
 <span class="org-level-2">** little-tester [&#26044;&#21629;&#20196;&#34892;&#24037;&#20855;&#36996;&#26377; load &#30456;&#32080;&#21512;] </span><span class="org-level-2"><span class="org-tag">:needed:</span></span>
 <span class="org-level-2">** design a way to remove magic numbers [not variable, but file by file like erlang ?]</span>
 <span class="org-level-2">** need more lib functions about string processing and better factoring for string processing</span>
@@ -219,7 +252,7 @@
      2. &#31777;&#21934;&#30340;&#23559;&#20195;&#30908;&#27169;&#22602;&#21270;&#30340;&#31995;&#32113;
      3. GC &#21644; hash-table &#30340;&#23526;&#39511;
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>
-<span class="org-level-2">** &#22312; name-string-area &#20013;&#20989;&#25976;&#30340;&#22995;&#21517;&#22312;&#34987;&#21152;&#36617;&#21040; name-hash-table &#26178; &#34987;&#37325;&#26032;&#35079;&#35069;&#20102;&#19968;&#36941;</span>
+<span class="org-level-2">** &#22312; string-area &#20013;&#20989;&#25976;&#30340;&#22995;&#21517;&#22312;&#34987;&#21152;&#36617;&#21040; name-hash-table &#26178; &#34987;&#37325;&#26032;&#35079;&#35069;&#20102;&#19968;&#36941;</span>
 <span class="org-level-2">** only one error-code-&gt;string is not enough</span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* writers</span>
@@ -251,6 +284,16 @@
      write-byte
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** </span><span class="org-done">test</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">kkk</span>
+     <span class="cicada-nymph-string">"kkk took my baby away !"</span> .s
+     .l
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+
+   kkk
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : if &amp; else &amp; then</span>
@@ -286,9 +329,9 @@
         address, string[address, length] &gt;&gt;</span>
      drop2
      <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">instruction</span>,false?branch
-       <span class="cicada-nymph-title">save-into</span>,jo-area
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span> xx|swap|x
-     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span> xx|swap|x
+     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
@@ -297,12 +340,12 @@
         address, string[address, length] &gt;&gt;</span>
      drop2
      <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">instruction</span>,branch
-        <span class="cicada-nymph-title">save-into</span>,jo-area
+        <span class="cicada-nymph-title">save-into</span>,jojo-area
      x|swap|xx
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span> xxx|swap|x
-     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span> xxx|swap|x
+     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-comment">&lt;&lt; address, string[address, length], address &gt;&gt;</span>
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      over sub <span class="cicada-nymph-variable">*jo-size*</span> div
      swap save
      <span class="cicada-nymph-end">end</span>
@@ -313,7 +356,7 @@
         string[address, length] &gt;&gt;</span>
      drop2
      x|swap|xx
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      over sub <span class="cicada-nymph-variable">*jo-size*</span> div
      swap save
      <span class="cicada-nymph-end">end</span>
@@ -321,15 +364,39 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> if &amp; else &amp; then</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">kkk</span>
-     <span class="cicada-nymph-string">"kkk took my baby away !"</span> .s
-     .l
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">.12</span>
+     <span class="cicada-nymph-comment">&lt;&lt; 1 2 -- &gt;&gt;</span>
+     <span class="cicada-nymph-number">2</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-string">"(^-^)"</span> .s
+       <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+         <span class="cicada-nymph-string">"\^o^/"</span> .s
+       <span class="cicada-nymph-syntax-key-word">else</span>
+         <span class="cicada-nymph-string">"     "</span> .s
+       <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       <span class="cicada-nymph-string">"     "</span> .s
+       <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
+         <span class="cicada-nymph-string">"\^o^/"</span> .s
+       <span class="cicada-nymph-syntax-key-word">else</span>
+         <span class="cicada-nymph-string">"     "</span> .s
+       <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
-   kkk
-
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial</span>
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">.12,test</span>
+     .l
+     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> .12 .l
+     <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">2</span> .12 .l
+     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">6</span> .12 .l
+     <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">6</span> .12 .l
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+   <span class="cicada-nymph-title">.12</span>,test
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> if &amp; else &amp; then [by factorial]</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial</span>
      <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
      dup
      one? <span class="cicada-nymph-syntax-key-word">if</span>
@@ -364,51 +431,7 @@
      <span class="cicada-nymph-number">20</span> factorial . .l
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
-
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">.12</span>
-     <span class="cicada-nymph-comment">&lt;&lt; 1 2 -- &gt;&gt;</span>
-     <span class="cicada-nymph-number">2</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-string">"(^-^)"</span> .s
-       <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-         <span class="cicada-nymph-string">"\^o^/"</span> .s
-       <span class="cicada-nymph-syntax-key-word">else</span>
-         <span class="cicada-nymph-string">"     "</span> .s
-       <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-syntax-key-word">else</span>
-       <span class="cicada-nymph-string">"     "</span> .s
-       <span class="cicada-nymph-number">1</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-         <span class="cicada-nymph-string">"\^o^/"</span> .s
-       <span class="cicada-nymph-syntax-key-word">else</span>
-         <span class="cicada-nymph-string">"     "</span> .s
-       <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
-
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">.12,test</span>
-     .l
-     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> .12 .l
-     <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">2</span> .12 .l
-     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">6</span> .12 .l
-     <span class="cicada-nymph-number">6</span> <span class="cicada-nymph-number">6</span> .12 .l
-     <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
-
-
    <span class="cicada-nymph-title">factorial</span>,test
-   <span class="cicada-nymph-title">.12</span>,test
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** more,rule-set,make-jojo</span>
-<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">more,rule-set,make-jojo</span>
-     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-     <span class="cicada-nymph-syntax-key-word">jo</span> word:if?   <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,if,make-jojo    <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
-     <span class="cicada-nymph-syntax-key-word">jo</span> word:else? <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,else,make-jojo  <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
-     <span class="cicada-nymph-syntax-key-word">jo</span> word:then? <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,then,make-jojo  <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
-     <span class="cicada-nymph-end">end</span>
-   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
-
-   <span class="cicada-nymph-title">more</span>,rule-set,make-jojo
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : prepare-for &amp; exception-reset-stack</span>
 <span class="org-level-2">** </span><span class="org-todo">&#35352;</span><span class="org-level-2"> &#30064;&#24120;&#34389;&#29702;</span>
@@ -432,9 +455,9 @@
         string[address, length] &gt;&gt;</span>
      drop2
      <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">instruction</span>,prepare-for
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">instruction</span>,exception-head
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -453,28 +476,147 @@
         string[address, length] &gt;&gt;</span>
      drop2
      <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">instruction</span>,exception-reset-stack
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      current-defining-word <span class="cicada-nymph-title">find-jo</span>,through-jo-link
      drop
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** more,rule-set,make-jojo</span>
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : save-to</span>
+<span class="org-level-2">** word:save-to?</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
-</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">more,rule-set,make-jojo</span>
-     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-     <span class="cicada-nymph-syntax-key-word">jo</span> word:prepare-for?
-     <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,prepare-for,make-jojo
-     <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
-     <span class="cicada-nymph-syntax-key-word">jo</span> word:exception-reset-stack?
-     <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,exception-reset-stack,make-jojo
-     <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">word:save-to?</span>
+     <span class="cicada-nymph-comment">&lt;&lt; word[address, length] -- bool &gt;&gt;</span>
+     <span class="cicada-nymph-string">"save-to"</span> string-equal?
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** syntax,save-to,make-jojo</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,save-to,make-jojo</span>
+     <span class="cicada-nymph-comment">&lt;&lt; string[address, length], word:save-to --
+        string[address, length] &gt;&gt;</span>
+     <span class="cicada-nymph-comment">&lt;&lt;
+     note that
+     the following call to (syntax,address,make-jojo)
+     will drop word:save-to
+     &gt;&gt;</span>
+     <span class="cicada-nymph-title">syntax</span>,address,make-jojo
+     <span class="cicada-nymph-syntax-key-word">jo</span> save
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : loop</span>
+<span class="org-level-2">** word:loop?</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">word:loop?</span>
+     <span class="cicada-nymph-comment">&lt;&lt; word[address, length] -- bool &gt;&gt;</span>
+     <span class="cicada-nymph-string">"loop"</span> string-equal?
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** syntax,loop,make-jojo</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,loop,make-jojo</span>
+     <span class="cicada-nymph-comment">&lt;&lt; string[address, length], word:loop --
+        string[address, length] &gt;&gt;</span>
+     drop2
+     <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-end">&lt;&gt;</span>
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
+     current-defining-word <span class="cicada-nymph-title">find-jo</span>,through-jo-link
+     drop
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : recur</span>
+<span class="org-level-2">** word:recur?</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">word:recur?</span>
+     <span class="cicada-nymph-comment">&lt;&lt; word[address, length] -- bool &gt;&gt;</span>
+     <span class="cicada-nymph-string">"recur"</span> string-equal?
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** syntax,recur,make-jojo</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,recur,make-jojo</span>
+     <span class="cicada-nymph-comment">&lt;&lt; string[address, length], word:recur --
+        string[address, length] &gt;&gt;</span>
+     drop2
+     current-defining-word <span class="cicada-nymph-title">find-jo</span>,through-jo-link
+     drop
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> recur [by factorial]</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial</span>
+     <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
+     dup
+     one? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     dup sub1 <span class="cicada-nymph-syntax-key-word">recur</span> mul
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
-   <span class="cicada-nymph-title">more</span>,rule-set,make-jojo
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial,test</span>
+     .l
+     <span class="cicada-nymph-number">1</span> factorial . .l
+     <span class="cicada-nymph-number">2</span> factorial . .l
+     <span class="cicada-nymph-number">3</span> factorial . .l
+     <span class="cicada-nymph-number">4</span> factorial . .l
+     <span class="cicada-nymph-number">5</span> factorial . .l
+     <span class="cicada-nymph-number">6</span> factorial . .l
+     <span class="cicada-nymph-number">7</span> factorial . .l
+     <span class="cicada-nymph-number">8</span> factorial . .l
+     <span class="cicada-nymph-number">9</span> factorial . .l
+     <span class="cicada-nymph-number">10</span> factorial . .l
+     <span class="cicada-nymph-number">11</span> factorial . .l
+     <span class="cicada-nymph-number">12</span> factorial . .l
+     <span class="cicada-nymph-number">13</span> factorial . .l
+     <span class="cicada-nymph-number">14</span> factorial . .l
+     <span class="cicada-nymph-number">15</span> factorial . .l
+     <span class="cicada-nymph-number">16</span> factorial . .l
+     <span class="cicada-nymph-number">17</span> factorial . .l
+     <span class="cicada-nymph-number">18</span> factorial . .l
+     <span class="cicada-nymph-number">19</span> factorial . .l
+     <span class="cicada-nymph-number">20</span> factorial . .l
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+
+   <span class="cicada-nymph-title">factorial</span>,test
 <span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* more,rule-set,make-jojo</span>
+<span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
+</span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">more,rule-set,make-jojo</span>
+    <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:if?   <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,if,make-jojo    <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:else? <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,else,make-jojo  <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:then? <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,then,make-jojo  <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:prepare-for?
+    <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,prepare-for,make-jojo
+    <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:exception-reset-stack?
+    <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,exception-reset-stack,make-jojo
+    <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:save-to?
+    <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,save-to,make-jojo
+    <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:loop?  <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,loop,make-jojo  <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+    <span class="cicada-nymph-syntax-key-word">jo</span> word:recur? <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,recur,make-jojo <span class="cicada-nymph-variable">*rule-set,make-jojo*</span> add-rule
+    <span class="cicada-nymph-end">end</span>
+  <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+
+  <span class="cicada-nymph-title">more</span>,rule-set,make-jojo
+<span class="org-block-end-line">  #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* allocate</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
@@ -492,7 +634,7 @@
      <span class="cicada-nymph-number">0</span> over save
      add1 swap
      sub1 swap
-     <span class="cicada-nymph-end">&lt;&gt;</span> clear-memory
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** allocate-memory</span>
@@ -608,7 +750,7 @@
      <span class="cicada-nymph-comment">&lt;&lt; name -- string[address, length] &gt;&gt;</span>
      name-&gt;address
      fetch
-     address-&gt;name-string
+     address-&gt;string
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -654,17 +796,17 @@
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** name,save-string</span>
    * note that
-     name-string-area is used
+     string-area is used
    * currently (name,save-string) is to
-     copy string into name-string-area
+     copy string into string-area
      maybe a better interface should be designed for this
      for some strings are already staticly allocated
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name,save-string</span>
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length], name -- &gt;&gt;</span>
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span>
      xx|swap|xx
-     <span class="cicada-nymph-title">save-into</span>,name-string-area
+     <span class="cicada-nymph-title">save-into</span>,string-area
      swap
      name-&gt;address
      save
@@ -758,13 +900,13 @@
        drop <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-comment">&lt;&lt; re-start from 0 &gt;&gt;</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      xx|over|x
-     <span class="cicada-nymph-title">string-head</span>,char over
+     <span class="cicada-nymph-title">string-head</span>,byte over
      <span class="cicada-nymph-number">2</span> swap power
      mul
      x|swap|xxxx add xxx|swap|x
      add1 xx|swap|x
-     <span class="cicada-nymph-title">string-tail</span>,char x|swap|xx
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">string-&gt;finite-carry-sum</span>,loop
+     <span class="cicada-nymph-title">string-tail</span>,byte x|swap|xx
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">string-&gt;finite-carry-sum</span>
@@ -802,7 +944,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-fetch-local-variable-2">::string</span>
      <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-fetch-local-variable-1">:counter</span> add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,search,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,search</span>
@@ -848,7 +990,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-fetch-local-variable-2">::string</span>
      <span class="cicada-nymph-fetch-local-variable-1">:number</span> <span class="cicada-nymph-fetch-local-variable-1">:counter</span> add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,insert,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,insert</span>
@@ -912,7 +1054,8 @@
      <span class="cicada-nymph-syntax-key-word">else</span>
        drop
      <span class="cicada-nymph-syntax-key-word">then</span>
-     add1 <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,report,orbit
+     add1
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,report,loop</span>
@@ -935,7 +1078,8 @@
        dup <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-title">name-hash-table</span>,report,orbit
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     add1 <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">name-hash-table</span>,report,loop
+     add1
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">name-hash-table,report</span>
@@ -996,11 +1140,11 @@
         string[address, length] &gt;&gt;</span>
      drop2
      <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">instruction</span>,literal
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      dup2
      <span class="cicada-nymph-title">string-head</span>,word
      string-&gt;name
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-title">string-tail</span>,word
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
@@ -1077,7 +1221,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      dup2 find-jo <span class="cicada-nymph-syntax-key-word">if</span>
        xx|swap|x drop2
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-string">"* (make-jojo) meets undefined word : "</span> .s .s .l
@@ -1097,7 +1241,7 @@
      xx|swap|xx
      <span class="cicada-nymph-title">string-head</span>,word
      <span class="cicada-nymph-title">make-jojo</span>,dispatch-syntax-word
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">make-jojo</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">make-jojo</span>
@@ -1132,7 +1276,7 @@
            <span class="cicada-nymph-end">end</span>
          <span class="cicada-nymph-syntax-key-word">then</span>
          jo-&gt;pre-jo
-         <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">init</span>,name-hash-table,nymph-jo,loop
+         <span class="cicada-nymph-end">loop</span>
        <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-syntax-key-word">else</span>
        drop
@@ -1145,7 +1289,7 @@
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      jo-&gt;pre-jo
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">init</span>,name-hash-table,nymph-jo,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">init,name-hash-table,nymph-jo</span>
@@ -1160,26 +1304,26 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">define-variable,with-tos</span>
      <span class="cicada-nymph-comment">&lt;&lt; variable, string[address, length] -- &gt;&gt;</span>
-     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span>
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      dup2 <span class="cicada-nymph-title">string-head</span>,word
-       <span class="cicada-nymph-title">save-into</span>,name-string-area
+       <span class="cicada-nymph-title">save-into</span>,string-area
 
      <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
      jo-&gt;link
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      dup <span class="cicada-nymph-title">jo</span>,save-into,name-hash-table
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span> save
+     <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
 
      <span class="cicada-nymph-variable">*explainer,variable*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
      drop2
-     <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -1187,34 +1331,34 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">define-exception</span>
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length] -- &gt;&gt;</span>
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span> xx|swap|x
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span> xx|swap|x
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span> xx|swap|x
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span> xx|swap|x
      <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span> xx|swap|x
-     <span class="cicada-nymph-comment">&lt;&lt; *current-free-address,name-string-area*
-        *current-free-address,jo-area*
+     <span class="cicada-nymph-comment">&lt;&lt; *current-free-address,string-area*
+        *current-free-address,jojo-area*
         *first-jo-in-jotionary*
         string[address, length] &gt;&gt;</span>
      prepare-for
        <span class="cicada-nymph-exception">!undo-make-jojo</span>
        <span class="cicada-nymph-end">end</span>
 
-     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-number">0</span> <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span>
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      dup2 <span class="cicada-nymph-title">string-head</span>,word
-       <span class="cicada-nymph-title">save-into</span>,name-string-area
+       <span class="cicada-nymph-title">save-into</span>,string-area
 
      <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
      jo-&gt;link
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      dup <span class="cicada-nymph-title">jo</span>,save-into,name-hash-table
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span> save
+     <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
 
      <span class="cicada-nymph-variable">*explainer,exception*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
      dup2
      <span class="cicada-nymph-title">string-tail</span>,word
@@ -1231,32 +1375,32 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">define-function</span>
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length] -- &gt;&gt;</span>
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span> xx|swap|x
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span> xx|swap|x
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span> xx|swap|x
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span> xx|swap|x
      <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span> xx|swap|x
-     <span class="cicada-nymph-comment">&lt;&lt; *current-free-address,name-string-area*
-        *current-free-address,jo-area*
+     <span class="cicada-nymph-comment">&lt;&lt; *current-free-address,string-area*
+        *current-free-address,jojo-area*
         *first-jo-in-jotionary*
         string[address, length] &gt;&gt;</span>
      prepare-for
        <span class="cicada-nymph-exception">!undo-make-jojo</span>
        <span class="cicada-nymph-end">end</span>
 
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span>
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      dup2 <span class="cicada-nymph-title">string-head</span>,word
-       <span class="cicada-nymph-title">save-into</span>,name-string-area
+       <span class="cicada-nymph-title">save-into</span>,string-area
 
      <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
      jo-&gt;link
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      dup <span class="cicada-nymph-title">jo</span>,save-into,name-hash-table
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span> save
+     <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
 
      <span class="cicada-nymph-variable">*explainer,function*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
      dup2
      <span class="cicada-nymph-title">string-tail</span>,word
@@ -1344,7 +1488,7 @@
        <span class="cicada-nymph-fetch-local-variable-1">:length</span> sub1
        <span class="cicada-nymph-fetch-local-variable-1">:char</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">remove-char!</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">remove-char!</span>
@@ -1361,11 +1505,11 @@
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">test,remove-char!</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
      <span class="cicada-nymph-string">"2#1001_1001"</span>
-     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,byte
      remove-char! .s <span class="cicada-nymph-comment">&lt;&lt; 2#1001_1001 &gt;&gt;</span>
      .l
      <span class="cicada-nymph-string">"___2#1001___1001___"</span>
-     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,byte
      remove-char! .s <span class="cicada-nymph-comment">&lt;&lt; 2#1001_1001 &gt;&gt;</span>
      .l
      <span class="cicada-nymph-end">end</span>
@@ -1376,16 +1520,16 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">latin-char?</span>
      <span class="cicada-nymph-comment">&lt;&lt; char -- bool &gt;&gt;</span>
-     dup <span class="cicada-nymph-string">"A"</span> <span class="cicada-nymph-title">string-head</span>,char less-than? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
+     dup <span class="cicada-nymph-string">"A"</span> <span class="cicada-nymph-title">string-head</span>,byte less-than? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
        drop <span class="cicada-nymph-bool">false</span>
        <span class="cicada-nymph-end">end</span>
-     dup <span class="cicada-nymph-string">"Z"</span> <span class="cicada-nymph-title">string-head</span>,char less-or-equal? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
+     dup <span class="cicada-nymph-string">"Z"</span> <span class="cicada-nymph-title">string-head</span>,byte less-or-equal? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
        drop <span class="cicada-nymph-bool">true</span>
        <span class="cicada-nymph-end">end</span>
-     dup <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,char less-than? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
+     dup <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,byte less-than? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
        drop <span class="cicada-nymph-bool">false</span>
        <span class="cicada-nymph-end">end</span>
-     dup <span class="cicada-nymph-string">"z"</span> <span class="cicada-nymph-title">string-head</span>,char less-or-equal? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
+     dup <span class="cicada-nymph-string">"z"</span> <span class="cicada-nymph-title">string-head</span>,byte less-or-equal? <span class="cicada-nymph-syntax-key-word">false?branch</span> <span class="cicada-nymph-number">4</span>
        drop <span class="cicada-nymph-bool">true</span>
        <span class="cicada-nymph-end">end</span>
      drop <span class="cicada-nymph-bool">false</span>
@@ -1396,26 +1540,26 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">latin-char-&gt;number</span>
      <span class="cicada-nymph-comment">&lt;&lt; latin-char -- number &gt;&gt;</span>
-     dup <span class="cicada-nymph-string">"A"</span> <span class="cicada-nymph-title">string-head</span>,char less-than? <span class="cicada-nymph-syntax-key-word">if</span>
+     dup <span class="cicada-nymph-string">"A"</span> <span class="cicada-nymph-title">string-head</span>,byte less-than? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-string">"* (latin-char-&gt;number) the argument must be a latin-char"</span> .s .l
        <span class="cicada-nymph-string">"  but the following char is less-than 'A' : "</span> .s
        .i .l
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-string">"Z"</span> <span class="cicada-nymph-title">string-head</span>,char less-or-equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-string">"A"</span> <span class="cicada-nymph-title">string-head</span>,char
+     dup <span class="cicada-nymph-string">"Z"</span> <span class="cicada-nymph-title">string-head</span>,byte less-or-equal? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-string">"A"</span> <span class="cicada-nymph-title">string-head</span>,byte
        sub
        <span class="cicada-nymph-number">10</span> add
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,char less-than? <span class="cicada-nymph-syntax-key-word">if</span>
+     dup <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,byte less-than? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-string">"* (latin-char-&gt;number) the argument must be a latin-char"</span> .s .l
        <span class="cicada-nymph-string">"  but the following char is less-than 'a' but greater-then 'Z' : "</span> .s
        .i .l
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     dup <span class="cicada-nymph-string">"z"</span> <span class="cicada-nymph-title">string-head</span>,char less-or-equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,char
+     dup <span class="cicada-nymph-string">"z"</span> <span class="cicada-nymph-title">string-head</span>,byte less-or-equal? <span class="cicada-nymph-syntax-key-word">if</span>
+       <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,byte
        sub
        <span class="cicada-nymph-number">10</span> add
        <span class="cicada-nymph-end">end</span>
@@ -1431,7 +1575,7 @@
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">number-&gt;latin-char</span>
      <span class="cicada-nymph-comment">&lt;&lt; number -- latin-char &gt;&gt;</span>
      <span class="cicada-nymph-number">10</span> sub
-     <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"a"</span> <span class="cicada-nymph-title">string-head</span>,byte
      add
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
@@ -1448,8 +1592,8 @@
      dup digit-char?
      swap latin-char?
      or <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-title">string-tail</span>,char
-       <span class="cicada-nymph-end">&lt;&gt;</span> wild-digit-string?
+       <span class="cicada-nymph-title">string-tail</span>,byte
+       <span class="cicada-nymph-end">loop</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      drop2
      <span class="cicada-nymph-bool">false</span>
@@ -1464,10 +1608,10 @@
        drop2 <span class="cicada-nymph-bool">false</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     dup2 <span class="cicada-nymph-title">string-head</span>,char
-     <span class="cicada-nymph-string">"-"</span> <span class="cicada-nymph-title">string-head</span>,char
+     dup2 <span class="cicada-nymph-title">string-head</span>,byte
+     <span class="cicada-nymph-string">"-"</span> <span class="cicada-nymph-title">string-head</span>,byte
      equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-title">string-tail</span>,char
+       <span class="cicada-nymph-title">string-tail</span>,byte
        wild-digit-string?
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
@@ -1508,14 +1652,14 @@
      <span class="cicada-nymph-fetch-local-variable-1">:string-address</span>
      string-&gt;buffer!
      <span class="cicada-nymph-fetch-local-variable-1">:string-address</span> swap
-     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,byte
      remove-char!
      <span class="cicada-nymph-save-local-variable-1">&gt;:new-string-length</span>
      <span class="cicada-nymph-save-local-variable-1">&gt;:new-string-address</span>
      <span class="cicada-nymph-comment">&lt;&lt; dup2 .s .l 0 end &gt;&gt;</span>
      <span class="cicada-nymph-fetch-local-variable-1">:new-string-address</span>
      <span class="cicada-nymph-fetch-local-variable-1">:new-string-length</span>
-     <span class="cicada-nymph-string">"#"</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"#"</span> <span class="cicada-nymph-title">string-head</span>,byte
      <span class="cicada-nymph-title">string</span>,find-char <span class="cicada-nymph-syntax-key-word">if</span>
      <span class="cicada-nymph-syntax-key-word">else</span>
        <span class="cicada-nymph-bool">false</span>
@@ -1573,7 +1717,7 @@
      <span class="cicada-nymph-save-local-variable-1">&gt;:address</span>
      <span class="cicada-nymph-fetch-local-variable-1">:address</span>
      <span class="cicada-nymph-fetch-local-variable-1">:length</span>
-     <span class="cicada-nymph-string">"#"</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"#"</span> <span class="cicada-nymph-title">string-head</span>,byte
      <span class="cicada-nymph-title">string</span>,find-char <span class="cicada-nymph-syntax-key-word">if</span>
      <span class="cicada-nymph-syntax-key-word">else</span>
        <span class="cicada-nymph-string">"* (base#wild-integer-string-&gt;base-string)"</span> .s .l
@@ -1599,7 +1743,7 @@
      <span class="cicada-nymph-save-local-variable-1">&gt;:address</span>
      <span class="cicada-nymph-fetch-local-variable-1">:address</span>
      <span class="cicada-nymph-fetch-local-variable-1">:length</span>
-     <span class="cicada-nymph-string">"#"</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"#"</span> <span class="cicada-nymph-title">string-head</span>,byte
      <span class="cicada-nymph-title">string</span>,find-char <span class="cicada-nymph-syntax-key-word">if</span>
      <span class="cicada-nymph-syntax-key-word">else</span>
        <span class="cicada-nymph-string">"* (base#wild-integer-string-&gt;wild-integer-string)"</span> .s .l
@@ -1673,7 +1817,7 @@
      <span class="cicada-nymph-fetch-local-variable-1">:base</span>
      <span class="cicada-nymph-fetch-local-variable-1">:sum</span>
      <span class="cicada-nymph-fetch-local-variable-1">:counter</span> add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">wild-integer-string-&gt;integer</span>,with-base,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">wild-integer-string-&gt;integer,with-base</span>
@@ -1684,10 +1828,10 @@
        <span class="cicada-nymph-number">0</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     dup2 <span class="cicada-nymph-title">string-head</span>,char
-     <span class="cicada-nymph-string">"-"</span> <span class="cicada-nymph-title">string-head</span>,char
+     dup2 <span class="cicada-nymph-title">string-head</span>,byte
+     <span class="cicada-nymph-string">"-"</span> <span class="cicada-nymph-title">string-head</span>,byte
      equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-title">string-tail</span>,char
+       <span class="cicada-nymph-title">string-tail</span>,byte
        <span class="cicada-nymph-number">-1</span> <span class="cicada-nymph-save-local-variable-1">&gt;:sign</span>
      <span class="cicada-nymph-syntax-key-word">else</span>
        <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-save-local-variable-1">&gt;:sign</span>
@@ -1711,7 +1855,7 @@
      tuck <span class="cicada-nymph-fetch-local-variable-1">:address</span> string-&gt;buffer!
        <span class="cicada-nymph-save-local-variable-1">&gt;:length</span>
      <span class="cicada-nymph-fetch-local-variable-1">:address</span> <span class="cicada-nymph-fetch-local-variable-1">:length</span>
-     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,char remove-char!
+     <span class="cicada-nymph-string">"_"</span> <span class="cicada-nymph-title">string-head</span>,byte remove-char!
        <span class="cicada-nymph-save-local-variable-2">&gt;::string</span>
      <span class="cicada-nymph-fetch-local-variable-2">::string</span>
      base#wild-integer-string-&gt;base-string
@@ -1817,7 +1961,7 @@
      <span class="cicada-nymph-fetch-local-variable-1">:div</span>
      <span class="cicada-nymph-fetch-local-variable-1">:base</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">.#</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">.#</span>
@@ -1945,7 +2089,7 @@
      <span class="cicada-nymph-fetch-local-variable-1">:gamber</span>
      <span class="cicada-nymph-fetch-local-variable-1">:number</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> sub1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">gamber-&gt;number</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">gamber-&gt;number</span>
@@ -2010,9 +2154,9 @@
      <span class="cicada-nymph-comment">&lt;&lt; string[address, length], word[address, length] --
         string[address, length] &gt;&gt;</span>
      <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">instruction</span>,literal
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      base#wild-integer-string-&gt;integer
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -2124,7 +2268,7 @@
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">execute-word</span>
      <span class="cicada-nymph-comment">&lt;&lt; word[address, length] -- unknown &gt;&gt;</span>
      dup2
-     <span class="cicada-nymph-title">find-jo</span>,through-jo-link <span class="cicada-nymph-syntax-key-word">if</span>
+     find-jo <span class="cicada-nymph-syntax-key-word">if</span>
        dup exception-jo? <span class="cicada-nymph-syntax-key-word">if</span>
          drop
          <span class="cicada-nymph-string">"* (execute-word) can not execute exception directly : "</span> .s
@@ -2177,7 +2321,7 @@
      <span class="cicada-nymph-syntax-key-word">else</span>
        execute-word
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">basic-REPL</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">basic-REPL</span>
@@ -2272,8 +2416,7 @@
      drop2
      read-word-for-REPL
      <span class="cicada-nymph-save-local-variable-2">&gt;::word</span>
-     <span class="cicada-nymph-comment">&lt;&lt; ::word find-jo if &gt;&gt;</span>
-     <span class="cicada-nymph-fetch-local-variable-2">::word</span> <span class="cicada-nymph-title">find-jo</span>,through-jo-link <span class="cicada-nymph-syntax-key-word">if</span>
+     <span class="cicada-nymph-fetch-local-variable-2">::word</span> find-jo <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-string">"* (syntax,jo,basic-REPL) meet undefined word after jo : "</span> .s <span class="cicada-nymph-fetch-local-variable-2">::word</span> .s .l
@@ -2315,7 +2458,7 @@
      <span class="cicada-nymph-string">"then"</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">syntax</span>,if,basic-REPL,meet-true,else
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,if,basic-REPL,meet-true</span>
@@ -2335,7 +2478,7 @@
      <span class="cicada-nymph-syntax-key-word">else</span>
        execute-word
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">syntax</span>,if,basic-REPL,meet-true
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** syntax,if,basic-REPL,meet-false</span>
@@ -2352,7 +2495,7 @@
      <span class="cicada-nymph-syntax-key-word">else</span>
        execute-word
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">syntax</span>,if,basic-REPL,meet-false,else
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,if,basic-REPL,meet-false</span>
@@ -2368,7 +2511,7 @@
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      drop2
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">syntax</span>,if,basic-REPL,meet-false
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** syntax,if,basic-REPL</span>
@@ -2402,7 +2545,7 @@
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : double-quote</span>
 <span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*circular-string-area*</span></span>
    * no length in the area anymore
-     [not like the name-string-area]
+     [not like the string-area]
    * and ending each string here with a 0
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-number">1024</span> <span class="cicada-nymph-number">1024</span> mul
@@ -2426,8 +2569,7 @@
      <span class="cicada-nymph-variable">*circular-string-area,size*</span> <span class="cicada-nymph-variable">*circular-string-area*</span> add
      greater-or-equal? <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-variable">*circular-string-area*</span>
-       <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*current-free-address,circular-string-area*</span>
-       save
+       <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*current-free-address,circular-string-area*</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      tuck
      <span class="cicada-nymph-variable">*current-free-address,circular-string-area*</span>
@@ -2453,7 +2595,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      over save-byte
      add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">syntax</span>,double-quote,basic-REPL,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,double-quote,basic-REPL</span>
@@ -2500,8 +2642,7 @@
      drop2
      read-word-for-REPL
      <span class="cicada-nymph-save-local-variable-2">&gt;::word</span>
-     <span class="cicada-nymph-comment">&lt;&lt; ::word find-jo if &gt;&gt;</span>
-     <span class="cicada-nymph-fetch-local-variable-2">::word</span> <span class="cicada-nymph-title">find-jo</span>,through-jo-link <span class="cicada-nymph-syntax-key-word">if</span>
+     <span class="cicada-nymph-fetch-local-variable-2">::word</span> find-jo <span class="cicada-nymph-syntax-key-word">if</span>
      <span class="cicada-nymph-syntax-key-word">else</span>
        <span class="cicada-nymph-string">"* (syntax,address,basic-REPL) meet undefined word : "</span> .s <span class="cicada-nymph-fetch-local-variable-2">::word</span> .s .l
        <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*syntax,address,basic-REPL,stack-balancer*</span>
@@ -2532,6 +2673,46 @@
 
    <span class="cicada-nymph-syntax-key-word">address</span> kkk
 <span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : save-to</span>
+<span class="org-level-2">** syntax,save-to,basic-REPL</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,save-to,basic-REPL</span>
+     <span class="cicada-nymph-comment">&lt;&lt; value, word:address -- address &gt;&gt;</span>
+     drop2
+     read-word-for-REPL
+     <span class="cicada-nymph-save-local-variable-2">&gt;::word</span>
+     <span class="cicada-nymph-fetch-local-variable-2">::word</span> find-jo <span class="cicada-nymph-syntax-key-word">if</span>
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       <span class="cicada-nymph-string">"* (syntax,save-to,basic-REPL) meet undefined word : "</span> .s <span class="cicada-nymph-fetch-local-variable-2">::word</span> .s .l
+       <span class="cicada-nymph-string">"  the value "</span> .s .i <span class="cicada-nymph-string">" is saved to no where"</span> .s .l
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-save-local-variable-1">&gt;:jo</span>
+     <span class="cicada-nymph-fetch-local-variable-1">:jo</span> variable-jo? <span class="cicada-nymph-syntax-key-word">if</span>
+     <span class="cicada-nymph-syntax-key-word">else</span>
+       <span class="cicada-nymph-string">"* (syntax,save-to,basic-REPL) meet a not variable-jo : "</span> .s <span class="cicada-nymph-fetch-local-variable-2">::word</span> .s .l
+       <span class="cicada-nymph-string">"  the value "</span> .s .i <span class="cicada-nymph-string">" is saved to no where"</span> .s .l
+       <span class="cicada-nymph-end">end</span>
+     <span class="cicada-nymph-syntax-key-word">then</span>
+     <span class="cicada-nymph-fetch-local-variable-1">:jo</span> <span class="cicada-nymph-variable">*jo-size*</span> add
+     save
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** add-rule to </span><span class="org-level-2"><span class="bold">*rule-set,basic-REPL*</span></span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
+</span>   <span class="cicada-nymph-syntax-key-word">jo</span> word:save-to?
+   <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-title">syntax</span>,save-to,basic-REPL
+   <span class="cicada-nymph-variable">*rule-set,basic-REPL*</span> add-rule
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** </span><span class="org-done">test</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph
+</span>   <span class="cicada-nymph-number">666</span>
+   <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*syntax,address,basic-REPL,stack-balancer*</span>
+   <span class="cicada-nymph-variable">*syntax,address,basic-REPL,stack-balancer*</span>
+
+   <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-syntax-key-word">save-to</span> kkk
+<span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* stack-REPL</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * print argument-stack in every loop
@@ -2547,7 +2728,7 @@
        dup fetch .
      <span class="cicada-nymph-variable">*jo-size*</span> add
      swap
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">print-argument-stack</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">print-argument-stack</span>
@@ -2602,7 +2783,7 @@
        execute-word
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-title">print-argument-stack</span>,pretty
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">stack-REPL</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">stack-REPL</span>
@@ -2618,9 +2799,7 @@
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*lost-exception-REPL*</span></span>
 <span class="org-level-2">** reset </span><span class="org-level-2"><span class="bold">*lost-exception-REPL*</span></span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
-</span>   <span class="cicada-nymph-syntax-key-word">jo</span> stack-REPL
-   <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*lost-exception-REPL*</span>
-   save
+</span>   <span class="cicada-nymph-syntax-key-word">jo</span> stack-REPL <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*lost-exception-REPL*</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph
@@ -2676,7 +2855,7 @@
        <span class="cicada-nymph-string">"    "</span> .s jo-&gt;name .s .l
        <span class="cicada-nymph-variable">*jo-size*</span> sub <span class="cicada-nymph-variable">*jo-size*</span> sub
      swap
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">list-rule</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">list-rule</span>
@@ -2717,7 +2896,7 @@
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-title">sub-rule</span>,move-one
      <span class="cicada-nymph-fetch-local-variable-1">:rule-set</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">2</span> mul add
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">sub-rule</span>,move
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">sub-rule,loop</span>
@@ -2736,7 +2915,7 @@
      <span class="cicada-nymph-fetch-local-variable-2">::rule</span>
      <span class="cicada-nymph-fetch-local-variable-1">:rule-set</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">2</span> mul sub
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">sub-rule</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">sub-rule</span>
@@ -2788,7 +2967,7 @@
      <span class="cicada-nymph-syntax-key-word">else</span>
        execute-word
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">eval-string</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">eval-string</span>
@@ -2806,6 +2985,11 @@
    <span class="cicada-nymph-string">": k 1 2 3 add add . end ; define-function k"</span> eval-string
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* define-variable</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> string allocation</span>
+   * string should be allocated to a static area
+     instead of dynamic area like <span class="bold">*circular-string-area*</span>
+     thus we have
+     (syntax,double-quote,define-variable)
 <span class="org-level-2">** syntax,double-quote,define-variable</span>
    * in ASCII encode double-quote is 34
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
@@ -2818,7 +3002,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      over save-byte
      add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">syntax</span>,double-quote,define-variable,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,double-quote,define-variable</span>
@@ -2828,10 +3012,10 @@
      <span class="cicada-nymph-fetch-local-variable-1">:buffer</span>
      <span class="cicada-nymph-title">syntax</span>,double-quote,define-variable,loop
      <span class="cicada-nymph-save-local-variable-1">&gt;:cursor</span>
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span> add2 <span class="cicada-nymph-save-local-variable-1">&gt;:address</span>
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span> add2 <span class="cicada-nymph-save-local-variable-1">&gt;:address</span>
      <span class="cicada-nymph-fetch-local-variable-1">:buffer</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-fetch-local-variable-1">:buffer</span> sub dup <span class="cicada-nymph-save-local-variable-1">&gt;:length</span>
-     <span class="cicada-nymph-title">save-into</span>,name-string-area
+     <span class="cicada-nymph-title">save-into</span>,string-area
      <span class="cicada-nymph-fetch-local-variable-1">:address</span>
      <span class="cicada-nymph-fetch-local-variable-1">:length</span>
      <span class="cicada-nymph-end">end</span>
@@ -2878,30 +3062,30 @@
      <span class="cicada-nymph-variable">*jo-size*</span> div <span class="cicada-nymph-save-local-variable-1">&gt;:variable-length</span>
 
      <span class="cicada-nymph-fetch-local-variable-1">:variable-length</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+     <span class="cicada-nymph-variable">*current-free-address,string-area*</span>
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
      <span class="cicada-nymph-fetch-local-variable-2">::variable-name</span>
-       <span class="cicada-nymph-title">save-into</span>,name-string-area
+       <span class="cicada-nymph-title">save-into</span>,string-area
 
      <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
      jo-&gt;link
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      dup <span class="cicada-nymph-title">jo</span>,save-into,name-hash-table
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span> save
+     <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*first-jo-in-jotionary*</span>
 
      <span class="cicada-nymph-variable">*explainer,variable*</span>
-       <span class="cicada-nymph-title">save-into</span>,jo-area
+       <span class="cicada-nymph-title">save-into</span>,jojo-area
 
-     <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      <span class="cicada-nymph-fetch-local-variable-1">:variable-length</span>
      n-save
 
      <span class="cicada-nymph-fetch-local-variable-1">:variable-length</span> <span class="cicada-nymph-variable">*jo-size*</span> mul
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
+     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
      add-save
 
      <span class="cicada-nymph-end">end</span>
@@ -3046,7 +3230,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      dup x|over|xxx execute-jo false? <span class="cicada-nymph-syntax-key-word">if</span>
        jo-&gt;pre-jo
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">jotionary</span>,list-by-jo-predicate,loop
+       <span class="cicada-nymph-end">loop</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      swap
        <span class="cicada-nymph-string">"  "</span> .s
@@ -3060,7 +3244,7 @@
        .s .l
      <span class="cicada-nymph-syntax-key-word">then</span>
      jo-&gt;pre-jo
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">jotionary</span>,list-by-jo-predicate,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">jotionary,list-by-jo-predicate</span>
@@ -3127,14 +3311,14 @@
        <span class="cicada-nymph-fetch-local-variable-1">:buffer</span>
        <span class="cicada-nymph-fetch-local-variable-1">:n</span> sub1
        <span class="cicada-nymph-fetch-local-variable-1">:cursor</span>
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">n-string-&gt;buffer!</span>,loop
+       <span class="cicada-nymph-end">loop</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      dup2 add sub1 fetch-byte <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> save-byte
      sub1
      <span class="cicada-nymph-fetch-local-variable-1">:buffer</span>
      <span class="cicada-nymph-fetch-local-variable-1">:n</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">n-string-&gt;buffer!</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">n-string-&gt;buffer!</span>
@@ -3697,21 +3881,21 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">init,getdents64</span>
      <span class="cicada-nymph-comment">&lt;&lt; offset -- &gt;&gt;</span>
      <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">4</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_ino+</span>       save <span class="cicada-nymph-number">8</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_off+</span>       save <span class="cicada-nymph-number">8</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_reclen+</span>    save <span class="cicada-nymph-number">2</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_type+</span>      save <span class="cicada-nymph-number">1</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_name+</span>      save <span class="cicada-nymph-number">256</span> add
-           <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,end+</span>           save
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_ino+</span>        <span class="cicada-nymph-number">8</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_off+</span>        <span class="cicada-nymph-number">8</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_reclen+</span>     <span class="cicada-nymph-number">2</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_type+</span>       <span class="cicada-nymph-number">1</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_name+</span>       <span class="cicada-nymph-number">256</span> add
+           <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,end+</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">8</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_ino+</span>       save <span class="cicada-nymph-number">8</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_off+</span>       save <span class="cicada-nymph-number">8</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_reclen+</span>    save <span class="cicada-nymph-number">2</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_type+</span>      save <span class="cicada-nymph-number">1</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,d_name+</span>      save <span class="cicada-nymph-number">256</span> add
-           <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+getdents64,end+</span>           save
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_ino+</span>        <span class="cicada-nymph-number">8</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_off+</span>        <span class="cicada-nymph-number">8</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_reclen+</span>     <span class="cicada-nymph-number">2</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_type+</span>       <span class="cicada-nymph-number">1</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,d_name+</span>       <span class="cicada-nymph-number">256</span> add
+           <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+getdents64,end+</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-end">end</span>
@@ -3750,7 +3934,7 @@
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-title">init</span>,getdents64
      <span class="cicada-nymph-title">test</span>,getdents64,print
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-constant">+getdents64,d_reclen+</span> fetch-two-bytes add
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">test</span>,getdents64,loop,structure
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">test,getdents64,loop</span>
@@ -3775,7 +3959,7 @@
      <span class="cicada-nymph-fetch-local-variable-1">:getdents64-structure-list</span>
      <span class="cicada-nymph-title">test</span>,getdents64,loop,structure
      <span class="cicada-nymph-fetch-local-variable-1">:port</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">test</span>,getdents64,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">test,getdents64</span>
@@ -3855,7 +4039,7 @@
      <span class="cicada-nymph-fetch-local-variable-1">:end</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-constant">+getdents64,d_reclen+</span> fetch-two-bytes add
      <span class="cicada-nymph-fetch-local-variable-1">:function</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">directory</span>,map,loop,execute
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">directory,map,loop</span>
@@ -3883,7 +4067,7 @@
      <span class="cicada-nymph-title">directory</span>,map,loop,execute
      <span class="cicada-nymph-fetch-local-variable-1">:port</span>
      <span class="cicada-nymph-fetch-local-variable-1">:function</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">directory</span>,map,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">directory,map</span>
@@ -4134,7 +4318,7 @@
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
      <span class="cicada-nymph-constant">:syscall-number,getpid:</span>
      <span class="cicada-nymph-number">0</span> syscall
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*pid*</span> save
+     <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*pid*</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
@@ -4190,7 +4374,7 @@
        <span class="cicada-nymph-string">"* (init-command-line) fail to read : "</span> .s <span class="cicada-nymph-fetch-local-variable-2">::path</span> .s .l
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*length,command-line*</span> save
+     <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*length,command-line*</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
@@ -4247,7 +4431,7 @@
        <span class="cicada-nymph-string">"* (init-environment-variable-list) fail to read : "</span> .s <span class="cicada-nymph-fetch-local-variable-2">::path</span> .s .l
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*length,environment-variable-list*</span> save
+     <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-variable">*length,environment-variable-list*</span>
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
@@ -4281,14 +4465,14 @@
      compare-buffer not <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-fetch-local-variable-1">:address</span> <span class="cicada-nymph-fetch-local-variable-1">:length</span>
        <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-number">0</span> cursor-&gt;next-matching-byte add1
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">find-environment-variable</span>,loop
+       <span class="cicada-nymph-end">loop</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-fetch-local-variable-1">:length</span> add fetch-byte
-     <span class="cicada-nymph-string">"="</span> <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-string">"="</span> <span class="cicada-nymph-title">string-head</span>,byte
      equal? not <span class="cicada-nymph-syntax-key-word">if</span>
        <span class="cicada-nymph-fetch-local-variable-1">:address</span> <span class="cicada-nymph-fetch-local-variable-1">:length</span>
        <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-number">0</span> cursor-&gt;next-matching-byte add1
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">find-environment-variable</span>,loop
+       <span class="cicada-nymph-end">loop</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-fetch-local-variable-1">:length</span> add add1 <span class="cicada-nymph-comment">&lt;&lt; over "=" &gt;&gt;</span>
      <span class="cicada-nymph-save-local-variable-1">&gt;:find-address</span>
@@ -4340,7 +4524,7 @@
 
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span>
      <span class="cicada-nymph-fetch-local-variable-1">:length</span> <span class="cicada-nymph-fetch-local-variable-1">:length-of-one-variable</span> sub
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">report-environment-variable</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">report-environment-variable</span>
@@ -4360,7 +4544,7 @@
      <span class="cicada-nymph-syntax-key-word">then</span>
      dup2 <span class="cicada-nymph-title">string-head</span>,word .s <span class="cicada-nymph-number">32</span> .b
      <span class="cicada-nymph-title">string-tail</span>,word
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">report-command-line</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">report-command-line</span>
@@ -4454,53 +4638,53 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">init,stat</span>
      <span class="cicada-nymph-comment">&lt;&lt; offset -- &gt;&gt;</span>
      <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">4</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_dev+</span>        save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_ino+</span>        save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_mode+</span>       save <span class="cicada-nymph-number">2</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_nlink+</span>      save <span class="cicada-nymph-number">2</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_uid+</span>        save <span class="cicada-nymph-number">2</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_gid+</span>        save <span class="cicada-nymph-number">2</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_rdev+</span>       save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_size+</span>       save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_blksize+</span>    save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_blocks+</span>     save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_atime+</span>      save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_atime_nsec+</span> save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_mtime+</span>      save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_mtime_nsec+</span> save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_ctime+</span>      save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_ctime_nsec+</span> save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,__unused4+</span>     save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,__unused5+</span>     save <span class="cicada-nymph-variable">*jo-size*</span> add
-           <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,end+</span>           save
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_dev+</span>         <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_ino+</span>         <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_mode+</span>        <span class="cicada-nymph-number">2</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_nlink+</span>       <span class="cicada-nymph-number">2</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_uid+</span>         <span class="cicada-nymph-number">2</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_gid+</span>         <span class="cicada-nymph-number">2</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_rdev+</span>        <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_size+</span>        <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_blksize+</span>     <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_blocks+</span>      <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_atime+</span>       <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_atime_nsec+</span>  <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_mtime+</span>       <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_mtime_nsec+</span>  <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_ctime+</span>       <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_ctime_nsec+</span>  <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,__unused4+</span>      <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,__unused5+</span>      <span class="cicada-nymph-variable">*jo-size*</span> add
+           <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,end+</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-variable">*jo-size*</span> <span class="cicada-nymph-number">8</span> equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_dev+</span>        save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_ino+</span>        save <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_dev+</span>         <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_ino+</span>         <span class="cicada-nymph-variable">*jo-size*</span> add
        <span class="cicada-nymph-comment">&lt;&lt;
        note the following order changing
        this is linux' bad
        &gt;&gt;</span>
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_nlink+</span>      save <span class="cicada-nymph-number">8</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_mode+</span>       save <span class="cicada-nymph-number">4</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_nlink+</span>       <span class="cicada-nymph-number">8</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_mode+</span>        <span class="cicada-nymph-number">4</span> add
 
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_uid+</span>        save <span class="cicada-nymph-number">4</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_gid+</span>        save <span class="cicada-nymph-number">4</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_uid+</span>         <span class="cicada-nymph-number">4</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_gid+</span>         <span class="cicada-nymph-number">4</span> add
                                              <span class="cicada-nymph-number">4</span> add <span class="cicada-nymph-comment">&lt;&lt; padding &gt;&gt;</span>
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_rdev+</span>       save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_size+</span>       save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_blksize+</span>    save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_blocks+</span>     save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_atime+</span>      save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_atime_nsec+</span> save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_mtime+</span>      save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_mtime_nsec+</span> save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_ctime+</span>      save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,st_ctime_nsec+</span> save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,__unused4+</span>     save <span class="cicada-nymph-variable">*jo-size*</span> add
-       dup <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,__unused5+</span>     save <span class="cicada-nymph-variable">*jo-size*</span> add
-           <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-constant">+stat,end+</span>           save
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_rdev+</span>        <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_size+</span>        <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_blksize+</span>     <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_blocks+</span>      <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_atime+</span>       <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_atime_nsec+</span>  <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_mtime+</span>       <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_mtime_nsec+</span>  <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_ctime+</span>       <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,st_ctime_nsec+</span>  <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,__unused4+</span>      <span class="cicada-nymph-variable">*jo-size*</span> add
+       dup <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,__unused5+</span>      <span class="cicada-nymph-variable">*jo-size*</span> add
+           <span class="cicada-nymph-syntax-key-word">save-to</span> <span class="cicada-nymph-constant">+stat,end+</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-end">end</span>
@@ -4713,7 +4897,7 @@
        <span class="cicada-nymph-bool">false</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-title">string-head</span>,byte
      <span class="cicada-nymph-number">47</span> equal? not
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
@@ -4728,7 +4912,7 @@
        <span class="cicada-nymph-bool">false</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-     <span class="cicada-nymph-title">string-head</span>,char
+     <span class="cicada-nymph-title">string-head</span>,byte
      <span class="cicada-nymph-number">47</span> equal?
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
@@ -4954,13 +5138,13 @@
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      over fetch-byte
-     <span class="cicada-nymph-string">"+"</span> <span class="cicada-nymph-title">string-head</span>,char equal? not <span class="cicada-nymph-syntax-key-word">if</span>
+     <span class="cicada-nymph-string">"+"</span> <span class="cicada-nymph-title">string-head</span>,byte equal? not <span class="cicada-nymph-syntax-key-word">if</span>
        drop2
        <span class="cicada-nymph-bool">false</span>
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      add sub1 fetch-byte
-     <span class="cicada-nymph-string">"+"</span> <span class="cicada-nymph-title">string-head</span>,char equal?
+     <span class="cicada-nymph-string">"+"</span> <span class="cicada-nymph-title">string-head</span>,byte equal?
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
@@ -5054,7 +5238,7 @@
        <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      .s <span class="cicada-nymph-number">32</span> .b
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">bad-path-syntax-word</span>,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-exception">!bad-path-syntax-word</span>
@@ -5118,11 +5302,11 @@
 
      <span class="cicada-nymph-fetch-local-variable-1">:cursor</span> <span class="cicada-nymph-fetch-local-variable-1">:length</span> add
        dup
-       <span class="cicada-nymph-string">"/"</span> <span class="cicada-nymph-title">string-head</span>,char
+       <span class="cicada-nymph-string">"/"</span> <span class="cicada-nymph-title">string-head</span>,byte
        swap
        save-byte
      add1
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">syntax</span>,path:,basic-REPL,loop
+     <span class="cicada-nymph-end">loop</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">syntax,path:,basic-REPL</span>
@@ -5171,14 +5355,29 @@
    <span class="cicada-nymph-string">"library"</span> <span class="cicada-nymph-title">poi</span>,sub
    <span class="cicada-nymph-wody">path:</span> <span class="cicada-nymph-constant">+library+</span> hi.cn <span class="cicada-nymph-sentence-reader">;</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> load &amp; need</span>
-<span class="org-level-2">** </span><span class="org-todo">note</span>
+</span><span class="org-level-1">* load &amp; need</span>
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> usage</span>
    * no library code will be auto loaded
      you need to configure path by (poi)
-     then
-     load the code you want by using path-syntax
-   * load-file should maintain a list of loaded files
-<span class="org-level-1">* -----------------------------------</span>
+     then load the code you want by using path-syntax
+<span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> loading-stack</span>
+   * by a loading-stack
+     (load) is able to maintain a list of loaded files
+     also be able to un-load code by the loading-order
+<span class="org-level-2">** load</span>
+<span class="org-block-begin-line">   #+begin_src cicada-nymph
+</span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">load</span>
+     <span class="cicada-nymph-comment">&lt;&lt; path[address, length] -- &gt;&gt;</span>
+
+     <span class="cicada-nymph-end">end</span>
+   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-2">** need</span>
+   * (need) is as (load-when-not-loaded)
+<span class="org-block-begin-line">   #+begin_src cicada-nymph
+</span>
+<span class="org-block-end-line">   #+end_src
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* report</span>
 <span class="org-level-2">** report-memory</span>
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
@@ -5197,30 +5396,30 @@
           <span class="cicada-nymph-variable">*current-free-address,un-initialized-memory*</span>
           <span class="cicada-nymph-variable">*un-initialized-memory*</span>
           sub sub . .l
-     <span class="cicada-nymph-string">"* *name-string-area*"</span> .s .l
+     <span class="cicada-nymph-string">"* *string-area*"</span> .s .l
      <span class="cicada-nymph-string">"  * size : "</span> .s
-          <span class="cicada-nymph-variable">*size,name-string-area*</span>
+          <span class="cicada-nymph-variable">*size,string-area*</span>
           . .l
      <span class="cicada-nymph-string">"  * used : "</span> .s
-          <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span>
-          <span class="cicada-nymph-variable">*name-string-area*</span>
+          <span class="cicada-nymph-variable">*current-free-address,string-area*</span>
+          <span class="cicada-nymph-variable">*string-area*</span>
           sub . .l
      <span class="cicada-nymph-string">"  * free : "</span> .s
-          <span class="cicada-nymph-variable">*size,name-string-area*</span>
-          <span class="cicada-nymph-variable">*current-free-address,name-string-area*</span>
-          <span class="cicada-nymph-variable">*name-string-area*</span>
+          <span class="cicada-nymph-variable">*size,string-area*</span>
+          <span class="cicada-nymph-variable">*current-free-address,string-area*</span>
+          <span class="cicada-nymph-variable">*string-area*</span>
           sub sub . .l
-     <span class="cicada-nymph-string">"* *jo-area*"</span> .s .l
+     <span class="cicada-nymph-string">"* *jojo-area*"</span> .s .l
      <span class="cicada-nymph-string">"  * size : "</span> .s
-          <span class="cicada-nymph-variable">*size,jo-area*</span> . .l
+          <span class="cicada-nymph-variable">*size,jojo-area*</span> . .l
      <span class="cicada-nymph-string">"  * used : "</span> .s
-          <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
-          <span class="cicada-nymph-variable">*jo-area*</span>
+          <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
+          <span class="cicada-nymph-variable">*jojo-area*</span>
           sub . .l
      <span class="cicada-nymph-string">"  * free : "</span> .s
-          <span class="cicada-nymph-variable">*size,jo-area*</span>
-          <span class="cicada-nymph-variable">*current-free-address,jo-area*</span>
-          <span class="cicada-nymph-variable">*jo-area*</span>
+          <span class="cicada-nymph-variable">*size,jojo-area*</span>
+          <span class="cicada-nymph-variable">*current-free-address,jojo-area*</span>
+          <span class="cicada-nymph-variable">*jojo-area*</span>
           sub sub . .l
      <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
@@ -5440,7 +5639,8 @@
 <span class="org-block-begin-line">   #+begin_src cicada-nymph :tangle core.cn
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">command-line,no-function</span>
      <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-     <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">command-line</span>,stack-REPL
+     <span class="cicada-nymph-title">command-line</span>,stack-REPL
+     <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** command-line-dispatcher</span>
@@ -5451,27 +5651,33 @@
      <span class="cicada-nymph-title">string-tail</span>,word
      dup2 space-string? <span class="cicada-nymph-syntax-key-word">if</span>
        drop2
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">command-line</span>,no-function
+       <span class="cicada-nymph-title">command-line</span>,no-function
+       <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-title">string-head</span>,word
      <span class="cicada-nymph-save-local-variable-2">&gt;::1st-word</span>
      <span class="cicada-nymph-fetch-local-variable-2">::1st-word</span> <span class="cicada-nymph-string">"basic-REPL"</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">command-line</span>,basic-REPL
+       <span class="cicada-nymph-title">command-line</span>,basic-REPL
+       <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-fetch-local-variable-2">::1st-word</span> <span class="cicada-nymph-string">"stack-REPL"</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">command-line</span>,stack-REPL
+       <span class="cicada-nymph-title">command-line</span>,stack-REPL
+       <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
      <span class="cicada-nymph-fetch-local-variable-2">::1st-word</span> <span class="cicada-nymph-string">"poi"</span> string-equal? <span class="cicada-nymph-syntax-key-word">if</span>
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">command-line</span>,poi
+       <span class="cicada-nymph-title">command-line</span>,poi
+       <span class="cicada-nymph-end">end</span>
      <span class="cicada-nymph-syntax-key-word">then</span>
-       <span class="cicada-nymph-end">&lt;&gt;</span> <span class="cicada-nymph-title">command-line</span>,unknow-function
+     <span class="cicada-nymph-title">command-line</span>,unknow-function
+     <span class="cicada-nymph-end">end</span>
    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the-story-begin*</span></span>
 <span class="org-block-begin-line">  #+begin_src cicada-nymph :tangle core.cn
 </span>  <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">the-story-begin</span>
     <span class="cicada-nymph-comment">&lt;&lt; -- &gt;&gt;</span>
-    <span class="cicada-nymph-end">&lt;&gt;</span> command-line-dispatcher
+    command-line-dispatcher
+    <span class="cicada-nymph-end">end</span>
   <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
 
   the-story-begin

@@ -1,4 +1,4 @@
-#+TITLE:  小蟬語引 / intro-of-cicada-nymph
+#+TITLE:  小蟬引 / intro-of-cicada-nymph
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
@@ -9,11 +9,11 @@
     1. 匯編代碼
        [[../show-all.html][cicada-nymph.org]]
        [[../tangled/show-all.html][cicada-nymph.cn]]
-    2. 小蟬語代碼
+    2. 小蟬代碼
        [[../core/show-all.html][core.org]]
        [[../core/tangled/show-all.html][core.cn]]
 * 題解
-  * 名爲小蟬語
+  * 名爲小蟬
     是因爲
     我起初爲了教學目的而實現這個程序語言
     而其設計來源於 我所設計的
@@ -43,13 +43,13 @@
       * [[../5th-instar/core/overview.html][被加載的核文件]]
       * 編譯器
       * 對文件的加載
-    * [[../overview.html][進行中的小蟬語]]
+    * [[../overview.html][進行中的小蟬]]
       * [[../core/overview.html][被加載的核文件]]
       * 局部變元
       * 另外
         在進行的版本中
         還有對性狀的一些豐富與補充
-        使得 小蟬語 在教學目的之外
+        使得 小蟬 在教學目的之外
         也能勝於其他任務
   * 通過這種方式
     並補充以

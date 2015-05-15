@@ -244,14 +244,14 @@
   <body>
     {% include before-pre.html %}
 <pre>
-<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#35486; / cicada-nymph
+<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796; / cicada-nymph
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>
 <span class="org-level-2">** optimize local-variable by new instruction </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
    * too many literal is too waste of memory
-<span class="org-level-2">** change the interface of </span><span class="org-level-2"><span class="bold">*name-string-area*</span></span><span class="org-level-2"> </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
+<span class="org-level-2">** change the interface of </span><span class="org-level-2"><span class="bold">*string-area*</span></span><span class="org-level-2"> </span><span class="org-level-2"><span class="org-tag">:maybe:</span></span>
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span>
 <span class="org-level-2">** notation</span>
@@ -323,38 +323,6 @@
      thus
      this kind of unique id is not fit
      for some tasks
-<span class="org-level-2">** different from the re-designed cicada-language</span>
-    * simplifications are for teaching purpose only
-    * first and foremost
-      function programming will NOT be supported in this implementation
-    * a helper function must be defined before it is used
-    * no mixfix-notation
-      * function call is "function" instead of "(function)"
-      * no such thing like
-        1 2 (add) = 1 (add 2) = (add 1 2)
-    * no named local argument
-      * thus no inited local argument
-    * no title-name-table
-      * thus in this implementation
-        we only use single name space
-      * thus in this implementation
-        we do NOT have the concept of "context"
-        so
-        the syntax is not as flexible as it will be in cicada-language
-    * no type
-      * no type inference
-      * no dynamic type tag
-      * no static type declaration
-    * global linked-list for naming
-      * not hash-table
-      * by the way
-        in classical forth
-        the linked-list of jo is called jotionary
-    * no dynamic-memory-management
-      * no garbage-collector
-    * about comment
-      * the comment of the argument &amp; return value of function
-        is allowed to be written in free style normal comment
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>
 <span class="org-level-2">** memory                             </span><span class="org-level-2"><span class="org-tag">:limit:</span></span>
    * need to protect the overloading of a variety of memories
@@ -837,19 +805,19 @@
 </span>  <span class="comment">;; initial link to point to 0 (as null)
 </span>  link = <span class="constant">0</span>
 <span class="org-block-end-line">  #+end_src
-</span><span class="org-level-1">* name_string_area</span>
+</span><span class="org-level-1">* string_area</span>
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">address$name_string_area</span>:
+</span>   <span class="function-name">address$string_area</span>:
       <span class="keyword">times</span> <span class="constant">64</span> * <span class="constant">1024</span> <span class="type">db</span> <span class="constant">0</span>
 
    <span class="function-name">address$core_file</span>:
       <span class="keyword">file</span> <span class="string">"core/core.cn"</span>
    <span class="function-name">end$core_file</span>:
 
-   <span class="function-name">end$name_string_area</span>:
+   <span class="function-name">end$string_area</span>:
 
-   current_free_address$name_string_area = address$name_string_area
+   current_free_address$string_area = address$string_area
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** make_name_string</span>
    * 2 bytes for length of name_string
@@ -865,17 +833,17 @@
       <span class="type">dw</span> (.end$string - .start$string)
       <span class="keyword">load</span> .length <span class="type">word</span> <span class="keyword">from</span> (.end$string)
    <span class="keyword">finish</span> <span class="keyword">virtual</span>
-   <span class="keyword">store</span> <span class="type">word</span> .length <span class="keyword">at</span> (current_free_address$name_string_area)
+   <span class="keyword">store</span> <span class="type">word</span> .length <span class="keyword">at</span> (current_free_address$string_area)
 
-   current_free_address$name_string_area = current_free_address$name_string_area + <span class="constant">2</span>
+   current_free_address$string_area = current_free_address$string_area + <span class="constant">2</span>
 
    <span class="keyword">repeat</span> .length
       <span class="keyword">virtual</span> <span class="keyword">at</span> <span class="constant">0</span>
          <span class="type">db</span> string
          <span class="keyword">load</span> .char <span class="type">byte</span> <span class="keyword">from</span> (% - <span class="constant">1</span>)
       <span class="keyword">finish</span> <span class="keyword">virtual</span>
-      <span class="keyword">store</span> <span class="type">byte</span> .char <span class="keyword">at</span> (current_free_address$name_string_area)
-      current_free_address$name_string_area = current_free_address$name_string_area + <span class="constant">1</span>
+      <span class="keyword">store</span> <span class="type">byte</span> .char <span class="keyword">at</span> (current_free_address$string_area)
+      current_free_address$string_area = current_free_address$string_area + <span class="constant">1</span>
    <span class="keyword">finish</span> <span class="keyword">repeat</span>
 
    }
@@ -898,7 +866,7 @@
    define_function__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$name_string_area
+      <span class="type">xx</span> current_free_address$string_area
 
       make_name_string string
 
@@ -941,7 +909,7 @@
    define_primitive_function__#<span class="builtin">jo</span>:
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$name_string_area
+      <span class="type">xx</span> current_free_address$string_area
 
       make_name_string string
 
@@ -978,7 +946,7 @@
       <span class="type">xx</span> <span class="constant">1</span>
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$name_string_area
+      <span class="type">xx</span> current_free_address$string_area
 
       make_name_string string
 
@@ -1067,7 +1035,7 @@
       <span class="type">xx</span> <span class="constant">0</span>
 
    name__#<span class="builtin">jo</span>:
-      <span class="type">xx</span> current_free_address$name_string_area
+      <span class="type">xx</span> current_free_address$string_area
 
       make_name_string string
 
@@ -1349,7 +1317,7 @@
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, subtraction
       <span class="type">xx</span> <span class="keyword">literal</span>, jo_size, subtraction
       <span class="type">xx</span> fetch
-      <span class="type">xx</span> address_to_name_string
+      <span class="type">xx</span> address_to_string
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** jo-&gt;link</span>
@@ -1404,25 +1372,28 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-1">* name-string-area</span>
+<span class="org-level-1">* string-area</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> interface</span>
-   * the interface of name-string-area is not good
+   * the interface of string-area is not good
      one can NOT use n-fetch and n-save
      to fetch and save value from the address
-<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*name-string-area*</span></span>
+<span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*string-area*</span></span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*name-string-area*"</span>, V__name_string_area
-      <span class="type">xx</span> address$name_string_area
+</span>   define_variable <span class="string">"*string-area*"</span>, V__string_area
+      <span class="type">xx</span> address$string_area
 
-   define_variable <span class="string">"*size,name-string-area*"</span>, V__size__name_string_area
-      <span class="type">xx</span> (end$name_string_area - address$name_string_area)
+   define_variable <span class="string">"*size,string-area*"</span>, V__size__string_area
+      <span class="type">xx</span> (end$string_area - address$string_area)
 
-   <span class="comment">;; *current-free-address,name-string-area*
+   <span class="comment">;; *current-free-address,string-area*
 </span>   <span class="comment">;; is at epilog
 </span><span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** address-&gt;name-string</span>
+</span><span class="org-level-2">** address-&gt;string</span>
+   * under the address there is
+     <span class="org-table">| length : 2 bytes |</span>
+     <span class="org-table">| string : n bytes |</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"address-&gt;name-string"</span>, address_to_name_string
+</span>   define_function <span class="string">"address-&gt;string"</span>, address_to_string
       <span class="comment">;; &lt;&lt; address -- string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>, addition  <span class="comment">;; address
@@ -4176,14 +4147,14 @@
       <span class="type">xx</span> false
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** string-[head|tail],char</span>
+</span><span class="org-level-2">** string-[head|tail],byte</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"string-head,char"</span>, string_head__char
+</span>   define_function <span class="string">"string-head,byte"</span>, string_head__byte
       <span class="comment">;; &lt;&lt; string[address, length] -- char &gt;&gt;
 </span>      <span class="type">xx</span> drop, fetch_byte
       <span class="type">xx</span> <span class="keyword">end</span>
 
-   define_function <span class="string">"string-tail,char"</span>, string_tail__char
+   define_function <span class="string">"string-tail,byte"</span>, string_tail__byte
       <span class="comment">;; &lt;&lt; string[address, length] -- [address + 1, length + 1] &gt;&gt;
 </span>      <span class="type">xx</span> sub1, swap
       <span class="type">xx</span> add1
@@ -4268,7 +4239,7 @@
       <span class="type">xx</span>   drop2, drop
       <span class="type">xx</span>   false
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> string_head__char, equal?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
+      <span class="type">xx</span> string_head__byte, equal?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
       <span class="type">xx</span>   true
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> false
@@ -4285,10 +4256,10 @@
       <span class="type">xx</span>   drop2, true
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> dup2
-      <span class="type">xx</span> string_head__char, <span class="keyword">literal</span>, <span class="default">'-'</span>, equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="type">xx</span> string_head__byte, <span class="keyword">literal</span>, <span class="default">'-'</span>, equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop2, false
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> string_tail__char, <span class="keyword">literal</span>, <span class="default">'0'</span>, char_string?
+      <span class="type">xx</span> string_tail__byte, <span class="keyword">literal</span>, <span class="default">'0'</span>, char_string?
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** digit-string?</span>
@@ -4299,7 +4270,7 @@
       <span class="type">xx</span>   drop2, true
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> over, fetch_byte, digit_char?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   string_tail__char
+      <span class="type">xx</span>   string_tail__byte
       <span class="type">xx</span>   <span class="keyword">taca</span>, digit_string?
       <span class="type">xx</span> drop2, false
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -4314,8 +4285,8 @@
       <span class="type">xx</span> dup2, <span class="keyword">literal</span>, <span class="default">'-'</span>, char_string?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop2, false
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, string_head__char, <span class="keyword">literal</span>, <span class="default">'-'</span>, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   string_tail__char
+      <span class="type">xx</span> dup2, string_head__byte, <span class="keyword">literal</span>, <span class="default">'-'</span>, equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="type">xx</span>   string_tail__byte
       <span class="type">xx</span>   digit_string?
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> digit_string?
@@ -4348,7 +4319,7 @@
       <span class="type">xx</span>   drop2
       <span class="type">xx</span>   <span class="keyword">end</span>
 
-      <span class="type">xx</span> dup2, string_head__char, digit_char_to_number
+      <span class="type">xx</span> dup2, string_head__byte, digit_char_to_number
       <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="constant">10</span>
       <span class="type">xx</span>   <span class="keyword">literal</span>, counter$digit_string_to_number, fetch
       <span class="type">xx</span>     one
@@ -4360,17 +4331,17 @@
       <span class="type">xx</span> <span class="keyword">literal</span>, sum$digit_string_to_number
       <span class="type">xx</span> add_save
 
-      <span class="type">xx</span> string_tail__char
+      <span class="type">xx</span> string_tail__byte
       <span class="type">xx</span> <span class="keyword">taca</span>, help__digit_string_to_number
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** string-&gt;integer</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"string-&gt;integer"</span>, string_to_integer
       <span class="comment">;; &lt;&lt; string[address, length] -- integer &gt;&gt;
-</span>      <span class="type">xx</span> dup2, string_head__char, <span class="keyword">literal</span>, <span class="default">'-'</span>, equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
+</span>      <span class="type">xx</span> dup2, string_head__byte, <span class="keyword">literal</span>, <span class="default">'-'</span>, equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
       <span class="type">xx</span>   digit_string_to_number
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> string_tail__char
+      <span class="type">xx</span> string_tail__byte
       <span class="type">xx</span> digit_string_to_number
       <span class="type">xx</span> negate
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -4392,7 +4363,7 @@
      <span class="type">xx</span>   true
      <span class="type">xx</span>   <span class="keyword">end</span>
      <span class="type">xx</span> xxswapx
-     <span class="type">xx</span> string_tail__char
+     <span class="type">xx</span> string_tail__byte
      <span class="type">xx</span> xswapxx
      <span class="type">xx</span> <span class="keyword">taca</span>, string__find_char
 <span class="org-block-end-line">   #+end_src
@@ -4598,8 +4569,8 @@
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop2, true
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, string_head__char, space_char?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   string_tail__char
+      <span class="type">xx</span> dup2, string_head__byte, space_char?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
+      <span class="type">xx</span>   string_tail__byte
       <span class="type">xx</span>   <span class="keyword">taca</span>, space_string?
       <span class="type">xx</span> drop2, false
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -4616,10 +4587,10 @@
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="comment">;;   no error handling
 </span>      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, string_head__char
+      <span class="type">xx</span> dup2, string_head__byte
       <span class="type">xx</span> space_char?, false?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> string_tail__char
+      <span class="type">xx</span> string_tail__byte
       <span class="type">xx</span> <span class="keyword">taca</span>, string_to_word_begin
 
    define_function <span class="string">"string-&gt;word-end"</span>, string_to_word_end
@@ -4627,9 +4598,9 @@
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="comment">;;   no error handling
 </span>      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, string_head__char
+      <span class="type">xx</span> dup2, string_head__byte
       <span class="type">xx</span> bar_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">3</span>
-      <span class="type">xx</span>   string_tail__char
+      <span class="type">xx</span>   string_tail__byte
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> help__string_to_word_end
       <span class="type">xx</span> <span class="keyword">end</span>
@@ -4639,13 +4610,13 @@
 </span>      <span class="type">xx</span> <span class="keyword">dup</span>, zero?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="comment">;;   no error handling
 </span>      <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, string_head__char
+      <span class="type">xx</span> dup2, string_head__byte
       <span class="type">xx</span> space_char?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, string_head__char
+      <span class="type">xx</span> dup2, string_head__byte
       <span class="type">xx</span> bar_ket_char?, <span class="keyword">false?branch</span>, <span class="constant">2</span>
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> string_tail__char
+      <span class="type">xx</span> string_tail__byte
       <span class="type">xx</span> <span class="keyword">taca</span>, help__string_to_word_end
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** string-[head|tail],word</span>
@@ -5013,55 +4984,55 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">kkk</span> <span class="cicada-nymph-comment">&lt;&lt; 989 &lt;&lt; 989 &gt;&gt;</span> &gt;&gt; <span class="cicada-nymph-sentence-reader">;</span> .s
    <span class="cicada-nymph-comment">&lt;&lt; kkk &gt;&gt;</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* jo-area</span>
+</span><span class="org-level-1">* jojo-area</span>
 <span class="org-level-2">** </span><span class="org-todo">note</span>
    * you can see how the naming convention is used
      for functions that create structured data into memory
 <span class="org-level-2">** memory allocation</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   size$jo_area = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
+</span>   size$jojo_area = <span class="constant">1024</span> * <span class="constant">1024</span> * jo_size
 
-   define_variable <span class="string">"*jo-area*"</span>, V__jo_area
-     <span class="type">xx</span> address$jo_area
+   define_variable <span class="string">"*jojo-area*"</span>, V__jojo_area
+     <span class="type">xx</span> address$jojo_area
 
-   define_variable <span class="string">"*size,jo-area*"</span>, V__size__jo_area
-     <span class="type">xx</span> size$jo_area
+   define_variable <span class="string">"*size,jojo-area*"</span>, V__size__jojo_area
+     <span class="type">xx</span> size$jojo_area
 
 
-   address$jo_area <span class="keyword">labeling</span>
-      <span class="type">preserve</span> size$jo_area
+   address$jojo_area <span class="keyword">labeling</span>
+      <span class="type">preserve</span> size$jojo_area
 
-   define_variable <span class="string">"*current-free-address,jo-area*"</span>, V__current_free_address__jo_area
-      <span class="type">xx</span> address$jo_area
+   define_variable <span class="string">"*current-free-address,jojo-area*"</span>, V__current_free_address__jojo_area
+      <span class="type">xx</span> address$jojo_area
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** save-into,name-string-area</span>
+</span><span class="org-level-2">** save-into,string-area</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"save-into,name-string-area"</span>, save_into__name_string_area
+</span>   define_function <span class="string">"save-into,string-area"</span>, save_into__string_area
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">dup</span>, V__current_free_address__name_string_area
+</span>      <span class="type">xx</span> <span class="keyword">dup</span>, V__current_free_address__string_area
       <span class="type">xx</span> save_two_bytes
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">2</span>
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__name_string_area
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__string_area
       <span class="type">xx</span> add_save
 
       <span class="type">xx</span> tuck
-      <span class="type">xx</span> V__current_free_address__name_string_area
+      <span class="type">xx</span> V__current_free_address__string_area
       <span class="type">xx</span> string_to_buffer!
 
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__name_string_area
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__string_area
       <span class="type">xx</span> add_save
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** save-into,jo-area</span>
+</span><span class="org-level-2">** save-into,jojo-area</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"save-into,jo-area"</span>, save_into__jo_area
+</span>   define_function <span class="string">"save-into,jojo-area"</span>, save_into__jojo_area
       <span class="comment">;; &lt;&lt; number -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__jo_area
+</span>      <span class="type">xx</span> V__current_free_address__jojo_area
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, jo_size
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_area
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jojo_area
       <span class="type">xx</span> add_save
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
@@ -5346,9 +5317,9 @@
       <span class="comment">;; &lt;&lt; string[address, length], word[address, length] --
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span> string_to_integer
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -5374,12 +5345,12 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">address</span>
-      <span class="type">xx</span> save_into__jo_area
+      <span class="type">xx</span> save_into__jojo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> find_jo__through_jo_link, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -5424,12 +5395,12 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span> save_into__jo_area
+      <span class="type">xx</span> save_into__jojo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> find_jo__through_jo_link, <span class="keyword">false?branch</span>, <span class="constant">4</span>
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -5474,13 +5445,13 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">branch</span>
-      <span class="type">xx</span> save_into__jo_area
+      <span class="type">xx</span> save_into__jojo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   string_to_integer
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -5525,13 +5496,13 @@
 </span>      <span class="type">xx</span> drop2
 
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">false?branch</span>
-      <span class="type">xx</span> save_into__jo_area
+      <span class="type">xx</span> save_into__jojo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_head__word
       <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   string_to_integer
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span>   string_tail__word
       <span class="type">xx</span>   <span class="keyword">end</span>
 
@@ -5569,7 +5540,7 @@
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** syntax,double-quote,make-jojo</span>
-   * name-string-area is used
+   * string-area is used
      to allocate string literal in function body
    * in ASCII encode double-quote is 34
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
@@ -5586,24 +5557,24 @@
 </span>
       <span class="comment">;; address
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_area
-      <span class="type">xx</span>   V__current_free_address__name_string_area, add2
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
+      <span class="type">xx</span>   V__current_free_address__string_area, add2
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="type">xx</span>   xoverxx, over
-      <span class="type">xx</span>     save_into__name_string_area
+      <span class="type">xx</span>     save_into__string_area
 
       <span class="comment">;; length
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="type">xx</span>   <span class="keyword">dup</span>
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
 
       <span class="type">xx</span>   tuck, subtraction
       <span class="type">xx</span>   xxswapx
       <span class="type">xx</span>   addition
       <span class="type">xx</span>   swap
 
-      <span class="type">xx</span>   string_tail__char <span class="comment">;; over the ending double-quote
+      <span class="type">xx</span>   string_tail__byte <span class="comment">;; over the ending double-quote
 </span>      <span class="type">xx</span>   <span class="keyword">end</span>
 
       <span class="function-name">.not_found</span>:
@@ -5646,7 +5617,7 @@
       <span class="type">xx</span> dup2
       <span class="type">xx</span> find_jo__through_jo_link, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   xxswapx, drop2 <span class="comment">;; drop word
-</span>      <span class="type">xx</span>   save_into__jo_area
+</span>      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> write_undefined_word_report__for_make_jojo
       <span class="type">xx</span> write_string
@@ -5696,8 +5667,8 @@
 <span class="org-level-2">** !undo-make-jojo</span>
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_exception <span class="string">"!undo-make-jojo"</span>, !undo_make_jojo
-      <span class="comment">;; &lt;&lt; old V__current_free_address__name_string_area
-</span>      <span class="comment">;;    old V__current_free_address__jo_area
+      <span class="comment">;; &lt;&lt; old V__current_free_address__string_area
+</span>      <span class="comment">;;    old V__current_free_address__jojo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length]
 </span>      <span class="comment">;;    -- &gt;&gt;
@@ -5715,8 +5686,8 @@
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
 
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary, save
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jo_area, save
-      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__name_string_area
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__jojo_area, save
+      <span class="type">xx</span> <span class="keyword">address</span>, V__current_free_address__string_area
       <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
 
@@ -5731,11 +5702,11 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"define-function"</span>, CICADA__define_function
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__name_string_area, xxswapx
-      <span class="type">xx</span> V__current_free_address__jo_area, xxswapx
+</span>      <span class="type">xx</span> V__current_free_address__string_area, xxswapx
+      <span class="type">xx</span> V__current_free_address__jojo_area, xxswapx
       <span class="type">xx</span> V__first_jo_in_jotionary, xxswapx
-      <span class="comment">;; &lt;&lt; old V__current_free_address__name_string_area
-</span>      <span class="comment">;;    old V__current_free_address__jo_area
+      <span class="comment">;; &lt;&lt; old V__current_free_address__string_area
+</span>      <span class="comment">;;    old V__current_free_address__jojo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>
@@ -5744,21 +5715,21 @@
       <span class="type">xx</span>   !undo_make_jojo
       <span class="type">xx</span>   <span class="keyword">end</span>
 
-      <span class="type">xx</span> V__current_free_address__name_string_area
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span> V__current_free_address__string_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__name_string_area
+      <span class="type">xx</span>   save_into__string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
 
-      <span class="type">xx</span> V__current_free_address__jo_area
+      <span class="type">xx</span> V__current_free_address__jojo_area
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$function
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_tail__word
@@ -5774,11 +5745,11 @@
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   define_function <span class="string">"define-exception"</span>, CICADA__define_exception
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
-</span>      <span class="type">xx</span> V__current_free_address__name_string_area, xxswapx
-      <span class="type">xx</span> V__current_free_address__jo_area, xxswapx
+</span>      <span class="type">xx</span> V__current_free_address__string_area, xxswapx
+      <span class="type">xx</span> V__current_free_address__jojo_area, xxswapx
       <span class="type">xx</span> V__first_jo_in_jotionary, xxswapx
-      <span class="comment">;; &lt;&lt; old V__current_free_address__name_string_area
-</span>      <span class="comment">;;    old V__current_free_address__jo_area
+      <span class="comment">;; &lt;&lt; old V__current_free_address__string_area
+</span>      <span class="comment">;;    old V__current_free_address__jojo_area
 </span>      <span class="comment">;;    old V__first_jo_in_jotionary
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>
@@ -5787,21 +5758,21 @@
       <span class="type">xx</span>   !undo_make_jojo
       <span class="type">xx</span>   <span class="keyword">end</span>
 
-      <span class="type">xx</span> V__current_free_address__name_string_area
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span> V__current_free_address__string_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__name_string_area
+      <span class="type">xx</span>   save_into__string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
 
-      <span class="type">xx</span> V__current_free_address__jo_area
+      <span class="type">xx</span> V__current_free_address__jojo_area
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$exception
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
 
       <span class="type">xx</span> dup2
       <span class="type">xx</span> string_tail__word
@@ -5819,26 +5790,26 @@
 </span>   define_function <span class="string">"define-variable,with-tos"</span>, CICADA__define_variable__with_tos
       <span class="comment">;; &lt;&lt; variable, string[address, length] -- &gt;&gt;
 </span>      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">1</span>
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
 
-      <span class="type">xx</span> V__current_free_address__name_string_area
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span> V__current_free_address__string_area
+      <span class="type">xx</span>   save_into__jojo_area
       <span class="type">xx</span> dup2, string_head__word
-      <span class="type">xx</span>   save_into__name_string_area
+      <span class="type">xx</span>   save_into__string_area
 
       <span class="type">xx</span> V__first_jo_in_jotionary
       <span class="type">xx</span> jo_to_link
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
 
-      <span class="type">xx</span> V__current_free_address__jo_area
+      <span class="type">xx</span> V__current_free_address__jojo_area
       <span class="type">xx</span> <span class="keyword">address</span>, V__first_jo_in_jotionary
       <span class="type">xx</span> save
 
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$variable
-      <span class="type">xx</span>   save_into__jo_area
+      <span class="type">xx</span>   save_into__jojo_area
 
       <span class="type">xx</span> drop2
-      <span class="type">xx</span> save_into__jo_area
+      <span class="type">xx</span> save_into__jojo_area
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-done">test</span><span class="org-level-2"> define-function</span>
@@ -6404,12 +6375,12 @@
 </span>      <span class="type">xx</span> over, zero?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   xxswapx, drop2
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> xxoverx, string_head__char
+      <span class="type">xx</span> xxoverx, string_head__byte
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">':'</span>, equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   xxswapx, drop2
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> add1, xxswapx
-      <span class="type">xx</span> string_tail__char, xswapxx
+      <span class="type">xx</span> string_tail__byte, xswapxx
       <span class="type">xx</span> <span class="keyword">taca</span>, count_front_colon__loop
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* two syntaxes</span>
@@ -6449,16 +6420,16 @@
       <span class="type">xx</span> local_variable_table__find, <span class="keyword">false?branch</span>, (.not_found-$)/jo_size
       <span class="comment">;;   literal, &lt;offese&gt;, literal, n, n_fetch__local_jo
 </span>      <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="comment">;;     offset
-</span>      <span class="type">xx</span>       save_into__jo_area
+</span>      <span class="type">xx</span>       save_into__jojo_area
       <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="comment">;;     n
 </span>      <span class="type">xx</span>     count_front_colon
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="type">xx</span>     <span class="keyword">literal</span>, n_fetch__local_jo
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="type">xx</span>   <span class="keyword">end</span>
    <span class="function-name">.not_found</span>:
       <span class="type">xx</span> write_local_variable_not_bound_report
@@ -6495,11 +6466,11 @@
       <span class="type">xx</span> equal?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop2, false
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> dup2, string_head__char
+      <span class="type">xx</span> dup2, string_head__byte
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">'&gt;'</span>, equal?, false?, <span class="keyword">false?branch</span>, <span class="constant">4</span>
       <span class="type">xx</span>   drop2, false
       <span class="type">xx</span>   <span class="keyword">end</span>
-      <span class="type">xx</span> string_tail__char
+      <span class="type">xx</span> string_tail__byte
       <span class="type">xx</span> dup2, count_front_colon
       <span class="type">xx</span> <span class="keyword">dup</span>, <span class="keyword">literal</span>, <span class="constant">0</span>, greater_than?, false?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
       <span class="type">xx</span>   drop, drop2, false
@@ -6514,21 +6485,21 @@
 </span>   define_function <span class="string">"syntax,local-variable-save,make-jojo"</span>, syntax__local_variable_save__make_jojo
       <span class="comment">;; &lt;&lt; string[address, length], word[address, length] --
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> string_tail__char
+</span>      <span class="type">xx</span> string_tail__byte
       <span class="type">xx</span> dup2
       <span class="type">xx</span> local_variable_table__find, <span class="keyword">false?branch</span>, (.not_found-$)/jo_size
       <span class="comment">;;   literal, &lt;offese&gt;, literal, n, n_save__local_jo
 </span>      <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="comment">;;     offset
-</span>      <span class="type">xx</span>       save_into__jo_area
+</span>      <span class="type">xx</span>       save_into__jojo_area
       <span class="type">xx</span>     <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="comment">;;     n
 </span>      <span class="type">xx</span>     count_front_colon
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="type">xx</span>     <span class="keyword">literal</span>, n_save__local_jo
-      <span class="type">xx</span>       save_into__jo_area
+      <span class="type">xx</span>       save_into__jojo_area
       <span class="type">xx</span>   <span class="keyword">end</span>
    <span class="function-name">.not_found</span>:
       <span class="type">xx</span> dup2
@@ -6537,23 +6508,23 @@
       <span class="type">xx</span> count_front_colon
       <span class="comment">;; literal, &lt;number&gt;, local_data_allocate__jo
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="comment">;;   number of jo
-</span>      <span class="type">xx</span>     <span class="keyword">dup</span>, save_into__jo_area
+</span>      <span class="type">xx</span>     <span class="keyword">dup</span>, save_into__jojo_area
       <span class="type">xx</span>   <span class="keyword">literal</span>, local_data_allocate__jo
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="comment">;; literal, &lt;offese&gt;, literal, n, save_local_data
 </span>      <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="comment">;;   offset
 </span>      <span class="type">xx</span>   swap
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="type">xx</span>   <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="comment">;;   n
-</span>      <span class="type">xx</span>     save_into__jo_area
+</span>      <span class="type">xx</span>     save_into__jojo_area
       <span class="type">xx</span>   <span class="keyword">literal</span>, n_save__local_jo
-      <span class="type">xx</span>     save_into__jo_area
+      <span class="type">xx</span>     save_into__jojo_area
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
@@ -6897,12 +6868,12 @@
    define_variable <span class="string">"*current-free-address,un-initialized-memory*"</span>, V__current_free_address__un_initialized_memory
      <span class="type">xx</span> current_free_address$un_initialized_memory
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,name-string-area*</span></span>
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*current-free-address,string-area*</span></span>
    * the last_name_string_in_assembly
-     is just "<span class="bold">*current-free-address,name-string-area*</span>"
+     is just "<span class="bold">*current-free-address,string-area*</span>"
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*current-free-address,name-string-area*"</span>, V__current_free_address__name_string_area
-      <span class="type">xx</span> current_free_address$name_string_area
+</span>   define_variable <span class="string">"*current-free-address,string-area*"</span>, V__current_free_address__string_area
+      <span class="type">xx</span> current_free_address$string_area
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** last_link</span>
    * this word helps to initialize V__first_jo_in_jotionary

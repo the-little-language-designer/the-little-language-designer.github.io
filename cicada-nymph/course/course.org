@@ -22,15 +22,15 @@
 * 流程
 ** 下載
    * [[https://github.com/the-little-language-designer/fasm][fasm 匯編器]]
-   * [[https://github.com/the-little-language-designer/cicada][小蟬語的代碼]]
+   * [[https://github.com/the-little-language-designer/cicada][小蟬的代碼]]
 ** fasm 匯編器
    * 嘗試用 fasm 編譯一些簡單的例子程序
      以瞭解其使用方式
-** 小蟬語解釋器
+** 小蟬解釋器
    * 用 fasm 編譯解釋器的源代碼
      並閱讀文檔
      以瞭解其使用方式
-   * [[../intro/contents.html][小蟬語引導文檔]]
+   * [[../intro/contents.html][小蟬引導文檔]]
      文檔中有進一步的學習說明
 * 見面
 ** 第一次
@@ -59,7 +59,7 @@
 ** 第五次
    * 函數式範式
      * 尾遞歸優化
-       小蟬語的優越性
+       小蟬的優越性
    * 輸入與輸出的具體實現
      * 字符串這個數據結構
 ** 第六次
@@ -92,7 +92,7 @@
         給我提一些語言設計方面的意見和建議 ?
         或者加入到蟬語之後的開發中來 ?
         如果你不熟悉程序語言
-        爲 小蟬語 或 蟬語 設計個新 LOGO 或 公仔 或 主頁 什麼的 ?
+        爲 小蟬 或 蟬語 設計個新 LOGO 或 公仔 或 主頁 什麼的 ?
         誰知道呢 ^-^
    * 提交作業的方式
      由以下幾種
