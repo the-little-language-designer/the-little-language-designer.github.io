@@ -3,43 +3,126 @@
 #+EMAIL:  xyheme@gmail.com
 
 * ===================================
-* *小蟬語*
-  * 小蟬語中所缺乏的最重要的是 GC
-    這導致沒法實現作爲一等公民的函數
-* different from the re-designed cicada-language
-   * simplifications are for teaching purpose only
-   * first and foremost
-     function programming will NOT be supported in this implementation
-   * a helper function must be defined before it is used
-   * no mixfix-notation
-     * function call is "function" instead of "(function)"
-     * no such thing like
-       1 2 (add) = 1 (add 2) = (add 1 2)
-   * no named local argument
-     * thus no inited local argument
-   * no title-name-table
-     * thus in this implementation
-       we only use single name space
-     * thus in this implementation
-       we do NOT have the concept of "context"
-       so
-       the syntax is not as flexible as it will be in cicada-language
-   * no type
-     * no type inference
-     * no dynamic type tag
-     * no static type declaration
-   * global linked-list for naming
-     * not hash-table
-     * by the way
-       in classical forth
-       the linked-list of jo is called jotionary
-   * no dynamic-memory-management
-     * no garbage-collector
-   * about comment
-     * the comment of the argument & return value of function
-       is allowed to be written in free style normal comment
-* 有自己的匯編器之後才能實現的性狀
-  * jotionary 中 jojo 的長度
+* *小蟬*
+* 特點
+  * no type
+    * no type inference
+    * no dynamic type tag
+    * no static type declaration
+  * no dynamic-memory-management
+    * no garbage-collector
+  * no inited local argument
+  * no mixfix-notation
+    * function call is "function" instead of "(function)"
+    * no such thing like
+      1 2 (add) = 1 (add 2) = (add 1 2)
+  * no title-name-table
+    * thus in this implementation
+      we only use single name space
+  * about comment
+    * the comment of the argument & return value of function
+      is allowed to be written in free style normal comment
+  * 其實最本質的特點是
+    1. 沒有類型
+    2. 沒有動態內存管理
+* 匯編
+** 能夠編譯自己之後之後才能實現的性狀
+   * jotionary 中 jojo 的長度
+   * 把對 棧註釋 處理成 元數據
+     利用這些元數據 就能夠實現簡單的類型推導
+   * 一個 debug 模式
+     在其中 對所有的基本的 棧的接口加上保護
+** 對匯編器的需要
+   * 爲了實現上面的性狀
+     把 cicada-nymph 編譯到任何一個語言都是可以的
+     [比如 Fasm]
+   * 但是我還是需要自己實現匯編器
+     因爲就工作量而言 二者相當
+     就所形成的實現策略的靈活性而言
+     根據 自己的匯編器 所制定的實現策略 要靈活很多
+** 小蟬 與 蟬語
+   * 關係如下
+     #+begin_src return-stack
+     (machine) -> (cicada-nymph) ->
+     (assembler) & (vm) -> (cicada-language)
+     #+end_src
+   * 可移植性由小蟬的易實現性來維護
+   * (vm) 是
+     實現與 cicada-nymph 中的
+     對底層機器的特殊屬性依賴很弱的
+     線串碼解釋器
+   * (assembler) 是
+     以 cicada-nymph 所提供的交叉匯編器框架爲基礎的
+** >< 交叉匯編器構架
+   * cross assembler framework
+   * 目的 爲了寫 cicada-language 的 VM 的 匯編器
+   * byte buffer editor
+     bit buffer editor
+     * cursor = 1 cursor
+     * buffer = 2 cursor
+     * xxxxxx = 3 cursor
+   * like line editor with modes ?
+   * hash-table for naming
+     各種 ?
+* 沒有類型
+  * 沒有類型推導
+    沒有動態的類型標籤
+    沒有靜態的類型聲明
+* 沒有動態的內存管理
+  * 沒有垃圾回收器
+* 語境
+  * reading-stack
+  * syntax-stack
+  * rule-set
+* 函數體內的結構化數據
+** 不能用來做返回值的結構化數據
+   * 在一個函數體內
+     它盡可以 通過 (allocate-local-memory)
+     來分配 *local-byte*
+     然後自己製作結構化的數據
+     但是這裏所製作的數據並不能用來做返回值
+     因爲函數退出的時候
+     所分配的局部內存就被回收了
+** 函數返回 靜態的 結構化數據
+   * 函數能夠返回結構化數據
+     但是由於沒有動態的內存管理
+     所以保存函數內結構化數據的內存
+     都是在定義函數的時候分配的
+     對這些函數的返回值進行副作用將是危險的
+   * 比如
+     | string | *string-area* |
+     | jojo   | *jojo-area*   |
+** 函數返回 動態的 結構化數據
+   * 這裏簡陋的實現動態內存分配的方式是
+     使用 circular
+     所達到的效果是 讓人們不能依賴這裏的數據
+     數據分配到了這裏 就得儘快使用掉
+     否則一個週期之後 數據就被覆蓋了
+   * 比如
+     | string | *circular-string-area* |
+     | jojo   | *circular-jojo-area*   |
+* 數據結構
+** 計劃
+   * 這裏其實是把 蟬語 中所設想的 姓 的機制
+     變成 數據結構接口管理器
+     也就是 實現 姓 做爲 數據結構
+** 實現
+   * 既然已經有了 name-hash-table 那麼這些就都是可能實現的了
+   * 可以用語法擴展來實現編譯時期對 jo 的查找
+   * 接口方面 有兩種方式
+     1. 完全與 已有的 查找 jo 的機制相互分離
+     2. 重用已有的機制
+     已有的機制有兩種
+     一個是 利用單項鏈接的鏈表
+     一個是 利用 name-hash-table 中的 nymph-jo 域
+   * 使用分離的 title-table 和 data-structure-table
+     都是爲了 減輕 name-hash-table 的負載
+     但是 也許這種負載對於 name-hash-table 是微乎其微的
+   * 我使用這樣一種方式來重用 name-hash-table
+     利用的特性是 如果做爲名字的字符串中帶有空格
+     那麼它就不可能被 以正常的方式找到
+     而利用這種 空格所形成的名字的 層次結構
+     我可以實現我所需要的性狀
 * ===================================
 * *蟬語*
 * 姓名
@@ -50,9 +133,10 @@
      所命姓名之姓
      不必與物之本姓相同
 ** 實現方法
-   * 爲了形成姓名這兩個層次
-     一字符串之散列表以存名
-     一名之表以爲姓
+   * 方法一
+     * 爲了形成姓名這兩個層次
+       一字符串之散列表以存名
+       一名之表以爲姓
 ** 姓之爲類型 用以分類函數
    * 姓之首要運用在於
      作爲結構化的數據的類型編碼
@@ -79,12 +163,8 @@
    沒有一個不流於對數學的拙劣模仿
    所以我放棄這種嘗試
    而強調在這方面數學語言與程序語言的差異
-** 姓之爲語境 用以分類語法關鍵詞
-   * 我之前沒能設計出很好的語法擴展機制
-     導致第一個版本中 很多地方重寫反工
-     現在我小心爲之
+** >< 姓之爲語境 用以分類語法關鍵詞
    * 一個語境是一個姓
-     用 :title: 表示之
      我用這個概念來解決
      1. 語法關鍵詞之間的集體相互調用問題
         [因爲 它們之間有很多相互遞歸調用]
@@ -96,7 +176,7 @@
         * 並且
           我提供語義 以使得 在聲明所要遞歸調用的語境時
           能夠局部覆蓋其中的某個語法關鍵詞
-          過着局部增加 等等
+          或者局部增加 等等
      2. 語法關鍵詞的重載問題
         這在於
         同一個語法關鍵詞在不同的語境下的意義可以不同
@@ -148,6 +228,9 @@
 ** 姓之爲結構
 ** 姓之爲模塊
 * 約束變元
+** 語義
+   * 就是用一種標記語言 來標記出函數體中的位置
+     然後再函數作用時 把值代入到這些位置
 ** 遞歸調用
    * 如果一個函數遞歸調用了自身
      那麼在遞歸調用時
@@ -165,7 +248,7 @@
      來保存函數作用過程中所獲得的
      約束變元的值
      而函數體內約束變元的位置上
-     保存 到這個棧中的 index
+     保存 到這個棧中的 offset
 ** 明顯的參數
    * 明顯的參數所提供的額外信息
      只被用來重排參數的順序而已
@@ -275,31 +358,6 @@
      還由於
      複雜的接口會讓 primitive-function 也變複雜
    * 所以我放棄這種計
-* 匯編
-** 與小蟬語的關係
-   * 關係如下
-     #+begin_src return-stack
-     (machine) -> (cicada-nymph) ->
-     (assembler) & (vm) -> (cicada-language)
-     #+end_src
-   * 可移植性由小蟬語的易實現性來維護
-   * (vm) 是
-     實現與 cicada-nymph 中的
-     對底層機器的特殊屬性依賴很弱的
-     線串碼解釋器
-   * (assembler) 是
-     以 cicada-nymph 所提供的交叉匯編器框架爲基礎的
-** 交叉匯編器構架
-   * cross assembler framework
-   * 目的 爲了寫 cicada-language 的 VM 的 匯編器
-   * byte buffer editor
-     bit buffer editor
-     * cursor = 1 cursor
-     * buffer = 2 cursor
-     * xxxxxx = 3 cursor
-   * like line editor with modes ?
-   * hash-table for naming
-     各種 ?
 * 編譯
 ** 本質
    * 編譯的本質是
@@ -426,7 +484,7 @@
    * 所能使用的抽象方式幾乎就只是函數而已
      由小的函數組成大的函數的方式是
      複合 與 作用
-     但是隻要我保持使用 姓 的方式的靈活性
+     但是只要我保持使用 姓 的方式的靈活性
      那麼我就能夠模仿
    * 比如
      繼承[遺傳] 與 變異

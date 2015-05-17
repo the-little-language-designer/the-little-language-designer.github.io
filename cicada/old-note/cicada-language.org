@@ -933,11 +933,7 @@
      高次方程 "不可解" 這個命題
   2. 那麼我能否給出類似 golais 的方法呢 ?
 * 試試
-  #+begin_src cicada
-  (* 需要 好好研究一下配色
-   ,* 因爲現在的語法高亮真是太難看了
-   ,*)
-
+  #+begin_src cicada-nymph
   (* for named functions and there applications *)
     function2
   <:arg2-of-function1
@@ -946,8 +942,8 @@
   (function1)
 
   (* 下面的語法可以形成一次 curry
-   ,* 即它將入棧一個匿名函數
-   ,*)
+   * 即它將入棧一個匿名函數
+   *)
 
   | 100
   <:arg1-of-function1
@@ -958,11 +954,11 @@
   (* for non-named functions and there applications *)
 
   (* 匿名函數 作爲一個數據結構
-   ,* [我想說的是一個數據類型]
-   ,* [我想用雙向鏈接的鏈表來實現這個數據類型]
-   ,* 因該具有一套完整而特殊的處理函數的
-   ,* apply 就是其中最重要的一個
-   ,*)
+   * [我想說的是一個數據類型]
+   * [我想用雙向鏈接的鏈表來實現這個數據類型]
+   * 因該具有一套完整而特殊的處理函數的
+   * apply 就是其中最重要的一個
+   *)
 
     function2
   <:arg2
@@ -978,24 +974,24 @@
 
 
   (* 匿名函數 作爲一個數據結構
-   ,* 其初始化 必須與定義數的方式相一致
-   ,* 也就是說它必須有相當的完備性
-   ,* 有完整的註釋性的信息
-   ,* [關於 關於默認的作用方式]
-   ,* [關於 棧中重命名]
-   ,* [關於 副作用]
-   ,* [關於 到數據類型的註冊]
-   ,* [等等 等等]
-   ,* [也就是說 我在這裏需要提供設計良好的 註釋格式]
-   ,* 所以下面這種簡單的函數作用是 不存在的
-   ,*)
+   * 其初始化 必須與定義數的方式相一致
+   * 也就是說它必須有相當的完備性
+   * 有完整的註釋性的信息
+   * [關於 關於默認的作用方式]
+   * [關於 棧中重命名]
+   * [關於 副作用]
+   * [關於 到數據類型的註冊]
+   * [等等 等等]
+   * [也就是說 我在這裏需要提供設計良好的 註釋格式]
+   * 所以下面這種簡單的函數作用是 不存在的
+   *)
 
   [ function2 ] apply
 
   (* 而應該是
-   ,* 即使在定義零元函數的時候
-   ,* 也應該有註釋性的信息以說明
-   ,*)
+   * 即使在定義零元函數的時候
+   * 也應該有註釋性的信息以說明
+   *)
 
 
 
@@ -1403,42 +1399,42 @@
       兩個點在這個列表中儲存的順序
       可以用來體現
       這條邊連接它們的方式
-  #+begin_src cicada
+  #+begin_src cicada-nymph
   example-graph
   ===========
   type: <graph>
   zero-dimension-geometry-object-list:
-    ,* #2=
+    * #2=
       v: vertex-2 address: #2#
       can: [ value: 222 ]
       abut-edge-list:
-         ,* e: edge:2-->3 address: #4#
-         ,* e: edge:3-->2 address: #6#
-    ,* #3=
+         * e: edge:2-->3 address: #4#
+         * e: edge:3-->2 address: #6#
+    * #3=
       v: vertex-3 address: #3#
       can: [ value: 333 ]
       abut-edge-list:
-         ,* e: edge:2-->3 address: #4#
-         ,* e: edge:3-->2 address: #6#
+         * e: edge:2-->3 address: #4#
+         * e: edge:3-->2 address: #6#
   one-dimension-geometry-object-list:
-    ,* #4=
+    * #4=
       e: edge:2-->3 address: #4#
       can: [ edge-type: black-arrow ]
       abut-vertex-list:
-         ,* v: vertex-2 address: #2#
-         ,* v: vertex-3 address: #3#
-    ,* #6=
+         * v: vertex-2 address: #2#
+         * v: vertex-3 address: #3#
+    * #6=
       e: edge:3-->2 address: #6#
       can: [ edge-type: black-arrow ]
       abut-vertex-list:
-         ,* v: vertex-3 address: #3#
-         ,* v: vertex-2 address: #2#
+         * v: vertex-3 address: #3#
+         * v: vertex-2 address: #2#
   ===========
   (* 所謂把 digrap[關於新的計算模型的語義]
-   ,* 在設計之處直接融合到 cicada 中
-   ,* 現在對我來說還太難了
-   ,* 現在
-   ,* 我只把 有向圖處理 的基本部分融合到 cicada 中
+   * 在設計之處直接融合到 cicada 中
+   * 現在對我來說還太難了
+   * 現在
+   * 我只把 有向圖處理 的基本部分融合到 cicada 中
    * 其實就是一個標記語言
    *)
   #+end_src
