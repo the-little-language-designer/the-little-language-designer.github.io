@@ -19,6 +19,11 @@
         /* bold */
         font-weight: bold;
       }
+      .cicada-nymph-XdataX {
+        /* cicada-nymph-<data>-face */
+        color: #ffffff;
+        font-weight: bold;
+      }
       .cicada-nymph-allocate {
         /* cicada-nymph-allocate-face */
         color: #AE7C3B;
@@ -36,6 +41,11 @@
       .cicada-nymph-constant {
         /* cicada-nymph-constant-face */
         color: #fd971f;
+        font-weight: bold;
+      }
+      .cicada-nymph-define-alias {
+        /* cicada-nymph-define-alias-face */
+        color: #ffffff;
         font-weight: bold;
       }
       .cicada-nymph-define-exception {
@@ -78,6 +88,16 @@
         color: #ef5939;
         font-weight: bold;
       }
+      .cicada-nymph-meta-code-begin {
+        /* cicada-nymph-meta-code-begin-face */
+        color: #ef5939;
+        font-weight: bold;
+      }
+      .cicada-nymph-meta-code-end {
+        /* cicada-nymph-meta-code-end-face */
+        color: #ae81ff;
+        font-weight: bold;
+      }
       .cicada-nymph-number {
         /* cicada-nymph-number-face */
         color: #fd971f;
@@ -101,6 +121,10 @@
         /* cicada-nymph-sentence-reader-face */
         color: #ffff00;
         font-weight: bold;
+      }
+      .cicada-nymph-square-brackets {
+        /* cicada-nymph-square-brackets-face */
+        color: #93a8c6;
       }
       .cicada-nymph-string {
         /* cicada-nymph-string-face */
@@ -194,20 +218,13 @@
   <body>
     {% include before-pre.html %}
 <pre>
-<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#26680; / core of cicada-nymph
+<span class="org-document-info-keyword">#+TITLE:</span>  <span class="org-document-title">&#23567;&#34796;&#20043;&#26680; / core of cicada-nymph
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span><span class="org-document-info-keyword">#+EMAIL:</span>  <span class="org-document-info">xyheme@gmail.com
 </span>
-<span class="org-level-1">* let functions about (poi) to use predicate [as I promised]</span>...
-<span class="org-level-1">* (poi,help)</span>
-<span class="org-level-1">* better design of the command-line-interface</span>
-<span class="org-level-1">* un-named function</span>...
-<span class="org-level-1">* better syntax for low-level structure [C structure]</span>
-<span class="org-level-1">* loading-stack</span>
 <span class="org-level-1">* </span><span class="org-done">todo</span>...
 <span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* </span><span class="org-todo">note</span>...
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> problem</span>...
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span>...
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* writers</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
@@ -222,17 +239,30 @@
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*name-hash-table*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* name</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* name-hash-table</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : name</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* jo in name-hash-table</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* make-jojo                           </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* define-[function|exception]         </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>...<span class="org-block-end-line">
+<span class="org-level-1">* string</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> data-structure</span>...
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#25976;&#25818;&#32080;&#27083;&#32317;&#32080;</span>...
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> title</span>...
+<span class="org-level-1">* define-function,with-title</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : &lt;title&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> define-alias,with-title</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> data-structure</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* make-jojo                           </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* init,name-hash-table,jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-variable,with-tos            </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-exception</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-function                     </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : name</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* number with base</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,make-jojo*</span></span><span class="org-level-1"> : number with base</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* basic-REPL                          </span><span class="org-level-1"><span class="org-tag">:redefine:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : if &amp; else &amp; then</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*circular-string-area*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : double-quote</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : address</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*rule-set,basic-REPL*</span></span><span class="org-level-1"> : save-to</span>...<span class="org-block-end-line">
@@ -245,10 +275,11 @@
 <span class="org-level-1">* eval-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* define-variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* un-named function</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* constant for linux                  </span><span class="org-level-1"><span class="org-tag">:linux:</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* jotionary</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* string</span>...<span class="org-block-end-line">
+<span class="org-level-1">* link</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* port</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* file-tree</span>...<span class="org-block-end-line">
@@ -257,14 +288,19 @@
 </span><span class="org-level-1">* path</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* poi</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* path syntax</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* load &amp; need</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> loading</span>...
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#21152;&#36617;</span>...
+<span class="org-level-1">* load &amp; need</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> test</span>...
+<span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* report</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* hi</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* command-line-interface</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*the-story-begin*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* </span><span class="org-done">test</span>...<span class="org-block-end-line">
+<span class="org-level-1">* </span><span class="org-done">test</span><span class="org-level-1"> report</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* ===================================</span>
 </pre>
   </body>

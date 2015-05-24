@@ -1,6 +1,0 @@
-#+TITLE:  SICP 引 / intro of SICP
-#+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
-
-* 題解
-  * [[../note/overview.html][筆記]]

@@ -24,11 +24,6 @@
         color: #AE7C3B;
         font-weight: bold;
       }
-      .cicada-nymph-bool {
-        /* cicada-nymph-bool-face */
-        color: #fd971f;
-        font-weight: bold;
-      }
       .cicada-nymph-comment {
         /* cicada-nymph-comment-face */
         color: #FF8888;
@@ -86,6 +81,10 @@
         /* cicada-nymph-sentence-reader-face */
         color: #ffff00;
         font-weight: bold;
+      }
+      .cicada-nymph-string {
+        /* cicada-nymph-string-face */
+        color: #e6db74;
       }
       .cicada-nymph-syntax-key-word {
         /* cicada-nymph-syntax-key-word-face */
@@ -256,24 +255,28 @@
 <span class="org-level-1">* prolog</span>...
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> stack</span>...
-<span class="org-level-1">* argument_stack</span>...
-<span class="org-level-1">* return_stack</span>...<span class="org-block-end-line">
+<span class="org-level-1">* argument-stack</span>...
+<span class="org-level-1">* return-stack</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* next</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> play with jo &amp; jojo</span>...
 <span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* link</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* string_area</span>...<span class="org-block-end-line">
+<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> jo</span>...
+<span class="org-level-1">* offset of jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> link</span>...
+<span class="org-level-1">* offset of link</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* null link</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*string-area*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* function-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* primitive-function-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* variable-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* exception-jo</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* execute-jo &amp; structure of jo</span>...
-<span class="org-level-1">* string-area</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* type of jo</span>...<span class="org-block-end-line">
+<span class="org-level-1">* jo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* string-area</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
-<span class="org-level-1">* end &amp; taca</span>...
+<span class="org-level-1">* end &amp; tail-call</span>...
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* helper function in assembly code</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
@@ -296,29 +299,36 @@
 </span><span class="org-level-1">* buffer</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* string</span>...
 <span class="org-level-1">* write number</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> word</span>...
-<span class="org-level-1">* read-word-&gt;buffer &amp; read-word &amp; read-word-for-REPL</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* string-[head|tail],word</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* jotionary</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* word</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* link</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* basic-REPL</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* colon semicolon</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* jojo-area</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* syntax-stack</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* jojo-area</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* make-link</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* make-jo-head</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* syntax-stack</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* rule-set</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* rule-set,make-jojo</span>...
 <span class="org-level-1">* make-jojo</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* define-[function|exception|variable]</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* !undo-make-jojo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* define-function</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-exception</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-variable,with-tos</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#26377;&#21517;&#23383;&#30340;&#23616;&#37096;&#35722;&#37327; &#33287; &#35722;&#38263;&#30340;&#23616;&#37096;&#25976;&#25818;</span>...
-<span class="org-level-1">* </span><span class="org-todo">note</span><span class="org-level-1"> </span><span class="org-level-1"><span class="bold">*to compare readability*</span></span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#20877;&#22686;&#21152;&#23616;&#37096;&#35722;&#20803;&#25903;&#25345;&#20043;&#24460; &#38656;&#35201;&#37325;&#23531;&#30340;&#37096;&#20998;</span>...
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#20877;&#22686;&#21152;&#23616;&#37096;&#35722;&#20803;&#25903;&#25345;&#20043;&#24460; &#38656;&#35201;&#37325;&#23531;&#30340;&#37096;&#20998;</span>...
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#32317;&#32080;</span>...
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#38364;&#26044;&#20998;&#25903;&#32080;&#27083;</span>...
-<span class="org-level-1">* local-jo</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* local-variable-table</span>...<span class="org-block-end-line">
+<span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*local-jo*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#21839;&#38988;</span>...
+<span class="org-level-1">* local-variable-table</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* two syntaxes</span>...
-<span class="org-level-1">* local-byte</span>...<span class="org-block-end-line">
+<span class="org-level-1">* </span><span class="org-level-1"><span class="bold">*local-byte*</span></span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* syscall</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* -----------------------------------</span>

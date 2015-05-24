@@ -51,8 +51,10 @@ table {
 
 body {
     font-size: 24px;
-    color: #f8f8f0;
-    background-color: #1b1d1e;
+    color: #ffffff;
+
+    background-color: #709870;
+
     /* font-family: "envy-code", "ms-song"; */
     /* font-family: "envy-code", "pmingliu-tw"; */
     /* font-family: "source-code-pro", "ming-lan"; */
@@ -94,16 +96,16 @@ h1 {
 }
 h2 {
     font-size: 1.6rem;
-    color: #616d8d;
-    color: #637d66;
+    /* color: #616d8d; */
+    /* color: #637d66; */
 }
 h3 {
     font-size: 1.3rem;
 }
 h4 {
     font-size: 1.2rem;
-    color: #616d8d;
-    color: #637d66;
+    /* color: #616d8d; */
+    /* color: #637d66; */
 }
 h5 {
     font-size: 1rem;
@@ -121,7 +123,7 @@ h5 {
     padding-right:   0;
 
     font-size: 34px;
-    color: #f8f8f0;
+    /* color: #f8f8f0; */
     text-align: left;
 
 }
@@ -150,12 +152,13 @@ h5 {
 }
 
 a {
-    color: #b7b297;
+    color: #dddddd;
     text-decoration: none;
 }
 
 a:hover {
     color: #f8f8f0;
+    text-decoration: none;
 }
 
 .slogan {
@@ -169,11 +172,11 @@ a:hover {
 
 article {
     display: block;
-    border-top:    0.2em solid #1b1d1e;
-    border-bottom: 0.2em solid #1b1d1e;
+    border-top:    0.2em solid #709870;
+    border-bottom: 0.2em solid #709870;
 
-    color: #1b1d1e;
-    background-color: #b7b297;
+    color: #1b1d1d;
+    background-color: #dddddd;
 
     padding-top:    1em;
     padding-bottom: 1em;
@@ -182,7 +185,7 @@ article {
 }
 
 article:hover {
-    background: #f8f8f0;
+    background-color: #f8f8f0;
 }
 
 article p {
