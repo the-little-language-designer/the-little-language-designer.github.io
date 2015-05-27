@@ -2,6 +2,7 @@
 #+AUTHOR: 謝宇恆 \ XIE Yuheng
 #+EMAIL:  xyheme@gmail.com
 
+* ===================================
 * 源起
 ** 歷史
    * I enrolled in Psychology and Philosophy because
@@ -333,4 +334,34 @@
 
   [ 1 2 3 4 ] [ + * ] infra .
   #+end_src
-* ><
+* -----------------------------------
+* *intro*
+* Synopsis of the language Joy
+* Frequently Asked Questions about Joy
+* Joy: Forth's Functional Cousin
+* Apter interviews von Thun
+* Rationale for Joy
+* -----------------------------------
+* *papers*
+* Overviewof Joy [introductory sections of other ]
+* Tutorial on Joy
+* Mathematical Foundations of Joy
+* Atomic Programs of Joy
+* The Algebra of Joy
+* Recursion Theory and Joy
+* Programming in Joy
+* A rewriting system for Joy
+* Joy compared with other functional languages
+* -----------------------------------
+* *examples*
+* Design of a Joy interpreter written in Joy
+* Design of matrix multiplication programs
+* Imperative thinking for Joy programs
+* Church arithmetic and Church logic
+* Nested Recursion and a new recursion combinator
+* Fast small truth tables (using Joy native sets)
+* the annoying quadratic formula
+* Lazy lists as reproducing programs
+* Survey of reproducing programs
+* Floy - a flat concatenative subbset of Joy
+* ===================================

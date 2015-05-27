@@ -2047,7 +2047,7 @@
       <span class="comment">;;;; find_link
 </span>      <span class="comment">;; xx read_word, string_to_integer ;; number
 </span>      <span class="comment">;; xx read_word, string_to_integer ;; number
-</span>      <span class="comment">;; xx read_word, V__link__core, find_link ;; add
+</span>      <span class="comment">;; xx read_word, V__link, find_link ;; add
 </span>      <span class="comment">;; xx drop ;; true
 </span>      <span class="comment">;; xx link_to_jo
 </span>      <span class="comment">;; xx apply
@@ -4655,10 +4655,10 @@
       <span class="type">xx</span> save
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*link,core*</span></span>
+</span><span class="org-level-2">** </span><span class="org-level-2"><span class="bold">*link*</span></span>
    * a link is the first jo in the link
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_variable <span class="string">"*link,core*"</span>, V__link__core
+</span>   define_variable <span class="string">"*link*"</span>, V__link
       <span class="type">xx</span> the_last_link_in_assembly_code
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** </span><span class="org-todo">note</span><span class="org-level-2"> about find</span>
@@ -4711,7 +4711,7 @@
       <span class="comment">;; maybe more
 </span>
       <span class="type">xx</span> dup2 <span class="comment">;; for to report undefined word
-</span>      <span class="type">xx</span> V__link__core
+</span>      <span class="type">xx</span> V__link
       <span class="type">xx</span> find_link, <span class="keyword">false?branch</span>, <span class="constant">6</span>
       <span class="type">xx</span>   xxswapx, drop2
       <span class="type">xx</span>   link_to_jo, apply
@@ -5286,14 +5286,6 @@
       <span class="type">xx</span> <span class="keyword">literal</span>, syntax__jo__make_jojo
       <span class="type">xx</span> V__rule_set__make_jojo, add_rule
 
-      <span class="type">xx</span> <span class="keyword">literal</span>, word_is_branch?
-      <span class="type">xx</span> <span class="keyword">literal</span>, syntax__branch__make_jojo
-      <span class="type">xx</span> V__rule_set__make_jojo, add_rule
-
-      <span class="type">xx</span> <span class="keyword">literal</span>, word_is_false?branch?
-      <span class="type">xx</span> <span class="keyword">literal</span>, syntax__false?branch__make_jojo
-      <span class="type">xx</span> V__rule_set__make_jojo, add_rule
-
       <span class="type">xx</span> <span class="keyword">literal</span>, word_is_double_quote?
       <span class="type">xx</span> <span class="keyword">literal</span>, syntax__double_quote__make_jojo
       <span class="type">xx</span> V__rule_set__make_jojo, add_rule
@@ -5341,35 +5333,9 @@
       <span class="comment">;; &lt;&lt; string[address, length], word:address --
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> drop2
-
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">address</span>
-      <span class="type">xx</span> jojo_area__stay
-
-      <span class="type">xx</span> dup2
-      <span class="type">xx</span> string_head__word
-      <span class="type">xx</span> V__link__core
-      <span class="type">xx</span> find_link, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-      <span class="type">xx</span>   link_to_jo, jojo_area__stay
-      <span class="type">xx</span>   string_tail__word
-      <span class="type">xx</span>   <span class="keyword">end</span>
-
-      <span class="type">xx</span> write_undefined_word_report__for_address
-      <span class="type">xx</span> dup2, string_head__word, write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
-      <span class="type">xx</span> !undo_make_jojo
-
-
-   define_function <span class="string">"write-undefined-word-report,for-address"</span>, write_undefined_word_report__for_address
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$undefined_word_report__for_address
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$undefined_word_report__for_address
-      <span class="type">xx</span> write_string
+      <span class="type">xx</span>   jojo_area__stay
       <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$undefined_word_report__for_address</span>:
-      <span class="type">db</span> <span class="string">"* (make-jojo (address)) the word follows (address) is undefined : "</span>
-   <span class="function-name">.end</span>:
-   length$undefined_word_report__for_address = (.end - string$undefined_word_report__for_address)
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** word:jo?</span>
@@ -5392,137 +5358,9 @@
       <span class="comment">;; &lt;&lt; string[address, length], word:jo --
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> drop2
-
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">literal</span>
-      <span class="type">xx</span> jojo_area__stay
-
-      <span class="type">xx</span> dup2
-      <span class="type">xx</span> string_head__word
-      <span class="type">xx</span> V__link__core
-      <span class="type">xx</span> find_link, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-      <span class="type">xx</span>   link_to_jo, jojo_area__stay
-      <span class="type">xx</span>   string_tail__word
-      <span class="type">xx</span>   <span class="keyword">end</span>
-
-      <span class="type">xx</span> write_undefined_word_report__for_jo
-      <span class="type">xx</span> dup2, string_head__word, write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
-      <span class="type">xx</span> !undo_make_jojo
-
-
-   define_function <span class="string">"write-undefined-word-report,for-jo"</span>, write_undefined_word_report__for_jo
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$undefined_word_report__for_jo
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$undefined_word_report__for_jo
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$undefined_word_report__for_jo</span>:
-      <span class="type">db</span> <span class="string">"* (syntax,jo,make-jojo) the word follows (jo) is undefined : "</span>
-   <span class="function-name">.end</span>:
-   length$undefined_word_report__for_jo = (.end - string$undefined_word_report__for_jo)
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** word:branch?</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">string$word_is_branch?</span>:
-      <span class="type">db</span> <span class="string">"branch"</span>
-   <span class="function-name">.end</span>:
-   length$word_is_branch? = (.end - string$word_is_branch?)
-
-   define_function <span class="string">"word:branch?"</span>, word_is_branch?
-      <span class="comment">;; &lt;&lt; word[branch, length] -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$word_is_branch?
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$word_is_branch?
-      <span class="type">xx</span> string_equal?
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** syntax,branch,make-jojo</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"syntax,branch,make-jojo"</span>, syntax__branch__make_jojo
-      <span class="comment">;; &lt;&lt; string[address, length], word:jo --
-</span>      <span class="comment">;;    string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> drop2
-
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">branch</span>
-      <span class="type">xx</span> jojo_area__stay
-
-      <span class="type">xx</span> dup2
-      <span class="type">xx</span> string_head__word
-      <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-      <span class="type">xx</span>   string_to_integer
       <span class="type">xx</span>   jojo_area__stay
-      <span class="type">xx</span>   string_tail__word
-      <span class="type">xx</span>   <span class="keyword">end</span>
-
-      <span class="type">xx</span> write_not_integer_string_report__for_branch
-      <span class="type">xx</span> dup2, string_head__word, write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
-      <span class="type">xx</span> !undo_make_jojo
-
-
-   define_function <span class="string">"write-not-integer-string-report,for-branch"</span>, write_not_integer_string_report__for_branch
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$not_integer_string_report__for_branch
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$not_integer_string_report__for_branch
-      <span class="type">xx</span> write_string
       <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$not_integer_string_report__for_branch</span>:
-      <span class="type">db</span> <span class="string">"* (syntax,branch,make-jojo) the word follows (branch) must be a integer string : "</span>
-   <span class="function-name">.end</span>:
-   length$not_integer_string_report__for_branch = (.end - string$not_integer_string_report__for_branch)
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** ----------------------------------</span>
-<span class="org-level-2">** word:false?branch?</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   <span class="function-name">string$word_is_false?branch?</span>:
-      <span class="type">db</span> <span class="string">"false?branch"</span>
-   <span class="function-name">.end</span>:
-   length$word_is_false?branch? = (.end - string$word_is_false?branch?)
-
-   define_function <span class="string">"word:false?branch?"</span>, word_is_false?branch?
-      <span class="comment">;; &lt;&lt; word[false?branch, length] -- bool &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$word_is_false?branch?
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$word_is_false?branch?
-      <span class="type">xx</span> string_equal?
-      <span class="type">xx</span> <span class="keyword">end</span>
-<span class="org-block-end-line">   #+end_src
-</span><span class="org-level-2">** syntax,false?branch,make-jojo</span>
-<span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
-</span>   define_function <span class="string">"syntax,false?branch,make-jojo"</span>, syntax__false?branch__make_jojo
-      <span class="comment">;; &lt;&lt; string[address, length], word:jo --
-</span>      <span class="comment">;;    string[address, length] &gt;&gt;
-</span>      <span class="type">xx</span> drop2
-
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="keyword">false?branch</span>
-      <span class="type">xx</span> jojo_area__stay
-
-      <span class="type">xx</span> dup2
-      <span class="type">xx</span> string_head__word
-      <span class="type">xx</span> dup2, integer_string?, <span class="keyword">false?branch</span>, <span class="constant">5</span>
-      <span class="type">xx</span>   string_to_integer
-      <span class="type">xx</span>   jojo_area__stay
-      <span class="type">xx</span>   string_tail__word
-      <span class="type">xx</span>   <span class="keyword">end</span>
-
-      <span class="type">xx</span> write_not_integer_string_report__for_false?branch
-      <span class="type">xx</span> dup2, string_head__word, write_string
-      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
-      <span class="type">xx</span> !undo_make_jojo
-
-
-   define_function <span class="string">"write-not-integer-string-report,for-false?branch"</span>, write_not_integer_string_report__for_false?branch
-      <span class="comment">;; &lt;&lt; -- &gt;&gt;
-</span>      <span class="type">xx</span> <span class="keyword">literal</span>, string$not_integer_string_report__for_false?branch
-      <span class="type">xx</span> <span class="keyword">literal</span>, length$not_integer_string_report__for_false?branch
-      <span class="type">xx</span> write_string
-      <span class="type">xx</span> <span class="keyword">end</span>
-
-   <span class="function-name">string$not_integer_string_report__for_false?branch</span>:
-      <span class="type">db</span> <span class="string">"* (syntax,false?branch,make-jojo) the word follows (false?branch) must be a integer string : "</span>
-   <span class="function-name">.end</span>:
-   length$not_integer_string_report__for_false?branch = (.end - string$not_integer_string_report__for_false?branch)
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** ----------------------------------</span>
 <span class="org-level-2">** word:double-quote?</span>
@@ -5616,7 +5454,7 @@
       <span class="type">xx</span>   apply
       <span class="type">xx</span>   <span class="keyword">end</span>
       <span class="type">xx</span> dup2
-      <span class="type">xx</span> V__link__core
+      <span class="type">xx</span> V__link
       <span class="type">xx</span> find_link, <span class="keyword">false?branch</span>, <span class="constant">6</span>
       <span class="type">xx</span>   xxswapx, drop2
       <span class="type">xx</span>   link_to_jo
@@ -5668,7 +5506,7 @@
      <span class="type">xx</span> exception_reset_stack, !undo_make_jojo
      <span class="comment">;; &lt;&lt; old V__string_area__current_free_address
 </span>     <span class="comment">;;    old V__jojo_area__current_free_address
-</span>     <span class="comment">;;    old V__link__core
+</span>     <span class="comment">;;    old V__link
 </span>     <span class="comment">;;    string[address, length]
 </span>     <span class="comment">;;    -- &gt;&gt;
 </span>
@@ -5683,7 +5521,7 @@
      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="default">';'</span>, write_byte
      <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">10</span>, write_byte
 
-     <span class="type">xx</span> <span class="keyword">address</span>, V__link__core, save
+     <span class="type">xx</span> <span class="keyword">address</span>, V__link, save
      <span class="type">xx</span> <span class="keyword">address</span>, V__jojo_area__current_free_address, save
      <span class="type">xx</span> <span class="keyword">address</span>, V__string_area__current_free_address
      <span class="type">xx</span> save
@@ -5692,7 +5530,7 @@
   <span class="function-name">string$undo_make_jojo_report</span>:
      <span class="type">db</span> <span class="string">"  the following jojo is not made :"</span>
      <span class="type">db</span> <span class="constant">10</span>
-     <span class="type">db</span> <span class="string">": "</span>
+     <span class="type">db</span> <span class="string">":"</span>
   <span class="function-name">.end</span>:
   length$undo_make_jojo_report = (.end - string$undo_make_jojo_report)
 <span class="org-block-end-line">  #+end_src
@@ -5708,10 +5546,10 @@
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
 </span>      <span class="type">xx</span> V__string_area__current_free_address, xxswapx
       <span class="type">xx</span> V__jojo_area__current_free_address, xxswapx
-      <span class="type">xx</span> V__link__core, xxswapx
+      <span class="type">xx</span> V__link, xxswapx
       <span class="comment">;; &lt;&lt; old V__string_area__current_free_address
 </span>      <span class="comment">;;    old V__jojo_area__current_free_address
-</span>      <span class="comment">;;    old V__link__core
+</span>      <span class="comment">;;    old V__link
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> prepare_for
       <span class="type">xx</span>   exception_head
@@ -5728,7 +5566,7 @@
 </span>      <span class="comment">;;    name-string[address, length] &gt;&gt;
 </span>
       <span class="type">xx</span> dup2
-      <span class="type">xx</span> V__link__core
+      <span class="type">xx</span> V__link
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
       <span class="comment">;; &lt;&lt; string[address, length]
 </span>      <span class="comment">;;    name-string[address, length]
@@ -5739,7 +5577,7 @@
 </span>      <span class="comment">;;    link &gt;&gt;
 </span>
       <span class="type">xx</span> xxtuckx
-      <span class="type">xx</span> <span class="keyword">address</span>, V__link__core, save
+      <span class="type">xx</span> <span class="keyword">address</span>, V__link, save
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$function
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
       <span class="comment">;; &lt;&lt; string[address, length]
@@ -5789,7 +5627,7 @@
 </span>   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">addadd</span> add add <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">3</span> addadd . <span class="cicada-nymph-comment">&lt;&lt; 6 &gt;&gt;</span>
 
-   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">addadd</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-title">string-head</span>,word <span class="cicada-nymph-variable">*link,core*</span> find-link drop
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">addadd</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-title">string-head</span>,word <span class="cicada-nymph-variable">*link*</span> find-link drop
    link-&gt;jo dup jo-&gt;length . <span class="cicada-nymph-comment">&lt;&lt; 3 &gt;&gt;</span>
    <span class="cicada-nymph-number">1</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">3</span> x|swap|xxx apply . <span class="cicada-nymph-comment">&lt;&lt; 6 &gt;&gt;</span>
 
@@ -5816,10 +5654,10 @@
       <span class="comment">;; &lt;&lt; string[address, length] -- &gt;&gt;
 </span>      <span class="type">xx</span> V__string_area__current_free_address, xxswapx
       <span class="type">xx</span> V__jojo_area__current_free_address, xxswapx
-      <span class="type">xx</span> V__link__core, xxswapx
+      <span class="type">xx</span> V__link, xxswapx
       <span class="comment">;; &lt;&lt; old V__string_area__current_free_address
 </span>      <span class="comment">;;    old V__jojo_area__current_free_address
-</span>      <span class="comment">;;    old V__link__core
+</span>      <span class="comment">;;    old V__link
 </span>      <span class="comment">;;    string[address, length] &gt;&gt;
 </span>      <span class="type">xx</span> prepare_for
       <span class="type">xx</span>   exception_head
@@ -5836,7 +5674,7 @@
 </span>      <span class="comment">;;    name-string[address, length] &gt;&gt;
 </span>
       <span class="type">xx</span> dup2
-      <span class="type">xx</span> V__link__core
+      <span class="type">xx</span> V__link
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
       <span class="comment">;; &lt;&lt; string[address, length]
 </span>      <span class="comment">;;    name-string[address, length]
@@ -5847,7 +5685,7 @@
 </span>      <span class="comment">;;    link &gt;&gt;
 </span>
       <span class="type">xx</span> xxtuckx
-      <span class="type">xx</span> <span class="keyword">address</span>, V__link__core, save
+      <span class="type">xx</span> <span class="keyword">address</span>, V__link, save
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$exception
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
       <span class="comment">;; &lt;&lt; string[address, length]
@@ -5907,7 +5745,7 @@
 </span>      <span class="comment">;;    name-string[address, length] &gt;&gt;
 </span>
       <span class="type">xx</span> dup2
-      <span class="type">xx</span> V__link__core
+      <span class="type">xx</span> V__link
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
       <span class="comment">;; &lt;&lt; string[address, length]
 </span>      <span class="comment">;;    name-string[address, length]
@@ -5918,7 +5756,7 @@
 </span>      <span class="comment">;;    link &gt;&gt;
 </span>
       <span class="type">xx</span> xxtuckx
-      <span class="type">xx</span> <span class="keyword">address</span>, V__link__core, save
+      <span class="type">xx</span> <span class="keyword">address</span>, V__link, save
       <span class="type">xx</span> <span class="keyword">literal</span>, explain$variable
       <span class="type">xx</span> <span class="keyword">literal</span>, <span class="constant">0</span>
       <span class="comment">;; &lt;&lt; string[address, length]
@@ -5964,6 +5802,9 @@
    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">fix-*three*</span> <span class="cicada-nymph-number">3</span> <span class="cicada-nymph-syntax-key-word">address</span> <span class="cicada-nymph-variable">*three*</span> save <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
    fix-*three*
    <span class="cicada-nymph-number">1</span> add-three . <span class="cicada-nymph-comment">&lt;&lt; 4 &gt;&gt;</span>
+
+   <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">jo-*three*</span> <span class="cicada-nymph-syntax-key-word">jo</span> <span class="cicada-nymph-variable">*three*</span> apply . <span class="cicada-nymph-end">end</span> <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+   jo-*three*
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> &#26377;&#21517;&#23383;&#30340;&#23616;&#37096;&#35722;&#37327; &#33287; &#35722;&#38263;&#30340;&#23616;&#37096;&#25976;&#25818;</span>
@@ -6965,7 +6806,7 @@
       <span class="type">xx</span> current_free_address$string_area
 <span class="org-block-end-line">   #+end_src
 </span><span class="org-level-2">** the_last_link_in_assembly_code</span>
-   * this word helps to initialize V__link__core
+   * this word helps to initialize V__link
 <span class="org-block-begin-line">   #+begin_src fasm :tangle cicada-nymph.fasm
 </span>   the_last_link_in_assembly_code = link
 <span class="org-block-end-line">   #+end_src
