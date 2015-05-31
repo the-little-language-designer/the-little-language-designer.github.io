@@ -9,7 +9,8 @@
   * [[thus-spoke/thus-spoke-poincare/overview.html][龐加萊如是說 / thus spoke Poincaré]]
 * 筆記 / note
 ** 語言學 / linguistic
-   * [[note/linguistic/shi-ci-bi-ji/overview.html][釋詞筆記]]
+   * [[note/linguistic/shi-ci-bi-ji/show-all.html][釋詞筆記]]
+   * [[note/linguistic/chinese/show-all.html][中文]]
 ** 道家 / daoism
    * [[note/daoism/qi-wu-lun/overview.html][齊物論記]]
 ** 算法 / algorithm
