@@ -29,6 +29,11 @@
         color: #AE7C3B;
         font-weight: bold;
       }
+      .cicada-nymph-await {
+        /* cicada-nymph-await-face */
+        color: #1ef15f;
+        font-weight: bold;
+      }
       .cicada-nymph-bool {
         /* cicada-nymph-bool-face */
         color: #fd971f;
@@ -43,11 +48,6 @@
         color: #fd971f;
         font-weight: bold;
       }
-      .cicada-nymph-define-exception {
-        /* cicada-nymph-define-exception-face */
-        color: #1ef15f;
-        font-weight: bold;
-      }
       .cicada-nymph-define-function {
         /* cicada-nymph-define-function-face */
         color: #ae81ff;
@@ -60,11 +60,6 @@
       }
       .cicada-nymph-end {
         /* cicada-nymph-end-face */
-        color: #00ffff;
-        font-weight: bold;
-      }
-      .cicada-nymph-exception {
-        /* cicada-nymph-exception-face */
         color: #00ffff;
         font-weight: bold;
       }
@@ -101,6 +96,11 @@
       .cicada-nymph-number-light {
         /* cicada-nymph-number-light-face */
         color: #ffff00;
+      }
+      .cicada-nymph-quote {
+        /* cicada-nymph-quote-face */
+        color: #fd971f;
+        font-weight: bold;
       }
       .cicada-nymph-save-local-variable-1 {
         /* cicada-nymph-save-local-variable-1-face */
@@ -236,18 +236,25 @@
 <span class="org-level-1">* ===================================</span>
 <span class="org-level-1">* writers</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* more syntax for definer</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* name</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* string</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* definers</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* more syntax for definer</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* name &amp; name-hash-table</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* name-record</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* make-jojo-syntax,quote</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* await &amp; awake</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* basic-REPL</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-function</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* to use the new naming mechanism</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* define-variable,with-tos</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* alias</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* more syntax for definer</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* more syntax for REPL</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* &lt;rule-set&gt; &amp; &lt;rule&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* to define some alias</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* a test of nested comment</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* stack-REPL</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* rule-set</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* eval-string</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* define-variable</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* constant of system</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* link</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* port</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* file</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* directory</span>...<span class="org-block-end-line">
@@ -255,9 +262,23 @@
 </span><span class="org-level-1">* path</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* poi</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* path syntax</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> undo</span>...
-<span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> load &amp; need</span>...<span class="org-block-end-line">
-</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> test framework</span>...
+</span><span class="org-level-1">* &lt;string&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* reading-stack</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;rule-set&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* -----------------------------------</span>
+<span class="org-level-1">* </span><span class="org-todo">&#35352;</span><span class="org-level-1"> module</span>...
+<span class="org-level-1">* module-naming-stack</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;moi&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;module-stack&gt; &amp; &lt;module-info&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;importing-stack&gt; &amp; &lt;importing-record&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;global-naming-stack&gt; &amp; &lt;module-naming-stack&gt;</span>...
+<span class="org-level-1">* undo</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;pre-module&gt; </span><span class="org-level-1"><span class="bold">*rule-set*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;post-module&gt; </span><span class="org-level-1"><span class="bold">*rule-set*</span></span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* &lt;module-buffer&gt;</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* import</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* load</span>...<span class="org-block-end-line">
+</span><span class="org-level-1">* test-framework</span>...
 <span class="org-level-1">* -----------------------------------</span>
 <span class="org-level-1">* report</span>...<span class="org-block-end-line">
 </span><span class="org-level-1">* hi</span>...<span class="org-block-end-line">
