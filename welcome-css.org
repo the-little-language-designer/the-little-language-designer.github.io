@@ -164,7 +164,7 @@
       text-align: right;
   }
   #+end_src
-* >< use group to do clearfix
+* use group to do clearfix
   #+begin_src css :tangle assets/css/welcome.css
   .group:before,
   .group:after {
@@ -203,7 +203,7 @@
   }
   #+end_src
 * article
-** >< article
+** article
    #+begin_src css :tangle assets/css/welcome.css
    article {
        display: block;
@@ -228,22 +228,6 @@
        padding-right:  1.5em;
    }
    #+end_src
-** advertisement
-   #+begin_src css
-   #advertisement {
-       background-image: url("{{ site.url }}/assets/image/wei-ji-1.jpg");
-       background-repeat: no-repeat;
-       background-size: cover;
-       color: #ffffff;
-   }
-
-   #advertisement:hover {
-       background-image: url("{{ site.url }}/assets/image/wei-ji-2.jpg");
-       background-repeat: no-repeat;
-       background-size: cover;
-       color: #1b1d1e;
-   }
-   #+end_src
 ** sysu-assembly-course
    #+begin_src css :tangle assets/css/welcome.css
    #sysu-assembly-course {
@@ -256,53 +240,17 @@
        color: #1b1d1e;
    }
    #+end_src
-** cicada-nymph
+** cicada-language
    #+begin_src css :tangle assets/css/welcome.css
-   #cicada-nymph {
+   #cicada-language {
        background-image: url("{{ site.url }}/assets/image/tanna-japonensis-2.jpg");
        background-repeat: no-repeat;
        background-size: cover;
        color: #1b1d1e;
    }
 
-   #cicada-nymph:hover {
-       background-image: url("{{ site.url }}/assets/image/tanna-japonensis-light-2.jpg");
-       background-repeat: no-repeat;
-       background-size: cover;
-       color: #1b1d1e;
-   }
-   #+end_src
-** cicada-language
-   #+begin_src css :tangle assets/css/welcome.css
-   #cicada-language {
-   }
-
    #cicada-language:hover {
-   }
-   #+end_src
-** toki-pona
-   #+begin_src css :tangle assets/css/welcome.css
-   #toki-pona {
-       background-image: url("{{ site.url }}/assets/image/toki-pona-logo-dark.jpg");
-       color: #1b1d1e;
-   }
-
-   #toki-pona:hover {
-       background-image: url("{{ site.url }}/assets/image/toki-pona-logo-light.jpg");
-       color: #1b1d1e;
-   }
-   #+end_src
-** SICP
-   #+begin_src css :tangle assets/css/welcome.css
-   #SICP {
-       background-image: url("{{ site.url }}/assets/image/sicp-logo-dark.jpg");
-       background-repeat: no-repeat;
-       background-size: cover;
-       color: #1b1d1e;
-   }
-
-   #SICP:hover {
-       background-image: url("{{ site.url }}/assets/image/sicp-logo-light.jpg");
+       background-image: url("{{ site.url }}/assets/image/tanna-japonensis-light-2.jpg");
        background-repeat: no-repeat;
        background-size: cover;
        color: #1b1d1e;

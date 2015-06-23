@@ -203,45 +203,15 @@ article p {
     color: #1b1d1e;
 }
 
-#cicada-nymph {
+#cicada-language {
     background-image: url("{{ site.url }}/assets/image/tanna-japonensis-2.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     color: #1b1d1e;
 }
 
-#cicada-nymph:hover {
-    background-image: url("{{ site.url }}/assets/image/tanna-japonensis-light-2.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #1b1d1e;
-}
-
-#cicada-language {
-}
-
 #cicada-language:hover {
-}
-
-#toki-pona {
-    background-image: url("{{ site.url }}/assets/image/toki-pona-logo-dark.jpg");
-    color: #1b1d1e;
-}
-
-#toki-pona:hover {
-    background-image: url("{{ site.url }}/assets/image/toki-pona-logo-light.jpg");
-    color: #1b1d1e;
-}
-
-#SICP {
-    background-image: url("{{ site.url }}/assets/image/sicp-logo-dark.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #1b1d1e;
-}
-
-#SICP:hover {
-    background-image: url("{{ site.url }}/assets/image/sicp-logo-light.jpg");
+    background-image: url("{{ site.url }}/assets/image/tanna-japonensis-light-2.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     color: #1b1d1e;
