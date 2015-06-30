@@ -28,5 +28,5 @@ run:
 	  --drafts
 
 clean:
-	rm -f                  \
-	*~ */*~ */*/*~ */*/*/*~  */*/*/*/*~
+	find . -name .*~ -exec rm {} \;
+
