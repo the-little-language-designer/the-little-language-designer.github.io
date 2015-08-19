@@ -1,6 +1,5 @@
 #+TITLE:  構架 / architecture
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
 
 * 費恩曼的比喻
 ** 來源
@@ -52,7 +51,7 @@
    * 給這個員工配備了一個黑板
      用於計算時打草稿
      {% assign image = "worker.jpg" %}{% assign size = "60" %}
-     {% include little-image.html %}     
+     {% include little-image.html %}
 ** 推銷員的卡片
    * 有一些抽屜用來存放 公司的推銷員的卡片
      每個銷售員一個抽屜
