@@ -2,5 +2,264 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 
 * ===================================
-* -----------------------------------
+* 記
+** 我只記住了抽象的模型
+   * 我忘記了具體實現這個模型的代碼是什麼
+     我只記住了抽象的模型
+** 珠子比喻函數 一串珠子比喻函數體
+** 珠子的分類
+   * 素函數珠 [primitive-function-jo]
+   * 函數珠   [function-jo]
+   * 變量珠   [variable-jo]
+** 珠子的詞典
+   * label dup 的值[即一個內存中的地址]
+     就被理解爲 dup 這個珠子 在珠子的詞典中的位置
+   * 找到了這個位置
+     就找到了詞典中這個條目下的所有信息
+* 素珠
+** define_primitive_function
+   #+begin_src fasm
+   macro define_primitive_function string, jo {
+
+   name__#jo:
+      xx current_free_address$string_area
+      make_primitive_string string
+   link__#jo:
+      xx link
+      link = link__#jo
+   jo:
+      xx assembly_code__#jo
+   assembly_code__#jo:
+
+      ;; here follows assembly code
+      ;; as primitive function body
+
+   }
+   #+end_src
+** dup
+   #+begin_src fasm
+   define_primitive_function "dup", dup
+      ;; << a -- a a >>
+      pop_argument_stack rax
+      push_argument_stack rax
+      push_argument_stack rax
+      next
+
+   name__dup:
+      xx current_free_address$string_area
+      make_primitive_string "dup"
+   link__dup:
+      xx link
+      link = link__dup
+   dup:
+      xx assembly_code__dup
+   assembly_code__dup:
+      ;; << a -- a a >>
+      pop_argument_stack rax
+      push_argument_stack rax
+      push_argument_stack rax
+      next
+   #+end_src
+* 非素珠
+** define_function
+   #+begin_src fasm
+   macro define_function string, jo {
+
+   name__#jo:
+      xx current_free_address$string_area
+      make_primitive_string string
+   link__#jo:
+      xx link
+      link = link__#jo
+   jo:
+      xx explain$function
+      ;; here follows a jojo as function-body
+
+   }
+   #+end_src
+** square
+   #+begin_src fasm
+   define_function "square", square
+      ;; << number -- number >>
+      xx dup
+      xx multiple
+      xx end
+
+   name__square:
+      xx current_free_address$string_area
+      make_primitive_string "square"
+   link__square:
+      xx link
+      link = link__square
+   square:
+      xx explain$function
+      ;; << number -- number >>
+      xx dup
+      xx multiple
+      xx end
+   #+end_src
+* >< 棧 [掠過]
+* 函數語義之形成
+** 參數棧與返回棧
+   * 參數棧 [argument-stack]
+   * 返回棧 [return-stack]
+** 參數傳遞
+   * 利用 參數棧
+   * 你可以想像每個 素函數珠
+     能夠幫你召喚出一個小機器人[或者小精靈]
+     來爲你做一些計算和操作
+   * 計算的材料都要從 參數棧 中取 [即函數的參數]
+     並且計算的結果也要返回 棧參數 中 [即函數的返回值]
+     比如
+     #+begin_src return-stack
+     (mul) : 素函數珠
+          它召喚出來一個小精靈
+          幫你做乘法
+
+     (dup) : 素函數珠
+          它召喚出來一個小精靈
+          來把 參數棧 頂部的數複製一下
+
+     (square) : 複合函數珠
+          因爲它是被分解成
+          上面的兩個 素函數 的複合的
+     #+end_src
+   * 這樣 參數棧 就成了 小精靈們 傳遞計算結果的場所
+     一個 小精靈 計算成果
+     可以被作爲 另一個 小精靈 的參數
+** 函數的 嵌套定義 與 嵌套調用 用 next 和 explain$function 實現
+*** next
+    #+begin_src fasm
+    macro next {
+       pop_return_stack rbx
+         mov rax, [rbx]
+       add rbx, cell_size
+       push_return_stack rbx
+         jmp dword [rax]
+    }
+    #+end_src
+*** explain$function
+    * find a jojo from a function-jo
+      and push the jojo to return-stack
+    * use rax as an argument
+      which stores a jo
+    #+begin_src fasm
+    explain$function:
+       add rax, cell_size
+       push_return_stack rax
+       next
+    #+end_src
+** 函數的 嵌套定義 與 嵌套調用 的抽象描述
+   * 你可以把 返回棧 return-stack 想像成一個鉄棍子
+     棍子串着一溜圈子
+     #+begin_src return-stack
+     - [ . ] - [ . ] - [ . ] - [ . ] - [ . ]
+     #+end_src
+     圈子上可以卡珠子
+     一串珠子中的某個珠子 可以被卡在棍子的圈子上
+     #+begin_src return-stack
+                               (666)
+         (22)                  (666)
+     - [ (22) ] - [ (33) ] - [ (666) ] - [ . ] - [ . ]
+         (22)       (33)
+         (22)       (33)
+                    (33)
+     #+end_src
+   * 只要把一串珠子放到返回棧裏
+     然後啓動 線串碼解釋器
+     就能形成函數 調用 與 返回 的語義了
+   * 比如下面的例子所展示的
+*** at the beginning
+    * argument-stack
+      << 2 >>
+    * return-stack
+      #+begin_src return-stack
+      - [ (square) ]
+          (square)
+          (end)
+      #+end_src
+*** next (1)
+    * argument-stack
+      << 2 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+      - [ (square) ] - [ (dup) ]
+          (end)          (mul)
+                         (end)
+      #+end_src
+*** next (2)
+    * argument-stack
+      << 2, 2 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)       (dup)
+      - [ (square) ] - [ (mul) ]
+          (end)          (end)
+      #+end_src
+*** next (3)
+    * argument-stack << 4 >>
+    * return-stack
+      #+begin_src return-stack
+                         (dup)
+          (square)       (mul)
+      - [ (square) ] - [ (end) ]
+          (end)
+      #+end_src
+*** next (4)
+    * argument-stack << 4 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+      - [ (square) ]
+          (end)
+      #+end_src
+*** next (5)
+    * argument-stack << 4 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+          (square)
+      - [ (end) ] - [ (dup) ]
+                      (mul)
+                      (end)
+      #+end_src
+*** next (6)
+    * argument-stack
+      << 4, 4 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+          (square)    (dup)
+      - [ (end) ] - [ (mul) ]
+                      (end)
+      #+end_src
+*** next (7)
+    * argument-stack
+      << 16 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)    (dup)
+          (square)    (mul)
+      - [ (end) ] - [ (end) ]
+      #+end_src
+*** next (8)
+    * argument-stack
+      << 16 >>
+    * return-stack
+      #+begin_src return-stack
+          (square)
+          (square)
+      - [ (end) ]
+      #+end_src
+*** next (9)
+    * argument-stack
+      << 16 >>
+    * return-stack
+      #+begin_src return-stack
+      - [  ]
+      #+end_src
+    * it is really simple
+      ^-^
+      is it not ?
 * ===================================
