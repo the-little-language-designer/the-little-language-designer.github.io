@@ -11,9 +11,47 @@
         color: #f8f8f0;
         background-color: #1b1d1e;
       }
+      .bold {
+        /* bold */
+        font-weight: bold;
+      }
       .builtin {
         /* font-lock-builtin-face */
         color: #a6e22e;
+      }
+      .cicada-nymph-comment {
+        /* cicada-nymph-comment-face */
+        color: #FF8888;
+      }
+      .cicada-nymph-define-function {
+        /* cicada-nymph-define-function-face */
+        color: #ae81ff;
+        font-weight: bold;
+      }
+      .cicada-nymph-end {
+        /* cicada-nymph-end-face */
+        color: #00ffff;
+        font-weight: bold;
+      }
+      .cicada-nymph-function-to-define {
+        /* cicada-nymph-function-to-define-face */
+        color: #ef5939;
+        font-weight: bold;
+      }
+      .cicada-nymph-number {
+        /* cicada-nymph-number-face */
+        color: #fd971f;
+        font-weight: bold;
+      }
+      .cicada-nymph-sentence-reader {
+        /* cicada-nymph-sentence-reader-face */
+        color: #ffff00;
+        font-weight: bold;
+      }
+      .cicada-nymph-syntax-key-word {
+        /* cicada-nymph-syntax-key-word-face */
+        color: #f92672;
+        font-weight: bold;
       }
       .comment {
         /* font-lock-comment-face */
@@ -60,11 +98,6 @@
       .org-level-3 {
         /* org-level-3 */
         color: #ff2727;
-      }
-      .org-todo {
-        /* org-todo */
-        color: #ffc0cb;
-        font-weight: bold;
       }
       .preprocessor {
         /* font-lock-preprocessor-face */
@@ -139,15 +172,85 @@
 </span><span class="org-document-info-keyword">#+AUTHOR:</span> <span class="org-document-info">&#35613;&#23431;&#24646; / XIE Yuheng
 </span>
 <span class="org-level-1">* ===================================</span>
-<span class="org-level-1">* </span><span class="org-todo">&#35352;</span>
+<span class="org-level-1">* &#38988;&#35299;</span>
+<span class="org-level-2">** cicada-nymph &#30340;&#35299;&#37323;&#22120;</span>
+<span class="org-level-3">*** &#22519;&#34892;&#20989;&#25976;</span>
+<span class="org-block-begin-line">    #+begin_src cicada-nymph
+</span>    <span class="cicada-nymph-comment">&lt;&lt; &#35336;&#31639; 3 &#33287; 4 &#30340;&#21644; &#20006;&#25171;&#21360;&#20986;&#32080;&#26524; &gt;&gt;</span>
+    <span class="cicada-nymph-number">3</span> <span class="cicada-nymph-number">4</span> add .
+
+    <span class="cicada-nymph-number">3</span>    <span class="cicada-nymph-comment">&lt;&lt; &#23559; 3 &#20837;&#26855; &gt;&gt;</span>
+    <span class="cicada-nymph-number">4</span>    <span class="cicada-nymph-comment">&lt;&lt; &#23559; 4 &#20837;&#26855; &gt;&gt;</span>
+    add  <span class="cicada-nymph-comment">&lt;&lt; &#23559;&#26855;&#20013;&#20841;&#25976;&#21462;&#20986;&#20006;&#30456;&#21152; &#25226;&#35336;&#31639;&#32080;&#26524;&#25918;&#22238;&#26855;&#20013; &gt;&gt;</span>
+    .    <span class="cicada-nymph-comment">&lt;&lt; &#25171;&#21360;&#20986;&#26855;&#38914;&#25976;&#20540; &gt;&gt;</span>
+
+
+    <span class="cicada-nymph-comment">&lt;&lt; &#35336;&#31639; 4 &#30340;&#24179;&#26041; &#20006;&#25171;&#21360;&#20986;&#32080;&#26524; &gt;&gt;</span>
+    <span class="cicada-nymph-number">4</span> dup mul .
+
+    <span class="cicada-nymph-number">4</span>    <span class="cicada-nymph-comment">&lt;&lt; &#23559; 4 &#20837;&#26855; &gt;&gt;</span>
+    dup  <span class="cicada-nymph-comment">&lt;&lt; &#23559;&#26855;&#38914;&#20803;&#32032;&#35079;&#35069; &gt;&gt;</span>
+    mul  <span class="cicada-nymph-comment">&lt;&lt; &#23559;&#26855;&#20013;&#20841;&#25976;&#21462;&#20986;&#20006;&#30456;&#20056; &#25226;&#35336;&#31639;&#32080;&#26524;&#25918;&#22238;&#26855;&#20013; &gt;&gt;</span>
+    .    <span class="cicada-nymph-comment">&lt;&lt; &#25171;&#21360;&#20986;&#26855;&#38914;&#25976;&#20540; &gt;&gt;</span>
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-3">*** &#23450;&#32681;&#20989;&#25976;</span>
+<span class="org-block-begin-line">    #+begin_src cicada-nymph
+</span>    <span class="cicada-nymph-comment">&lt;&lt; &#23450;&#32681;&#19968;&#20491;&#20989;&#25976; &#20197;&#35336;&#31639;&#24179;&#26041; &gt;&gt;</span>
+    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">square</span>
+      <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
+      dup mul
+      <span class="cicada-nymph-end">end</span>
+    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+
+    <span class="cicada-nymph-comment">&lt;&lt; &#35336;&#31639; 4 &#30340;&#24179;&#26041; &#20006;&#25171;&#21360;&#20986;&#32080;&#26524; &gt;&gt;</span>
+    <span class="cicada-nymph-number">4</span> square .
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-3">*** &#36958;&#27512;&#20989;&#25976;</span>
+<span class="org-block-begin-line">    #+begin_src cicada-nymph
+</span>    <span class="cicada-nymph-comment">&lt;&lt; &#23450;&#32681;&#38542;&#20056;&#20989;&#25976; &gt;&gt;</span>
+    <span class="cicada-nymph-sentence-reader">:</span> <span class="cicada-nymph-function-to-define">factorial</span>
+      <span class="cicada-nymph-comment">&lt;&lt; number -- number &gt;&gt;</span>
+      dup one? <span class="cicada-nymph-syntax-key-word">if</span>
+        <span class="cicada-nymph-end">end</span>
+      <span class="cicada-nymph-syntax-key-word">then</span>
+      dup sub1 factorial mul
+      <span class="cicada-nymph-end">end</span>
+    <span class="cicada-nymph-sentence-reader">;</span> <span class="cicada-nymph-define-function">define-function</span>
+
+    <span class="cicada-nymph-comment">&lt;&lt; &#35336;&#31639; 4 &#30340;&#38542;&#20056; &#20006;&#25171;&#21360;&#20986;&#32080;&#26524; &gt;&gt;</span>
+    <span class="cicada-nymph-number">4</span> factorial .
+
+    <span class="cicada-nymph-comment">&lt;&lt; &#35336;&#31639; 4 &#30340;&#38542;&#20056; &#20006;&#25171;&#21360;&#20986;&#32080;&#26524; &gt;&gt;</span>
+    <span class="cicada-nymph-number">4</span> <span class="cicada-nymph-number">3</span> <span class="cicada-nymph-number">2</span> <span class="cicada-nymph-number">1</span> mul mul mul .
+<span class="org-block-end-line">    #+end_src
+</span><span class="org-level-2">** cicada-instar</span>
+<span class="org-level-1">* &#29664;&#23376;</span>
 <span class="org-level-2">** &#25105;&#21482;&#35352;&#20303;&#20102;&#25277;&#35937;&#30340;&#27169;&#22411;</span>
    * &#25105;&#24536;&#35352;&#20102;&#20855;&#39636;&#23526;&#29694;&#36889;&#20491;&#27169;&#22411;&#30340;&#20195;&#30908;&#26159;&#20160;&#40636;
      &#25105;&#21482;&#35352;&#20303;&#20102;&#25277;&#35937;&#30340;&#27169;&#22411;
-<span class="org-level-2">** &#29664;&#23376;&#27604;&#21947;&#20989;&#25976; &#19968;&#20018;&#29664;&#23376;&#27604;&#21947;&#20989;&#25976;&#39636;</span>
 <span class="org-level-2">** &#29664;&#23376;&#30340;&#20998;&#39006;</span>
-   * &#32032;&#20989;&#25976;&#29664; [primitive-function-jo]
-   * &#20989;&#25976;&#29664;   [function-jo]
+   * &#32032;&#20989;&#25976;&#29664; [primitive-function-jo] &#29992;&#21295;&#32232;&#20195;&#30908;&#23531;
+   * &#20989;&#25976;&#29664;   [function-jo]           &#29992;&#32218;&#20018;&#30908;&#23531;
    * &#35722;&#37327;&#29664;   [variable-jo]
+   * &#19968;&#38982;&#29664;&#23376;&#20195;&#34920;&#19968;&#20491;&#20989;&#25976;
+     &#19968;&#20018;&#29664;&#23376;&#20195;&#34920;&#19968;&#20123;&#20989;&#25976;&#30340;&#35079;&#21512;&#20570;&#24418;&#25104;&#30340;&#20989;&#25976;&#39636;
+     &#19968;&#20491;&#20989;&#25976;&#39636;&#21487;&#20197;&#34987;&#32102;&#20197;&#21517;&#23383;
+     &#32780;&#23450;&#32681;&#29234;&#19968;&#20491;&#26032;&#30340;&#20989;&#25976;
+<span class="org-level-2">** &#29664;&#23376;&#27604;&#21947;&#20989;&#25976; &#19968;&#20018;&#29664;&#23376;&#27604;&#21947;&#20989;&#25976;&#39636;</span>
+   * &#23450;&#32681;&#26032;&#30340;&#20989;&#25976;&#23601;&#26159;
+     1. &#29992;&#24050;&#26377;&#30340;&#20989;&#25976; <span class="bold">*&#27083;&#36896;*</span> &#19968;&#20491; <span class="bold">*&#20989;&#25976;&#39636;*</span>
+     2. &#32102;&#36889;&#20491; &#20989;&#25976;&#39636; &#19968;&#20491;&#21517;&#23383;
+   * &#36889;&#35023; <span class="bold">*&#27083;&#36896;*</span> &#30340;&#26041;&#24335;&#23601;&#26159; <span class="bold">*&#20989;&#25976;&#35079;&#21512;*</span>
+     &#23601;&#26159; &#20989;&#25976;&#30340;&#30456;&#27231;&#20316;&#29992;
+     &#23601;&#26159; &#25226;&#29664;&#23376;&#20018;&#25104;&#20018;
+     &#19968;&#20018;&#29664;&#23376;&#23601;&#20195;&#34920; &#20989;&#25976;&#39636;
+     &#31359;&#29664;&#23376;&#30340;&#36942;&#31243;&#23601;&#20687;&#26159; &#35069;&#20316;&#35079;&#21512;&#20989;&#25976;&#30340;&#36942;&#31243;
+<span class="org-level-2">** &#38364;&#26044;&#20989;&#25976;&#35079;&#21512;</span>
+   * &#25976;&#23416;&#35023;&#35352;&#20570;
+     (g&#8201;&#8728;&#8201;f)(x) = g(f(x))
+     &#25105;&#35352;&#20570;
+     f g
+     &#21443;&#25976; x &#22312;&#21443;&#25976;&#26855;&#35023; &#19981;&#29992;&#26126;&#39023;&#23531;&#20986;&#20358;
 <span class="org-level-2">** &#29664;&#23376;&#30340;&#35422;&#20856;</span>
    * label dup &#30340;&#20540;[&#21363;&#19968;&#20491;&#20839;&#23384;&#20013;&#30340;&#22320;&#22336;]
      &#23601;&#34987;&#29702;&#35299;&#29234; dup &#36889;&#20491;&#29664;&#23376; &#22312;&#29664;&#23376;&#30340;&#35422;&#20856;&#20013;&#30340;&#20301;&#32622;
@@ -182,6 +285,8 @@
       push_argument_stack <span class="variable-name">rax</span>
       next
 
+   <span class="comment">;; ------------------------------
+</span>
    <span class="function-name">name__dup</span>:
       <span class="type">xx</span> current_free_address$string_area
       make_primitive_string <span class="string">"dup"</span>
@@ -222,6 +327,8 @@
       <span class="type">xx</span> multiple
       <span class="type">xx</span> <span class="keyword">end</span>
 
+   <span class="comment">;; ------------------------------
+</span>
    <span class="function-name">name__square</span>:
       <span class="type">xx</span> current_free_address$string_area
       make_primitive_string <span class="string">"square"</span>
@@ -235,7 +342,7 @@
       <span class="type">xx</span> multiple
       <span class="type">xx</span> <span class="keyword">end</span>
 <span class="org-block-end-line">   #+end_src
-</span><span class="org-level-1">* </span><span class="org-todo">&gt;&lt;</span><span class="org-level-1"> &#26855; [&#25504;&#36942;]</span>
+</span><span class="org-level-1">* &#26855; [&#25504;&#36942;]</span>
 <span class="org-level-1">* &#20989;&#25976;&#35486;&#32681;&#20043;&#24418;&#25104;</span>
 <span class="org-level-2">** &#21443;&#25976;&#26855;&#33287;&#36820;&#22238;&#26855;</span>
    * &#21443;&#25976;&#26855; [argument-stack]

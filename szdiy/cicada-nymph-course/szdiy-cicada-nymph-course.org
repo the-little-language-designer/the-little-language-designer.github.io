@@ -2,15 +2,85 @@
 #+AUTHOR: 謝宇恆 / XIE Yuheng
 
 * ===================================
-* 記
+* 題解
+** cicada-nymph 的解釋器
+*** 執行函數
+    #+begin_src cicada-nymph
+    << 計算 3 與 4 的和 並打印出結果 >>
+    3 4 add .
+
+    3    << 將 3 入棧 >>
+    4    << 將 4 入棧 >>
+    add  << 將棧中兩數取出並相加 把計算結果放回棧中 >>
+    .    << 打印出棧頂數值 >>
+
+
+    << 計算 4 的平方 並打印出結果 >>
+    4 dup mul .
+
+    4    << 將 4 入棧 >>
+    dup  << 將棧頂元素複製 >>
+    mul  << 將棧中兩數取出並相乘 把計算結果放回棧中 >>
+    .    << 打印出棧頂數值 >>
+    #+end_src
+*** 定義函數
+    #+begin_src cicada-nymph
+    << 定義一個函數 以計算平方 >>
+    : square
+      << number -- number >>
+      dup mul
+      end
+    ; define-function
+
+    << 計算 4 的平方 並打印出結果 >>
+    4 square .
+    #+end_src
+*** 遞歸函數
+    #+begin_src cicada-nymph
+    << 定義階乘函數 >>
+    : factorial
+      << number -- number >>
+      dup one? if
+        end
+      then
+      dup sub1 factorial mul
+      end
+    ; define-function
+
+    << 計算 4 的階乘 並打印出結果 >>
+    4 factorial .
+
+    << 計算 4 的階乘 並打印出結果 >>
+    4 3 2 1 mul mul mul .
+    #+end_src
+** cicada-instar
+* 珠子
 ** 我只記住了抽象的模型
    * 我忘記了具體實現這個模型的代碼是什麼
      我只記住了抽象的模型
-** 珠子比喻函數 一串珠子比喻函數體
 ** 珠子的分類
-   * 素函數珠 [primitive-function-jo]
-   * 函數珠   [function-jo]
+   * 素函數珠 [primitive-function-jo] 用匯編代碼寫
+   * 函數珠   [function-jo]           用線串碼寫
    * 變量珠   [variable-jo]
+   * 一顆珠子代表一個函數
+     一串珠子代表一些函數的複合做形成的函數體
+     一個函數體可以被給以名字
+     而定義爲一個新的函數
+** 珠子比喻函數 一串珠子比喻函數體
+   * 定義新的函數就是
+     1. 用已有的函數 *構造* 一個 *函數體*
+     2. 給這個 函數體 一個名字
+   * 這裏 *構造* 的方式就是 *函數複合*
+     就是 函數的相機作用
+     就是 把珠子串成串
+     一串珠子就代表 函數體
+     穿珠子的過程就像是 製作複合函數的過程
+** 關於函數複合
+   * 數學裏記做
+     (g ∘ f)(x) = g(f(x))
+     我記做
+     f g
+     參數 x 在參數棧裏 不用明顯寫出來
 ** 珠子的詞典
    * label dup 的值[即一個內存中的地址]
      就被理解爲 dup 這個珠子 在珠子的詞典中的位置
@@ -44,6 +114,8 @@
       push_argument_stack rax
       push_argument_stack rax
       next
+
+   ;; ------------------------------
 
    name__dup:
       xx current_free_address$string_area
@@ -85,6 +157,8 @@
       xx multiple
       xx end
 
+   ;; ------------------------------
+
    name__square:
       xx current_free_address$string_area
       make_primitive_string "square"
@@ -98,7 +172,7 @@
       xx multiple
       xx end
    #+end_src
-* >< 棧 [掠過]
+* 棧 [掠過]
 * 函數語義之形成
 ** 參數棧與返回棧
    * 參數棧 [argument-stack]
