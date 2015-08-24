@@ -1,6 +1,5 @@
 #+TITLE:  課程 / course
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
 
 * ===================================
 * 題解
