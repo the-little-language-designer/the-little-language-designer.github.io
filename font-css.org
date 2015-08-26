@@ -1,6 +1,5 @@
 #+TITLE:  font css
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
 
 * 楷
   #+begin_src css :tangle _includes/font.css

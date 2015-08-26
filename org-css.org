@@ -1,6 +1,5 @@
 #+TITLE:  org css
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
 
 * for template in jekyll
   #+begin_src css :tangle assets/css/org.css

@@ -53,7 +53,8 @@ body {
     font-size: 24px;
     color: #ffffff;
 
-    background-color: #709870;
+    /* background-color: #709870; */
+    background-color: #FF5548;
 
     /* font-family: "envy-code", "ms-song"; */
     /* font-family: "envy-code", "pmingliu-tw"; */
@@ -172,8 +173,10 @@ a:hover {
 
 article {
     display: block;
-    border-top:    0.2em solid #709870;
-    border-bottom: 0.2em solid #709870;
+    /* border-top:    0.2em solid #709870; */
+    /* border-bottom: 0.2em solid #709870; */
+    border-top:    0.2em solid #FF5548;
+    border-bottom: 0.2em solid #FF5548;
 
     color: #1b1d1d;
     background-color: #dddddd;

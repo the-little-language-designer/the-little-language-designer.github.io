@@ -1,6 +1,5 @@
 #+TITLE:  welcome css
 #+AUTHOR: 謝宇恆 / XIE Yuheng
-#+EMAIL:  xyheme@gmail.com
 
 * for template in jekyll
   #+begin_src css :tangle assets/css/welcome.css
@@ -73,7 +72,8 @@
       font-size: 24px;
       color: #ffffff;
 
-      background-color: #709870;
+      /* background-color: #709870; */
+      background-color: #FF5548;
 
       /* font-family: "envy-code", "ms-song"; */
       /* font-family: "envy-code", "pmingliu-tw"; */
@@ -205,28 +205,30 @@
 * article
 ** article
    #+begin_src css :tangle assets/css/welcome.css
-   article {
-       display: block;
-       border-top:    0.2em solid #709870;
-       border-bottom: 0.2em solid #709870;
+      article {
+          display: block;
+          /* border-top:    0.2em solid #709870; */
+          /* border-bottom: 0.2em solid #709870; */
+          border-top:    0.2em solid #FF5548;
+          border-bottom: 0.2em solid #FF5548;
 
-       color: #1b1d1d;
-       background-color: #dddddd;
+          color: #1b1d1d;
+          background-color: #dddddd;
 
-       padding-top:    1em;
-       padding-bottom: 1em;
-       padding-left:   1em;
-       padding-right:  1em;
-   }
+          padding-top:    1em;
+          padding-bottom: 1em;
+          padding-left:   1em;
+          padding-right:  1em;
+      }
 
-   article:hover {
-       background-color: #f8f8f0;
-   }
+      article:hover {
+          background-color: #f8f8f0;
+      }
 
-   article p {
-       padding-left:   1.5em;
-       padding-right:  1.5em;
-   }
+      article p {
+          padding-left:   1.5em;
+          padding-right:  1.5em;
+      }
    #+end_src
 ** sysu-assembly-course
    #+begin_src css :tangle assets/css/welcome.css
